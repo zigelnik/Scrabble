@@ -2,6 +2,7 @@
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+.idea/
 
 ### Eclipse ###
 .apt_generated
@@ -11,7 +12,7 @@ out/
 .settings
 .springBeans
 .sts4-cache
-.idea
+
 bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
@@ -28,3 +29,4 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
