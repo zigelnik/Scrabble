@@ -3,7 +3,11 @@ package sr1.test;
 import java.util.ArrayList;
 
 public class Board {
+<<<<<<< Updated upstream
 
+=======
+    //Hello First change2
+>>>>>>> Stashed changes
     private static final int STAR = 7;
     private static final int BOARD_SIZE = 15;
     private static Tile[][] boardTiles = new Tile[BOARD_SIZE][BOARD_SIZE];
