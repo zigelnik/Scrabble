@@ -25,9 +25,11 @@ The game ends when a player has used all of their tiles or when there are no mor
 ## Project Structure
 The project is structured using the MVVM architecture and Observer-Observable design pattern. The purpose of this architecture is to separate the user interface from the underlying data model, making the code easier to read, maintain, and extend. The project is divided into three main packages:
 
-**model**: Contains the data model classes for the game, including the Scrabble board, tiles, and players. The classes in this package are responsible for the game's logic and state.
-**view**: Contains the JavaFX view classes for the game, including the game board, player tiles, and game window. The classes in this package are responsible for displaying the game's user interface and handling user input.
-**viewmodel**: Contains the view model classes for the game, which handle the game logic and communication between the model and view. The classes in this package act as intermediaries between the model and view, responding to user input and updating the view accordingly.
+**Model**: Contains the data model classes for the game, including the Scrabble board, tiles, and players. The classes in this package are responsible for the game's logic and state.
+
+**View**: Contains the JavaFX view classes for the game, including the game board, player tiles, and game window. The classes in this package are responsible for displaying the game's user interface and handling user input.
+
+**ViewModel**: Contains the view model classes for the game, which handle the game logic and communication between the model and view. The classes in this package act as intermediaries between the model and view, responding to user input and updating the view accordingly.
 
 ## Conclusion
 This project demonstrates the use of advanced programming concepts in the development of a JavaFX application. The use of the MVVM architecture and Observer-Observable design pattern improves code quality, making the application easier to read, maintain, and extend. The project also demonstrates effective user interface design and implementation, providing an intuitive and engaging experience for the user. Overall, this project represents a high level of competency in programming and is a testament to the skills and knowledge gained through
