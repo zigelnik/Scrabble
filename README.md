@@ -1,7 +1,7 @@
 # Scrabble Game
 This is a JavaFX implementation of the Scrabble game using the Model-View-ViewModel (MVVM) architecture and Observer-Observable design pattern. The game operates with Server-Socket and has two modes: Guest and Host mode. This project was developed as part of a college course and demonstrates knowledge of advanced programming concepts, including design patterns, object-oriented programming, and user interface design.
 
-##Planning
+## Planning
 ![WhatsApp Image 2023-05-07 at 17 32 12](https://user-images.githubusercontent.com/78549129/236684145-508429e7-3f76-489a-b24c-910df4b8264a.jpeg)
 
 
