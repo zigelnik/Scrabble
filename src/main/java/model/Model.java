@@ -39,28 +39,5 @@ public class Model extends Observable {
 //        }
     }
 
-//    public void setAileron(double x) {
-//        String cmd = properties.get("aileron");
-//        out2fg.println(cmd+" "+x);
-//        out2fg.flush();
-//    }
 
-    public void setAileron(double x) {
-        String cmd = properties.get("a");
-
-    }
-
-    public void setElevators(double x) {
-
-    }
-
-    public void setRudder(double x) {
-
-    }
-    public void setD(double x) {
-
-    }
-
-    public void setThrottle(double nv) {
-    }
 }

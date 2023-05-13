@@ -16,8 +16,7 @@ public class Main extends Application {
             Model m = new Model("properties.txt");
             WindowController wc = fxmlLoader.getController();
             ViewModel vm = new ViewModel(m);
-            wc.init(vm);
-            wc.paint();
+
 
             stage.setTitle("hello");
             stage.setScene(scene);

@@ -54,3 +54,12 @@ jlink {
 jlinkZip {
     group = 'distribution'
 }
+
+jar {
+    manifest {
+        attributes(
+
+                'Main-Class': 'model.main'
+        )
+    }
+}

@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.canvas.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FEE3D4;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.WindowController">
-    <center>
-        <Canvas fx:id="joystick" height="234.0" onMouseDragged="#mouseMove" onMousePressed="#mouseDown" onMouseReleased="#mouseUp" width="368.0" BorderPane.alignment="CENTER" />
-    </center>
-    <bottom>
-        <Slider fx:id="rudder" blockIncrement="0.1" max="1.0" min="-1.0" BorderPane.alignment="CENTER" />
-    </bottom>
-    <left>
-        <Slider fx:id="throttle" blockIncrement="0.1" max="1.0" min="-1.0" orientation="VERTICAL" BorderPane.alignment="CENTER" />
-    </left>
-</BorderPane>
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.WindowController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <Button fx:id="hostB" mnemonicParsing="false" onAction="#host" prefHeight="38.0" prefWidth="324.0" text="Host Game" GridPane.rowIndex="2" />
+      <Button fx:id="joinB" mnemonicParsing="false" onAction="#join" prefHeight="37.0" prefWidth="300.0" text="Button" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+   </children>
+</GridPane>
