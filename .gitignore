@@ -32,3 +32,6 @@ bin/
 .DS_Store
 
 .idea
+build/
+.gradle
+gradle/wrapper
