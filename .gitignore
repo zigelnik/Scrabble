@@ -1,6 +1,10 @@
 ### IntelliJ IDEA ###
 .idea/
-
+build.gradle
+gradlew
+gradlew.bat
+package.json
+settings.gradle
 
 ### Eclipse ###
 .apt_generated
