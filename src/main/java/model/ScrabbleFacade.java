@@ -1,35 +1,31 @@
 package model;
 
-import model.logic.MyServer;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class ScrabbleFacade {
 
     GameState gs;
-    List<String> listenersList;
+    List<Player> playerList;
 
     ScrabbleFacade(){
-        this.listenersList = new ArrayList<>();
-        this.gs = new GameState();
+        this.playerList = new ArrayList<>();
+        this.gs = new GameState(playerList);
     }
 
     void hostGame(int port){
+        playerList.add(new Player());
         GameServer game = new GameServer(port);
         game.start();
     }
 
 
     void joinGame(String ip, int port ){
+        playerList.add(new Player());
         GameClient client = new GameClient(ip,port);
         client.start();
     }
 
-    public void getGameState(){
-        gs.getScore(new Player());
-        gs.getBoardState();
-    }
 
     void disconnect(){
 
