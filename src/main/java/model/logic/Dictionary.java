@@ -18,80 +18,68 @@ public class Dictionary {
     private String[] fileWords;
     private final String[] files;
 
-    public Dictionary(String... args)  {
+    public Dictionary(String... args) {
 
-       files = args;
-        wordsExist = new CacheManager(WORDS_EXIST_SIZE,new LRU());
+        files = args;
+        wordsExist = new CacheManager(WORDS_EXIST_SIZE, new LRU());
         wordsDONTExist = new CacheManager(WORDS_DONT_EXIST_SIZE, new LFU());
-        bf = new BloomFilter(BF_SIZE,HASH_FUNC1,HASH_FUNC2);
+        bf = new BloomFilter(BF_SIZE, HASH_FUNC1, HASH_FUNC2);
 
 
-        for(String file: files)
-        {
+        for (String file : files) {
             fileWords = getWordsFromFile(file);
 
-            for(String words:fileWords)
+            for (String words : fileWords)
                 bf.add(words);
         }
     }
 
-    public String[] getWordsFromFile(String file)
-    {
+    public String[] getWordsFromFile(String file) {
 
         StringBuilder builder = new StringBuilder();
         String[] newWords;
 
-            try (BufferedReader buffer = new BufferedReader(
-                    new FileReader(file))) {
+        try (BufferedReader buffer = new BufferedReader(
+                new FileReader(file))) {
 
-                String str;
+            String str;
 
-                // holding true upto that the while loop runs
-                while ((str = buffer.readLine()) != null)
-                    builder.append(str).append("\n");
+            // holding true upto that the while loop runs
+            while ((str = buffer.readLine()) != null)
+                builder.append(str).append("\n");
 
-            }
-
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-             newWords = builder.toString().split("\\W");
-
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        newWords = builder.toString().split("\\W");
 
 
         return newWords;
     }
 
-    public boolean query(String word)
-    {
-        if(wordsExist.query(word))
+    public boolean query(String word) {
+        if (wordsExist.query(word))
             return true;
 
-         if(wordsDONTExist.query(word))
+        if (wordsDONTExist.query(word))
             return false;
 
-         if(bf.contains(word))
-        {
+        if (bf.contains(word)) {
             wordsExist.add(word);
             return true;
-        }
-        else {
+        } else {
             wordsDONTExist.add(word);
-            return  false;
+            return false;
         }
 
     }
 
-    public boolean challenge(String word)
-    {
+    public boolean challenge(String word) {
         boolean flag = false;
-        try
-        {
+        try {
             flag = IOSearcher.search(word, files);
-        }
-        catch(Exception e)
-        {
-                e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return flag;

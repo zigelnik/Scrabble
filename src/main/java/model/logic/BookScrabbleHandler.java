@@ -5,7 +5,6 @@ import java.util.Scanner;
 
 
 public class BookScrabbleHandler implements  ClientHandler{
-    //BufferedReader in;
     Scanner in;
     PrintWriter out;
     DictionaryManager dm;
@@ -15,7 +14,6 @@ public class BookScrabbleHandler implements  ClientHandler{
         try{
 
             dm = new DictionaryManager();
-            // in = new BufferedReader(new InputStreamReader(inFromclient));
             in = new Scanner(inFromclient);
             out = new PrintWriter(outToClient,true);
 
@@ -24,10 +22,7 @@ public class BookScrabbleHandler implements  ClientHandler{
             String byMethod;
 
             line = in.nextLine();
-//            System.out.println(line);
             byMethod = String.valueOf(line.charAt(0)) + line.charAt(1);
-//            System.out.println(byMethod);
-
             args = line.substring(2).split(",",0);
 
             if (byMethod.equals("C,"))

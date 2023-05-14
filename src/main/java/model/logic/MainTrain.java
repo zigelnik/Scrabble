@@ -9,6 +9,8 @@ import java.net.Socket;
 import java.util.Random;
 import java.util.Scanner;
 
+
+
 public class MainTrain {
 
 	public static class ClientHandler1 implements ClientHandler {
@@ -20,9 +22,7 @@ public class MainTrain {
 			out = new PrintWriter(outToClient);
 			in = new Scanner(inFromclient);
 			String text = in.next();
-			out.println(text);
-			System.out.println(text);
-
+			out.println(new StringBuilder(text).reverse().toString());
 			out.flush();
 		}
 
@@ -161,7 +161,7 @@ public class MainTrain {
 	public static void main(String[] args) {
 		if (testServer()) {
 			//testDM();
-		//	testBSCH();
+			//testBSCH();
 		}
 		System.out.println("done");
 	}

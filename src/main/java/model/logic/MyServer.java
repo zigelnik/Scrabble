@@ -51,17 +51,6 @@ public class MyServer {
                 try {
 
                     ch.handleClient(aClient.getInputStream(), aClient.getOutputStream());
-//                    String line = in.readLine();
-//                    if(line.equals("hello server"))
-//                    {
-//                        out.println("hi clientush");
-//                        System.out.println("hahaha");
-//                    }
-//                    else{
-//                        out.println("mi ata?");
-//                        System.out.println("hahaha");
-//
-//                    }
                     ch.close();
                     aClient.getInputStream().close();
                     aClient.getOutputStream().close();

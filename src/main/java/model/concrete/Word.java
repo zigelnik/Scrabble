@@ -5,9 +5,10 @@ import java.util.Arrays;
 
 
 public class Word {
-    private Tile[] tiles;
-    private int row, col;
-    private boolean vertical;
+    private final Tile[] tiles;
+    private final int row;
+    private final int col;
+    private final boolean vertical;
 
     @Override
     public boolean equals(Object o) {

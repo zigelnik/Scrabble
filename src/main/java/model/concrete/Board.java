@@ -18,6 +18,25 @@ public class Board {
 
     private Board() {
 
+        /*                            Board should look like this:
+
+            {{"3W", " ", " ", "2L", " ", " ", " ", "3W", " ", " ", " ", "2L", " ", " ", "3W"},
+            {" ", "2W ", " ", " ", " ", "3L", " ", " ", " ", "3L", " ", " ", " ", "2W", " "},
+            {" ", " ", "2W", " ", " ", " ", "2L", " ", "2L", " ", " ", " ", "2W", " ", " "},
+            {"2L", " ", " ", "2W", " ", " ", " ", "2L", " ", " ", " ", "2W", " ", " ", "2L"},
+            {" ", " ", " ", "2L", "2W", " ", " ", " ", " ", " ", "2W", " ", " ", " ", "3W"},
+            {" ", "3L", " ", " ", " ", "3L", " ", " ", " ", "3L", " ", " ", " ", "3L", " "},
+            {" ", " ", "2L", " ", " ", " ", "2L", " ", "2L", " ", " ", " ", "2L", " ", " "},
+            {"3W", " ", " ", "2L", " ", " ", " ", "*", " ", " ", " ", "2L", " ", " ", "3W"},
+            {" ", " ", "2L", " ", " ", " ", "2L", " ", "2L", " ", " ", " ", "2L", " ", " "},
+            {" ", "3L", " ", " ", " ", "3L", " ", " ", " ", "3L", " ", " ", " ", "3L", " "},
+            {" ", " ", " ", " ", "2W", " ", " ", " ", " ", " ", "2W", " ", " ", " ", " "},
+            {"2L", " ", " ", "2W", " ", " ", " ", "2L", " ", " ", " ", "2W", " ", " ", "2L"},
+            {" ", " ", "2W", " ", " ", " ", "2L", " ", "2L", " ", " ", " ", "2W", " ", " "},
+            {" ", "2W", " ", " ", " ", "3L", " ", " ", " ", "3L", " ", " ", " ", "2W", " "},
+            {"3W", " ", " ", "2L", " ", " ", " ", "3W", " ", " ", " ", "2L", " ", " ","3W"},}
+        */
+
         boardMat[STAR][STAR] = STAR_SIGN;
 
         boardMat[0][0] = TRIPLE_WORD_SCR;
@@ -100,7 +119,7 @@ public class Board {
 
         for (int i = 0; i < board.boardMat.length; i++)
             for (int j = 0; j < board.boardMat.length; j++)
-                if (board.boardTiles[i][j] != null)//.get_letter()>= 'A' && board._BoardTiles[i][j].get_letter() <= 'Z')
+                if (board.boardTiles[i][j] != null)
                     curTiles[i][j] = board.boardTiles[i][j];
 
         return curTiles;
@@ -447,7 +466,7 @@ public class Board {
         return bonuses;
     }
 
-    // try placing a word by checking all the needed criterias, then returning the word's score
+    // try placing a word by checking all the needed criteria, then returning the word's score
     public int tryPlaceWord(Word w) {
 
         int  sumScore = 0;

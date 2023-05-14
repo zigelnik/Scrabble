@@ -40,10 +40,10 @@ public class Tile {
     {
         private static Bag bag=null;
         private int tilesCounter = 26;
-        private int currAmount[] =            {9,2,2,4,12,2,3,2,9,1,1,4,2,6,8,2,1,6,4,6,4,2,2,1,2,1};
-        private final int maxAmount[] =              {9,2,2,4,12,2,3,2,9,1,1,4,2,6,8,2,1,6,4,6,4,2,2,1,2,1};
-        private final int scoreArr[] =               {1,3,3,2,1,4,2,4,1,8,5,1,3,1,1,3,10,1,1,1,1,4,4,8,4,10};
-        private  Tile tiles[] = new Tile[26];
+        private final int[] currAmount =            {9,2,2,4,12,2,3,2,9,1,1,4,2,6,8,2,1,6,4,6,4,2,2,1,2,1};
+        private final int[] maxAmount =              {9,2,2,4,12,2,3,2,9,1,1,4,2,6,8,2,1,6,4,6,4,2,2,1,2,1};
+        private final int[] scoreArr =               {1,3,3,2,1,4,2,4,1,8,5,1,3,1,1,3,10,1,1,1,1,4,4,8,4,10};
+        private final Tile[] tiles = new Tile[26];
         private Bag() {
             int i;
             char x;
@@ -52,7 +52,7 @@ public class Tile {
             }
         }
 
-        // get random tile with srand library, if not found, check if the next letter is availble
+        // get a random tile, if not found check availability of the next letter
         public Tile getRand()
         {
             Random rand = new Random();
@@ -99,8 +99,8 @@ public class Tile {
         public void put(Tile tile)
         {
             int tileIndex = tile.getLetter()-'A';
-            if(currAmount[tileIndex] >= maxAmount[tileIndex])
-                return;
+            if(currAmount[tileIndex] >= maxAmount[tileIndex]) {
+            }
             else currAmount[tileIndex]++;
         }
 

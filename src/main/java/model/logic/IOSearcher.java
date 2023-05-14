@@ -9,7 +9,7 @@ public class IOSearcher {
     private static StringBuilder builder;
     private static String str;
 
-    public static boolean search(String word, String ...args) {
+    public static boolean search(String word, String... args) {
 
 
         for (String arg : args) {
