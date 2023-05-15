@@ -5,43 +5,88 @@ import model.concrete.Tile;
 import model.concrete.Word;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Player {
     private static int playersCounter = 1; // NOTE: with always the playersCounter is +1 from real playersNum
     String playerName;
     int id;
-    Tile[] pack;
+    List<Tile> pack;
     int packSize; // physical size of tiles
     int sumScore;
 
     Player(){
         // players id is from 1-4
         this.id = playersCounter++;
-        this.pack = new Tile[7];
+        this.pack = new ArrayList<>();
         this.packSize = 7;
         this.sumScore = 0;
     }
 
-    void makeMove(Word w){
-        //corner cases: what if return 0? something went wrong with his word?
-        // what if the tiles are over?
-        // how the dictionary is presented? with file.txt?
-        sumScore += Board.getBoard().tryPlaceWord(w);
+    int makeMove(Word w){
+        int tmpMoveScore = 0;
+        // if tiles are over
+        if(packSize == 0){
+            System.out.println("Tiles are over");
+            return tmpMoveScore;
+        }
+        // if the player wants to place a word with no enough tiles
+        else if(w.getTiles().length > packSize){
+            System.out.println("Tiles are over");
+            return tmpMoveScore;
+        }
+        // if the player dont have all the tiles for word
+        else if(!isContainTilesForWord(w)){
+            System.out.println("Not all word tiles are existed");
+            return tmpMoveScore;
+        }
+        tmpMoveScore += Board.getBoard().tryPlaceWord(w);
+        // after all checks,decline the words size from pack and init pack back to 7.
+        if(tmpMoveScore != 0){
+            packSize -= w.getTiles().length;
+            initPackAfterMove(w);
+        }
+        sumScore += tmpMoveScore;
+        return tmpMoveScore;
+    }
+
+    private boolean isContainTilesForWord(Word w) {
+        for(Tile t: pack){
+            if(!(Arrays.stream(w.getTiles()).toList().contains(t))){
+                return false;
+            }
+        }
+        return true;
     }
 
 
     //Functions for managing players racks
-    public void initPack(){
-        for(int i =0; i < pack.length; i++){
-            pack[i] = Tile.Bag.getBag().getRand();
+
+    // func for re-packing the plater hand with tiles after placing word on board
+    public void initPackAfterMove(Word w) {
+        List<Tile>tmpWordList = Arrays.stream(w.getTiles()).toList();
+        pack = pack.stream().filter((t)->!tmpWordList.contains(t)).collect(Collectors.toList());
+        while(!packIsFull()){
+            pack.add(Tile.Bag.getBag().getRand());
+            packSize++;
         }
     }
 
+    // first initialization of players pack.
+    public void initPack(){
+        for(int i =0; i < packSize; i++){
+            pack.add(Tile.Bag.getBag().getRand());
+        }
+    }
+
+    //TODO:we still need tileInd?
+    //get specific tile by index
     public Tile getAndRemoveFromPack(int tileInd)
     {
-        Tile temp = pack[tileInd];
-        pack[tileInd] = null;
+        Tile temp = pack.get(tileInd);
+        pack.set(tileInd,null);
         return temp;
     }
 
@@ -49,11 +94,11 @@ public class Player {
     //adds tile to next free index in rack array then , returns -1 if not found.
     public int addTileToPack(Tile tile)
     {
-        for(int i = 0; i < pack.length; i++)
+        for(int i = 0; i < pack.size(); i++)
         {
-            if(pack[i] == null)
+            if(pack.get(i) == null)
             {
-                pack[i] = Tile.Bag.getBag().getRand();
+                pack.set(i,Tile.Bag.getBag().getRand());
                 packSize++;
                 return i;
             }
@@ -72,7 +117,7 @@ public class Player {
         return packSize;
     }
 
-    public Tile[] getPack()
+    public List<Tile> getPack()
     {
         return this.pack;
     }

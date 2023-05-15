@@ -27,7 +27,23 @@ public class ScrabbleFacade {
     }
 
 
+    void initGame(){
+        playerList.stream().forEach((p)->p.initPack());
+        //TODO: running the dictionary server
+    }
+
+    // there is dictionaryLegal method from patam1 , return always True.
+    boolean tmpDictionaryLeagal(){
+        //TODO: with given word we will open new thread to dictionaryServer
+        //TODO: check with dm if the word is legal , return true or false
+        //TODO: closing the tread, this method will run each time a player want to make move
+        return true;
+    }
+
     void disconnect(){
+        //TODO:prinying to view of player is disconnected
+        //TODO: make sure the all the servers and threads are closed
+
 
     }
 

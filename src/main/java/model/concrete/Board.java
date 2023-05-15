@@ -219,27 +219,39 @@ public class Board {
         return false;
     }
 
-    // check if the word is legal using different situational methods
+// check if the word is legal using different situational methods
     public boolean boardLegal(Word w) {
 
         // check if the word is in the dictionary
         if (!dictionaryLegal(w))
             return false;
 
-        if (!WordInBoardsRange(w))
+        if (!WordInBoardsRange(w)) {
+            System.out.println("Invalid move!! , word not under board limits");
             return false;
+        }
 
-        if (firstWord == false)
+        if (firstWord == false){
+            System.out.println("Invalid move!! , first word has to cross the star");
             return FirstWordOnStar(w);
+        }
 
-        if (WordsAlign(w))
+        if (WordsAlign(w)){
             return true;
+        }
+        else{
+            System.out.println("Invalid move!! , you cant override tiles");
+        }
 
-        if (checkAroundWord(w))
+
+        if (checkAroundWord(w)){
             return true;
+        }
+        else{
+            System.out.println("Invalid move!! , new word must to be close to exist one");
+        }
 
-        return false;
-    }
+        return false;}
 
     // check if there are tiles above or below the word, if so try to locate a new created word
     public Word getWordUpToDown(int row, int col, Word w, int t) {
