@@ -17,7 +17,11 @@ public class Player {
     int packSize; // physical size of tiles
     int sumScore;
 
+<<<<<<< Updated upstream
     Player(){
+=======
+    public Player(String name){
+>>>>>>> Stashed changes
         // players id is from 1-4
         this.id = playersCounter++;
         this.pack = new ArrayList<>();
@@ -34,7 +38,7 @@ public class Player {
         }
         // if the player wants to place a word with no enough tiles
         else if(w.getTiles().length > packSize){
-            System.out.println("Tiles are over");
+            System.out.println("Not enough tiles");
             return tmpMoveScore;
         }
         // if the player dont have all the tiles for word
@@ -64,7 +68,7 @@ public class Player {
 
     //Functions for managing players racks
 
-    // func for re-packing the plater hand with tiles after placing word on board
+    // func for re-packing the player hand with tiles after placing word on board
     public void initPackAfterMove(Word w) {
         List<Tile>tmpWordList = Arrays.stream(w.getTiles()).toList();
         pack = pack.stream().filter((t)->!tmpWordList.contains(t)).collect(Collectors.toList());
@@ -91,20 +95,21 @@ public class Player {
     }
 
 
+    //TODO: we already have method like this, ask zigel/Or
     //adds tile to next free index in rack array then , returns -1 if not found.
-    public int addTileToPack(Tile tile)
-    {
-        for(int i = 0; i < pack.size(); i++)
-        {
-            if(pack.get(i) == null)
-            {
-                pack.set(i,Tile.Bag.getBag().getRand());
-                packSize++;
-                return i;
-            }
-        }
-        return -1;
-    }
+//    public int addTileToPack(Tile tile)
+//    {
+//        for(int i = 0; i < pack.size(); i++)
+//        {
+//            if(pack.get(i) == null)
+//            {
+//                pack.set(i,Tile.Bag.getBag().getRand());
+//                packSize++;
+//                return i;
+//            }
+//        }
+//        return -1;
+//    }
 
     //Getters
     public boolean packIsFull()
@@ -122,6 +127,8 @@ public class Player {
         return this.pack;
     }
 
-
+    public int getId() {
+        return id;
+    }
 
 }
