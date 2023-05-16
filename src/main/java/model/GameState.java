@@ -3,6 +3,7 @@ package model;
 import model.concrete.Board;
 import model.concrete.Tile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameState {
@@ -12,10 +13,10 @@ public class GameState {
     Board board;
 
     //CTOR
-    public GameState(List<Player> playersList) {
+    public GameState() {
         this.board = Board.getBoard();
         this.gameCash = Tile.Bag.getBag();
-        this.playersList = playersList;
+        this.playersList = new ArrayList<>();
     }
 
     //Getters
@@ -32,14 +33,17 @@ public class GameState {
     }
 
 
-    // Funcctions
+    // Functions
     Player playerTurn(Player tmpTurn){
         // return the player that his id is next to the current player's id
         curPlayerInd = (curPlayerInd + 1) % playersList.size();
         return playersList.get(curPlayerInd);
     }
 
-
+    public void addPlayer(String name)
+    {
+        playersList.add(new Player(name));
+    }
     Player isGameOver(){
         int max = 0;
         Player tmpPlayer = null;
@@ -53,6 +57,11 @@ public class GameState {
             return tmpPlayer;
         }
         return null;
+    }
+
+    public void initGame(){
+//        playersList.stream().forEach((p)->p.initPack());
+        //TODO: running the dictionary server
     }
 
 }

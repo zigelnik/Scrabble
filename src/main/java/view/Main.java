@@ -13,9 +13,9 @@ public class Main extends Application {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("hello-view.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 200, 200);
-            Model m = new Model("properties.txt");
-            WindowController wc = fxmlLoader.getController();
-            ViewModel vm = new ViewModel(m);
+            //Model m = new Model("properties.txt");
+            //WindowController wc = fxmlLoader.getController();
+           // ViewModel vm = new ViewModel(m);
 
 
             stage.setTitle("hello");

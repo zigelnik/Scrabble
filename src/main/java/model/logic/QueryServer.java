@@ -9,7 +9,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 
-public class MyServer {
+public class QueryServer {
 
     private int port;
     private ClientHandler ch;
@@ -18,7 +18,7 @@ public class MyServer {
     private PrintWriter out;
     private BufferedReader in;
 
-    public MyServer(int port, ClientHandler ch) {
+    public QueryServer(int port, ClientHandler ch) {
         this.port = port;
         this.ch = ch;
 
