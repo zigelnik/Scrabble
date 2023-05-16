@@ -17,11 +17,9 @@ public class Player {
     int packSize; // physical size of tiles
     int sumScore;
 
-<<<<<<< Updated upstream
-    Player(){
-=======
+
     public Player(String name){
->>>>>>> Stashed changes
+
         // players id is from 1-4
         this.id = playersCounter++;
         this.pack = new ArrayList<>();
@@ -95,21 +93,6 @@ public class Player {
     }
 
 
-    //TODO: we already have method like this, ask zigel/Or
-    //adds tile to next free index in rack array then , returns -1 if not found.
-//    public int addTileToPack(Tile tile)
-//    {
-//        for(int i = 0; i < pack.size(); i++)
-//        {
-//            if(pack.get(i) == null)
-//            {
-//                pack.set(i,Tile.Bag.getBag().getRand());
-//                packSize++;
-//                return i;
-//            }
-//        }
-//        return -1;
-//    }
 
     //Getters
     public boolean packIsFull()

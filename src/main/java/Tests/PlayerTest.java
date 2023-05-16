@@ -1,5 +1,6 @@
 package Tests;
 
+
 import model.Model;
 import model.Player;
 import model.ScrabbleFacade;
