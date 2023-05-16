@@ -28,7 +28,7 @@ public class ScrabbleFacade {
 
     }
     void disconnect(){
-        //TODO:prinying to view of player is disconnected
+        //TODO: printing to view of player is disconnected
         //TODO: make sure the all the servers and threads are closed
 
 

@@ -7,6 +7,7 @@ import java.util.*;
 public class GameClient {
     String ip;
     int port;
+    String name;
 
     public GameClient(String ip, int port) {
         this.ip = ip;
@@ -32,6 +33,10 @@ public class GameClient {
             // object of scanner class
             Scanner sc = new Scanner(System.in);
             String line = null;
+            System.out.println("Please enter your name: ");
+            name = sc.nextLine();
+            System.out.println("Server replied: hi "
+                    + name);
 
             while (!"exit".equalsIgnoreCase(line)) {
 
@@ -54,4 +59,10 @@ public class GameClient {
             e.printStackTrace();
         }
     }
+
+    public String getName()
+    {
+        return name;
+    }
+
 }

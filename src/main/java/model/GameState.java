@@ -6,11 +6,12 @@ import model.concrete.Tile;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameState {
+public  class GameState {
     int curPlayerInd = 0;
     Tile.Bag gameCash;
     List<Player> playersList;
     Board board;
+    private static GameState gameStateInstance = null;
 
     //CTOR
     public GameState() {
@@ -59,9 +60,13 @@ public class GameState {
         return null;
     }
 
-    public void initGame(){
-//        playersList.stream().forEach((p)->p.initPack());
-        //TODO: running the dictionary server
+
+
+    public static GameState getGameState() {
+        if (gameStateInstance == null)
+            gameStateInstance = new GameState();
+
+        return gameStateInstance;
     }
 
 }
