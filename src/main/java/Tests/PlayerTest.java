@@ -56,7 +56,6 @@ public class PlayerTest {
             }
         }
 
-
         for (Player p: pList){
             p.initPack();
             Word w1 = new Word(get("HORN"), 7, 5, false);
@@ -68,7 +67,7 @@ public class PlayerTest {
         }
 
 
-        //TODO: testing make move of: word is null,packsize is 0,not enough tiles, tiles of word is contain
+        //TODO: testing make move of: packsize is 0,not enough tiles, tiles of word is contain
         //TODO: after placing tiles, is packsize 7?
 
     }
