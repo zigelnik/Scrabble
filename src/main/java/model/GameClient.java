@@ -52,6 +52,7 @@ public class GameClient {
                         + in.readLine());
             }
 
+
             // closing the scanner object
             sc.close();
         }

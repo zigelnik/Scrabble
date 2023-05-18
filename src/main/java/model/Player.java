@@ -17,9 +17,8 @@ public class Player {
     int packSize; // physical size of tiles
     int sumScore;
 
-    Player(String name){
+    public Player(){
         // players id is from 1-4
-        this.playerName = name;
         this.id = playersCounter++;
         this.pack = new ArrayList<>();
         this.packSize = 7;

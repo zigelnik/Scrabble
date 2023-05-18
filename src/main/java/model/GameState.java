@@ -43,7 +43,7 @@ public  class GameState {
 
     public void addPlayer(String name)
     {
-        playersList.add(new Player(name));
+       // playersList.add(new Player(name));
     }
     Player isGameOver(){
         int max = 0;
@@ -60,8 +60,10 @@ public  class GameState {
         return null;
     }
 
+        public void initPack()
+        {       playersList.stream().forEach((p)->p.initPack());
 
-
+        }
     public static GameState getGameState() {
         if (gameStateInstance == null)
             gameStateInstance = new GameState();
