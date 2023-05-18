@@ -1,6 +1,7 @@
 package model;
 
 import model.logic.BookScrabbleHandler;
+import model.logic.DictionaryManager;
 import model.logic.MyServer;
 
 import java.io.IOException;
@@ -18,7 +19,7 @@ public class HostPlayer extends  Player{
     }
 
     // there is dictionaryLegal method from patam1 , return always True.
-    public boolean tmpDictionaryLegal(String query, boolean result){
+    public boolean tmpDictionaryLegal(String query ){
         //TODO: with given word we will open new thread to dictionaryServer
         //TODO: check with dm if the word is legal , return true or false
         //TODO: closing the tread, this method will run each time a player want to make move
@@ -28,14 +29,17 @@ public class HostPlayer extends  Player{
         // [*] put tests here like eli did in mainTrain -> testBSCH
 
         try {
-
+            DictionaryManager dm = DictionaryManager.get();
+            dm.query("TOKEN");
+            
             Socket server = new Socket("localhost", port);
             PrintWriter out = new PrintWriter(server.getOutputStream());
             Scanner in = new Scanner(server.getInputStream());
             out.println(query);
             out.flush();
             String res = in.next();
-            if ((result && !res.equals("true")) || (!result && !res.equals("false")))
+            System.out.println(res);
+            if (( !res.equals("true")))
                   System.out.println("problem getting the right answer from the server (-10)");
             in.close();
             out.close();

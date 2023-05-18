@@ -18,7 +18,8 @@ public class Model extends Observable implements ScrabbleFacade {
 
     public void initGame(){
         HostPlayer hp = new HostPlayer();
-        System.out.println(hp.tmpDictionaryLegal("Q,mobydick.txt,mobydick.txt,"+"Stewart",true));
+
+        System.out.println(hp.tmpDictionaryLegal("Q,mobydick.txt,"+"TOKEN"));
     }
 
 
@@ -44,6 +45,7 @@ public class Model extends Observable implements ScrabbleFacade {
 
     @Override
     public void disconnect() {
+        hostServer.close();
         //TODO: printing to view of player is disconnected
         //TODO: make sure the all the servers and threads are closed
     }
