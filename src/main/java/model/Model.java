@@ -20,22 +20,27 @@ public class Model extends Observable implements ScrabbleFacade {
         playerList = gameState.getPlayersList();
         while(!gameState.isGameOver)
         {
-            for( Player p: playerList)
+            if (getHost() != null)
             {
-                if (p.getClass().equals(HostPlayer.class))
-                {
-                    ((HostPlayer) p).tmpDictionaryLegal("");
-                }
+                ((HostPlayer) getHost()).tmpDictionaryLegal("");
             }
+
         }
 
         HostPlayer hp = new HostPlayer();
 
-
         System.out.println(hp.tmpDictionaryLegal("Q,mobydick.txt,"+"TOKEN"));
     }
 
-
+    //Getting the host from players list, if null: Host not found
+    public Player getHost(){
+        for( Player p: playerList) {
+            if (p.getClass().equals(HostPlayer.class)) {
+                return p;
+            }
+        }
+        return null;
+    }
 
     @Override
     public void hostGame(int port) {
