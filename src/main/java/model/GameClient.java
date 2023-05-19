@@ -3,6 +3,8 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+//TODO: why we need GameClient? why just not consider GuestPlayer as GameClinet and just open the sovket overthere?
+
 // Client class
 public class GameClient {
     String ip;

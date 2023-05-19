@@ -16,6 +16,8 @@ public class Model extends Observable implements ScrabbleFacade {
         gameState = GameState.getGameState();
     }
 
+
+    //TODO: where the player setting again his query after it placed?
     public void initGame(){
         playerList = gameState.getPlayersList();
         while(!gameState.isGameOver)

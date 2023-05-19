@@ -35,6 +35,8 @@ public  class GameState {
         return board;
     }
 
+    public boolean getIsGameOver(){return isGameOver;}
+
 
     // Functions
     Player playerTurn(Player tmpTurn){

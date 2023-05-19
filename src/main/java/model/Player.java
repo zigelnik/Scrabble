@@ -92,26 +92,11 @@ public class Player {
 //    }
 
 
-    //adds tile to next free index in rack array then , returns -1 if not found.
-//    public int addTileToPack(Tile tile)
-//    {
-//        for(int i = 0; i < pack.size(); i++)
-//        {
-//            if(pack.get(i) == null)
-//            {
-//                pack.set(i,Tile.Bag.getBag().getRand());
-//                packSize++;
-//                return i;
-//            }
-//        }
-//        return -1;
-//    }
-
 
     //Getters
     public boolean packIsFull()
     {
-        return packSize == 7;
+        return pack.size() == 7;
     }
 
     public int getPackSize()

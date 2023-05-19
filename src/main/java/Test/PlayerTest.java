@@ -1,5 +1,6 @@
 package Test;
 
+import model.GameState;
 import model.Model;
 import model.Player;
 import model.concrete.Tile;
@@ -61,10 +62,9 @@ public class PlayerTest {
         if(p1.makeMove(w1) > 0){
             System.out.println("Problem with packSize at p1 hand (-10)");
         }
-
-
-        //TODO: testing make move of: packsize is 0,not enough tiles, tiles of word is contain
-        //TODO: after placing tiles, is packsize 7?
+        if(p1.getPackSize() != 7 && !GameState.getGameState().getIsGameOver()){
+            System.out.println("Problem with player re-packing while game not over (-10)");
+        }
 
     }
 }
