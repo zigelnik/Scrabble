@@ -10,7 +10,9 @@ public interface ScrabbleFacade {
     void joinGame(String ip, int port );
 
 
-    void addPlayer(String name);
+
+    void addPlayer(Player player);
+
     void disconnect();
 
 

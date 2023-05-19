@@ -1,23 +1,36 @@
 package model;
 
-import model.logic.BookScrabbleHandler;
 import model.logic.MyServer;
 
+import java.util.List;
 import java.util.Observable;
 
 public class Model extends Observable implements ScrabbleFacade {
 
     MyServer hostServer;
-    GameState gameState;
+    GameState gameState; // controls all the objects of the game, whenever something changes the game state updates.
     GameClient client;
-
+    List<Player> playerList;
 
     public Model() {
-        this.gameState = new GameState();
+        gameState = GameState.getGameState();
     }
 
     public void initGame(){
+        playerList = gameState.getPlayersList();
+        while(!gameState.isGameOver)
+        {
+            for( Player p: playerList)
+            {
+                if (p.getClass().equals(HostPlayer.class))
+                {
+                    ((HostPlayer) p).tmpDictionaryLegal("");
+                }
+            }
+        }
+
         HostPlayer hp = new HostPlayer();
+
 
         System.out.println(hp.tmpDictionaryLegal("Q,mobydick.txt,"+"TOKEN"));
     }
@@ -26,21 +39,23 @@ public class Model extends Observable implements ScrabbleFacade {
 
     @Override
     public void hostGame(int port) {
-        //model.gameState.addPlayer(new Player(?name?));
         hostServer= new MyServer(port, new GameClientHandler());
         hostServer.start();
+        addPlayer(new HostPlayer());
+
     }
 
     @Override
     public void joinGame(String ip, int port) {
-        // model.gameState.addPlayer(new Player());
-       client = new GameClient(ip,port);
+        client = new GameClient(ip,port);
         client.start();
+        addPlayer(new GuestPlayer());
+
     }
 
     @Override
-    public void addPlayer(String name) {
-        //TODO: where should we put this method of creating players.
+    public void addPlayer(Player player) {
+        gameState.addPlayer(new Player());
     }
 
     @Override

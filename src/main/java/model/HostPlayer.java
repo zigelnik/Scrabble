@@ -11,7 +11,9 @@ import java.util.Scanner;
 
 public class HostPlayer extends  Player{
 
-   public  MyServer queryServer;
+
+
+    public  MyServer queryServer;
     public int port = 9997;
 
     public HostPlayer() {
@@ -53,4 +55,6 @@ public class HostPlayer extends  Player{
 
         return true;
     }
+
+
 }

@@ -16,6 +16,7 @@ public class Player {
     List<Tile> pack;
     int packSize; // physical size of tiles
     int sumScore;
+    String query;
 
     public Player(){
         // players id is from 1-4
@@ -122,6 +123,13 @@ public class Player {
         return this.pack;
     }
 
-
+    public String getQuery()
+    {
+        return query;
+    }
+    public void setQuery(String q)
+    {
+        this.query = q;
+    }
 
 }
