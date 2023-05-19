@@ -26,7 +26,7 @@ public class Player {
         this.sumScore = 0;
     }
 
-    int makeMove(Word w){
+    public int makeMove(Word w){
         int tmpMoveScore = 0;
         // if tiles are over
         if(packSize == 0){
@@ -63,9 +63,9 @@ public class Player {
     }
 
 
-    //Functions for managing players racks
+    //Functions for managing players tiles pack
 
-    // func for re-packing the plater hand with tiles after placing word on board
+    // func for re-packing the player hand with tiles after placing word on board
     public void initPackAfterMove(Word w) {
         List<Tile>tmpWordList = Arrays.stream(w.getTiles()).toList();
         pack = pack.stream().filter((t)->!tmpWordList.contains(t)).collect(Collectors.toList());
@@ -82,30 +82,31 @@ public class Player {
         }
     }
 
-    //TODO:we still need tileInd?
-    //get specific tile by index
-    public Tile getAndRemoveFromPack(int tileInd)
-    {
-        Tile temp = pack.get(tileInd);
-        pack.set(tileInd,null);
-        return temp;
-    }
+
+//    //get specific tile by index
+//    public Tile getAndRemoveFromPack(int tileInd)
+//    {
+//        Tile temp = pack.get(tileInd);
+//        pack.set(tileInd,null);
+//        return temp;
+//    }
 
 
     //adds tile to next free index in rack array then , returns -1 if not found.
-    public int addTileToPack(Tile tile)
-    {
-        for(int i = 0; i < pack.size(); i++)
-        {
-            if(pack.get(i) == null)
-            {
-                pack.set(i,Tile.Bag.getBag().getRand());
-                packSize++;
-                return i;
-            }
-        }
-        return -1;
-    }
+//    public int addTileToPack(Tile tile)
+//    {
+//        for(int i = 0; i < pack.size(); i++)
+//        {
+//            if(pack.get(i) == null)
+//            {
+//                pack.set(i,Tile.Bag.getBag().getRand());
+//                packSize++;
+//                return i;
+//            }
+//        }
+//        return -1;
+//    }
+
 
     //Getters
     public boolean packIsFull()
@@ -127,6 +128,9 @@ public class Player {
     {
         return query;
     }
+
+    public int getId() {return id;}
+
     public void setQuery(String q)
     {
         this.query = q;
