@@ -9,7 +9,7 @@ public class Model extends Observable implements ScrabbleFacade {
 
     MyServer hostServer;
     GameState gameState; // controls all the objects of the game, whenever something changes the game state updates.
-    GameClient client;
+    GuestPlayer client;
     List<Player> playerList;
 
     public Model() {
@@ -18,13 +18,22 @@ public class Model extends Observable implements ScrabbleFacade {
 
 
     //TODO: where the player setting again his query after it placed?
+    // should be in the main?
     public void initGame(){
         playerList = gameState.getPlayersList();
+
+        //TODO randomize a player to start the game method -> after that, initPack with 7 tiles for each player
+
         while(!gameState.isGameOver)
         {
+//            Player p = new Player();
+//            int playerInd = p.id;
+            // TODO:method who runs on the turn each time
+
             if (getHost() != null)
             {
-                ((HostPlayer) getHost()).tmpDictionaryLegal("");
+              //  ((HostPlayer) getHost()).tmpDictionaryLegal(p.getQuery().toString());
+              //  p.makeMove(p.getQuery());
             }
 
         }
@@ -54,15 +63,17 @@ public class Model extends Observable implements ScrabbleFacade {
 
     @Override
     public void joinGame(String ip, int port) {
-        client = new GameClient(ip,port);
+        client = new GuestPlayer(ip,port);
         client.start();
-        addPlayer(new GuestPlayer());
+        addPlayer(client);
 
     }
 
+
+
     @Override
     public void addPlayer(Player player) {
-        gameState.addPlayer(new Player());
+        gameState.addPlayer(player);
     }
 
     @Override

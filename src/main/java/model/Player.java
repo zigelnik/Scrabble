@@ -10,17 +10,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Player {
-    private static int playersCounter = 1; // NOTE: with always the playersCounter is +1 from real playersNum
     String playerName;
     int id;
     List<Tile> pack;
     int packSize; // physical size of tiles
     int sumScore;
-    String query;
+    Word query;
 
     public Player(){
         // players id is from 1-4
-        this.id = playersCounter++;
+        this.id = 0;
         this.pack = new ArrayList<>();
         this.packSize = 7;
         this.sumScore = 0;
@@ -109,16 +108,18 @@ public class Player {
         return this.pack;
     }
 
-    public String getQuery()
+    public Word getQuery()
     {
         return query;
     }
 
     public int getId() {return id;}
 
-    public void setQuery(String q)
+    public void setQuery(Word q)
     {
         this.query = q;
     }
+
+    //todo: pick a tile from live board to create a tile[] so we can send it
 
 }

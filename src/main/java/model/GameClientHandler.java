@@ -14,14 +14,18 @@ public class GameClientHandler implements ClientHandler{
     private String clientName;
     PrintWriter out ;
     BufferedReader in ;
+    public static GameState gameInstance = GameState.getGameState();
 
     public GameClientHandler() {
-            handlerList.add(this);
     }
 
     @Override
     public void handleClient(InputStream inFromclient, OutputStream outToClient) {
+          handlerList.add(this);
+
         try {
+//     TODO:       ObjectOutput op =  new ObjectOutputStream(outToClient);
+//            op.writeObject(gameInstance);
 
             out = new PrintWriter(
                     outToClient, true);
@@ -39,6 +43,8 @@ public class GameClientHandler implements ClientHandler{
                 System.out.printf(
                         " Sent from client: " /*+ clientName */+ " " + line + "\n");
                 out.println(line);
+                out.flush();
+
             }
         }catch (IOException e)
         {

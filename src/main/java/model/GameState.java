@@ -50,7 +50,7 @@ public  class GameState {
        playersList.add(new Player());
     }
 
-    Player isGameOver(){
+    Player isWinner(){
         int max = 0;
         Player tmpPlayer = null;
         if(gameCash.getTilesCounter() == 0){

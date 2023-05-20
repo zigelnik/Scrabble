@@ -54,5 +54,8 @@ public class HostPlayer extends  Player{
         return true;
     }
 
+        public void loadBooks(String... args)
+        {
 
+        }
 }
