@@ -10,9 +10,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Player {
-    private static int playersCounter = 1; // NOTE: with always the playersCounter is +1 from real playersNum
     String playerName;
-    int id;
+    String id;
     List<Tile> pack;
     int packSize; // physical size of tiles
     int sumScore;
@@ -20,7 +19,7 @@ public class Player {
 
     public Player(){
         // players id is from 1-4
-        this.id = playersCounter++;
+        this.id = "0";
         this.pack = new ArrayList<>();
         this.packSize = 7;
         this.sumScore = 0;
@@ -77,10 +76,11 @@ public class Player {
 
     // first initialization of players pack.
     public void initPack(){
-        for(int i =0; i < packSize; i++){
+        for(int i =0; i < packSize-1; i++){
             pack.add(Tile.Bag.getBag().getRand());
         }
     }
+
 
 
 //    //get specific tile by index
@@ -114,7 +114,7 @@ public class Player {
         return query;
     }
 
-    public int getId() {return id;}
+    public String getId() {return id;}
 
     public void setQuery(String q)
     {

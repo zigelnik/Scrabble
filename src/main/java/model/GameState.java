@@ -78,3 +78,5 @@ public  class GameState {
     }
 
 }
+
+//TODO: checking first Tile for each player to set id for turns
