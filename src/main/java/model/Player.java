@@ -17,13 +17,7 @@ public class Player {
     int sumScore;
     Word query;
 
-<<<<<<< HEAD
-
-    public Player(String name){
-
-=======
     public Player(){
->>>>>>> Zigel
         // players id is from 1-4
         this.id = 0;
         this.pack = new ArrayList<>();
@@ -40,7 +34,7 @@ public class Player {
         }
         // if the player wants to place a word with no enough tiles
         else if(w.getTiles().length > packSize){
-            System.out.println("Not enough tiles");
+            System.out.println("Tiles are over");
             return tmpMoveScore;
         }
         // if the player dont have all the tiles for word
@@ -88,15 +82,6 @@ public class Player {
     }
 
 
-//    //get specific tile by index
-//    public Tile getAndRemoveFromPack(int tileInd)
-//    {
-//        Tile temp = pack.get(tileInd);
-//        pack.set(tileInd,null);
-//        return temp;
-//    }
-
-
 
     //Getters
     public boolean packIsFull()
@@ -114,11 +99,6 @@ public class Player {
         return this.pack;
     }
 
-<<<<<<< HEAD
-    public int getId() {
-        return id;
-    }
-=======
     public Word getQuery()
     {
         return query;
@@ -132,6 +112,5 @@ public class Player {
     }
 
     //todo: pick a tile from live board to create a tile[] so we can send it
->>>>>>> Zigel
 
 }
