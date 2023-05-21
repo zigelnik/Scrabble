@@ -3,19 +3,23 @@ package model;
 import model.concrete.Board;
 import model.concrete.Tile;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class GameState {
+public  class GameState {
     int curPlayerInd = 0;
     Tile.Bag gameCash;
     List<Player> playersList;
     Board board;
+    boolean isGameOver;
+    private static GameState gameStateInstance = null;
 
     //CTOR
-    public GameState(List<Player> playersList) {
+    private GameState() {
         this.board = Board.getBoard();
         this.gameCash = Tile.Bag.getBag();
-        this.playersList = playersList;
+        this.playersList = new ArrayList<>();
+        this.isGameOver = false;
     }
 
     //Getters
@@ -31,16 +35,22 @@ public class GameState {
         return board;
     }
 
+    public boolean getIsGameOver(){return isGameOver;}
 
-    // Funcctions
+
+    // Functions
     Player playerTurn(Player tmpTurn){
         // return the player that his id is next to the current player's id
         curPlayerInd = (curPlayerInd + 1) % playersList.size();
         return playersList.get(curPlayerInd);
     }
 
+    public void addPlayer(Player player)
+    {
+       playersList.add(new Player());
+    }
 
-    Player isGameOver(){
+    Player isWinner(){
         int max = 0;
         Player tmpPlayer = null;
         if(gameCash.getTilesCounter() == 0){
@@ -50,9 +60,21 @@ public class GameState {
                     tmpPlayer =  p;
                 }
             }
+            isGameOver = true;
             return tmpPlayer;
         }
         return null;
+    }
+
+        public void initPack()
+        {       playersList.stream().forEach((p)->p.initPack());
+
+        }
+    public static GameState getGameState() {
+        if (gameStateInstance == null)
+            gameStateInstance = new GameState();
+
+        return gameStateInstance;
     }
 
 }

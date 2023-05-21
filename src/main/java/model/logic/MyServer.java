@@ -9,7 +9,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 
-public class MyServer {
+public class MyServer extends Thread{
 
     private int port;
     private ClientHandler ch;
@@ -17,6 +17,7 @@ public class MyServer {
     private ServerSocket server;
     private PrintWriter out;
     private BufferedReader in;
+    private static int numOfPlayers= 0;
 
     public MyServer(int port, ClientHandler ch) {
         this.port = port;
@@ -24,6 +25,11 @@ public class MyServer {
 
     }
 
+    @Override
+    public void run()
+    {
+        start();
+    }
     public void start()
     {
         stop = false;
@@ -45,6 +51,22 @@ public class MyServer {
 
             try {
                 Socket aClient = server.accept();
+                if(numOfPlayers < 3) {
+                    numOfPlayers++;
+                    String clientName = "Client #"+numOfPlayers;
+                    // socket object to receive incoming client
+                    // requests
+
+                    // Displaying that new client is connected
+                    // to server
+                    System.out.println("\nNew client connected from: "
+                            + aClient.getInetAddress()
+                            .getHostAddress()+" number of clients: "+numOfPlayers);
+                }
+                         else{
+                                 System.out.println("too much clients!");
+                                   aClient.close();
+                               }
                 out = new PrintWriter(aClient.getOutputStream(), true);
                 in = new BufferedReader(new InputStreamReader(aClient.getInputStream()));
 

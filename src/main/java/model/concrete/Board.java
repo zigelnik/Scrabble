@@ -125,9 +125,6 @@ public class Board {
         return curTiles;
     }
 
-    public boolean dictionaryLegal(Word w) {
-        return true;
-    }
 
     // check if the word can fit within the board's borders
     public boolean WordInBoardsRange(Word w) {
@@ -143,6 +140,7 @@ public class Board {
             return false;
         else if (w.isVertical() && row + wordSize > BOARD_SIZE - 1)
             return false;
+
 
         return true;
     }
@@ -222,9 +220,7 @@ public class Board {
 // check if the word is legal using different situational methods
     public boolean boardLegal(Word w) {
 
-        // check if the word is in the dictionary
-        if (!dictionaryLegal(w))
-            return false;
+
 
         if (!WordInBoardsRange(w)) {
             System.out.println("Invalid move!! , word not under board limits");
