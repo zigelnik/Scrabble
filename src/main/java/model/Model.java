@@ -20,6 +20,7 @@ public class Model extends Observable implements ScrabbleFacade {
     //TODO: where the player setting again his query after it placed?
     // should be in the main?
     public void initGame(){
+<<<<<<< HEAD
         playerList = gameState.getPlayersList();
 
         //TODO randomize a player to start the game method -> after that, initPack with 7 tiles for each player
@@ -36,6 +37,24 @@ public class Model extends Observable implements ScrabbleFacade {
               //  p.makeMove(p.getQuery());
             }
 
+=======
+        int ind = 0;
+        playerList = gameState.setTurns(); // players turns by their index in playerList
+        playerList.stream().forEach((p)->p.initPack());
+
+        while(!gameState.isGameOver)
+        {
+            //this is the player that his turn now
+            Player tmpPlayer = playerList.get(ind);
+            if (getHost() != null)
+            {
+                ((HostPlayer) getHost()).tmpDictionaryLegal(tmpPlayer.getQuery().toString());
+                tmpPlayer.makeMove(tmpPlayer.getQuery());
+            }
+
+            ind = (ind+1 % playerList.size());
+            Player winner = gameState.isWinner();
+>>>>>>> Tals-branch
         }
 
         HostPlayer hp = new HostPlayer();

@@ -100,6 +100,7 @@ public class Tile {
         {
             int tileIndex = tile.getLetter()-'A';
             if(currAmount[tileIndex] >= maxAmount[tileIndex]) {
+
             }
             else currAmount[tileIndex]++;
         }
