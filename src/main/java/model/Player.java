@@ -81,7 +81,6 @@ public class Player {
         }
     }
 
-<<<<<<< HEAD
 
 //    //get specific tile by index
 //    public Tile getAndRemoveFromPack(int tileInd)
@@ -93,10 +92,6 @@ public class Player {
 
 
 
-=======
-
-
->>>>>>> Tals-branch
     //Getters
     public boolean packIsFull()
     {

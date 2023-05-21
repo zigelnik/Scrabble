@@ -4,12 +4,7 @@ import model.concrete.Board;
 import model.concrete.Tile;
 
 import java.util.ArrayList;
-<<<<<<< HEAD
-=======
-import java.util.Comparator;
->>>>>>> Tals-branch
 import java.util.List;
-import java.util.stream.Collectors;
 
 public  class GameState {
     int curPlayerInd = 0;
@@ -44,28 +39,10 @@ public  class GameState {
 
 
     // Functions
-<<<<<<< HEAD
     Player playerTurn(Player tmpTurn){
         // return the player that his id is next to the current player's id
         curPlayerInd = (curPlayerInd + 1) % playersList.size();
         return playersList.get(curPlayerInd);
-=======
-
-    public List<Player> setTurns(){
-        //extracting randomly tile for each player, setting is id, returning to bag
-        for(Player p : playersList){
-            Tile tmpTile =  gameCash.getRand();
-            p.id = tmpTile.score;
-            gameCash.put(tmpTile);
-
-        }
-        // sorting the list from big id to small id with sorting & reversing the order
-        playersList = playersList.stream().sorted(Comparator.comparingInt(Player::getId).reversed())
-                .collect(Collectors.toList());
-
-        //first player at list is now the playing first randomly
-        return playersList;
->>>>>>> Tals-branch
     }
 
     public void addPlayer(Player player)
@@ -73,22 +50,12 @@ public  class GameState {
        playersList.add(new Player());
     }
 
-<<<<<<< HEAD
     Player isWinner(){
-=======
-    public void addPlayer(Player player)
-    {
-       playersList.add(new Player());
-    }
-
-    public Player isWinner(){
->>>>>>> Tals-branch
         int max = 0;
         Player tmpPlayer = null;
-        //Winner: when the tiles bag is empty and the winner finished his pack
         if(gameCash.getTilesCounter() == 0){
             for(Player p : playersList){
-                if(max < p.sumScore && p.packSize == 0){
+                if(max < p.sumScore){
                     max = p.sumScore;
                     tmpPlayer =  p;
                 }
@@ -99,13 +66,10 @@ public  class GameState {
         return null;
     }
 
-<<<<<<< HEAD
         public void initPack()
         {       playersList.stream().forEach((p)->p.initPack());
 
         }
-=======
->>>>>>> Tals-branch
     public static GameState getGameState() {
         if (gameStateInstance == null)
             gameStateInstance = new GameState();

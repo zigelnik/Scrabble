@@ -1,13 +1,7 @@
 package model;
 
-<<<<<<< HEAD
 import model.logic.MyServer;
 
-=======
-
-import model.logic.MyServer;
-
->>>>>>> Tals-branch
 public interface ScrabbleFacade {
 
 
@@ -22,8 +16,4 @@ public interface ScrabbleFacade {
     void disconnect();
 
 
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> Tals-branch
