@@ -17,6 +17,7 @@ public class Player {
     int sumScore;
     Word query;
 
+
     public Player(){
         this.id = 0;
         this.pack = new ArrayList<>();
@@ -41,7 +42,7 @@ public class Player {
             System.out.println("Not all word tiles are existed");
             return tmpMoveScore;
         }
-        tmpMoveScore += Board.getBoard().tryPlaceWord(w);
+        tmpMoveScore += GameState.getBoard().tryPlaceWord(w); // placing the word at the same board
         // after all checks,decline the words size from pack and init pack back to 7.
         if(tmpMoveScore != 0){
             packSize -= w.getTiles().length;
@@ -49,6 +50,12 @@ public class Player {
         }
         sumScore += tmpMoveScore;
         return tmpMoveScore;
+    }
+    
+    public void convertStrToWord(String strQuery){
+        //TODO: getting ass argument Tile[],row,col,vert
+        //TODO: splitting with rejex to variables and structures
+        //TODO: creating new Word with those dataFiellds and send to make Move
     }
 
     private boolean isContainTilesForWord(Word w) {
@@ -59,6 +66,8 @@ public class Player {
         }
         return true;
     }
+
+
 
 
     //Functions for managing players tiles pack
