@@ -10,39 +10,39 @@ import java.util.stream.Collectors;
 
 public  class GameState {
     int curPlayerInd = 0;
-    Tile.Bag gameCash;
-    List<Player> playersList;
-    Board board;
-    boolean isGameOver;
+    static Tile.Bag gameCash;
+    static List<Player> playersList;
+    static Board board;
+    static boolean isGameOver;
     private static GameState gameStateInstance = null;
 
     //CTOR
     private GameState() {
-        this.board = Board.getBoard();
-        this.gameCash = Tile.Bag.getBag();
-        this.playersList = new ArrayList<>();
-        this.isGameOver = false;
+        GameState.board = Board.getBoard();
+        GameState.gameCash = Tile.Bag.getBag();
+        GameState.playersList = new ArrayList<>();
+        GameState.isGameOver = false;
     }
 
     //Getters
-    public Tile.Bag getGameCash() {
+    public static Tile.Bag getGameCash() {
         return gameCash;
     }
 
-    public List<Player> getPlayersList() {
+    public static List<Player> getPlayersList() {
         return playersList;
     }
 
-    public Board getBoard() {
+    public static Board getBoard() {
         return board;
     }
 
-    public boolean getIsGameOver(){return isGameOver;}
+    public static boolean getIsGameOver(){return isGameOver;}
 
 
     // Functions
 
-    public List<Player> setTurns(){
+    public static List<Player> setTurns(){
         //extracting randomly tile for each player, setting is id, returning to bag
         for(Player p : playersList){
             Tile tmpTile =  gameCash.getRand();
@@ -59,12 +59,12 @@ public  class GameState {
     }
 
 
-    public void addPlayer(Player player)
+    public static void addPlayer(Player player)
     {
        playersList.add(new Player());
     }
 
-    public Player isWinner(){
+    public static Player isWinner(){
         int max = 0;
         Player tmpPlayer = null;
         //Winner: when the tiles bag is empty and the winner finished his pack

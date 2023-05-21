@@ -8,12 +8,11 @@ import java.util.Observable;
 public class Model extends Observable implements ScrabbleFacade {
 
     MyServer hostServer;
-    GameState gameState; // controls all the objects of the game, whenever something changes the game state updates.
     GuestPlayer client;
     List<Player> playerList;
 
     public Model() {
-        gameState = GameState.getGameState();
+
     }
 
 
@@ -21,10 +20,10 @@ public class Model extends Observable implements ScrabbleFacade {
     // should be in the main?
     public void initGame(){
         int ind = 0;
-        playerList = gameState.setTurns(); // players turns by their index in playerList
+        playerList = GameState.setTurns(); // players turns by their index in playerList
         playerList.stream().forEach((p)->p.initPack());
 
-        while(!gameState.isGameOver)
+        while(!GameState.isGameOver)
         {
             //this is the player that his turn now
             Player tmpPlayer = playerList.get(ind);
@@ -35,7 +34,7 @@ public class Model extends Observable implements ScrabbleFacade {
             }
 
             ind = (ind+1 % playerList.size());
-            Player winner = gameState.isWinner();
+            Player winner = GameState.isWinner();
         }
 
         HostPlayer hp = new HostPlayer();
@@ -73,7 +72,7 @@ public class Model extends Observable implements ScrabbleFacade {
 
     @Override
     public void addPlayer(Player player) {
-        gameState.addPlayer(player);
+        GameState.addPlayer(player);
     }
 
     @Override

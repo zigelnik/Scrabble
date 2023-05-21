@@ -18,7 +18,6 @@ public class Player {
     Word query;
 
     public Player(){
-        // players id is from 1-4
         this.id = 0;
         this.pack = new ArrayList<>();
         this.packSize = 7;
@@ -37,7 +36,7 @@ public class Player {
             System.out.println("Tiles are over");
             return tmpMoveScore;
         }
-        // if the player dont have all the tiles for word
+        // if the player don't have all the tiles for word
         else if(!isContainTilesForWord(w)){
             System.out.println("Not all word tiles are existed");
             return tmpMoveScore;
@@ -111,6 +110,6 @@ public class Player {
         this.query = q;
     }
 
-    //todo: pick a tile from live board to create a tile[] so we can send it
+
 
 }
