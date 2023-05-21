@@ -7,7 +7,7 @@ import java.util.Observable;
 
 public class Model extends Observable implements ScrabbleFacade {
 
-    MyServer hostServer;
+    GameServer hostServer;
     GameState gameState; // controls all the objects of the game, whenever something changes the game state updates.
     GuestPlayer client;
     List<Player> playerList;
@@ -55,7 +55,7 @@ public class Model extends Observable implements ScrabbleFacade {
 
     @Override
     public void hostGame(int port) {
-        hostServer= new MyServer(port, new GameClientHandler());
+        hostServer= new GameServer(port);
         hostServer.start();
         addPlayer(new HostPlayer());
 
@@ -78,7 +78,7 @@ public class Model extends Observable implements ScrabbleFacade {
 
     @Override
     public void disconnect() {
-        hostServer.close();
+        //hostServer.close();
         //TODO: printing to view of player is disconnected
         //TODO: make sure the all the servers and threads are closed
     }

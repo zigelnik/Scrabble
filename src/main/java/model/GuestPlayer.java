@@ -9,7 +9,7 @@ import java.util.*;
 public class GuestPlayer extends Player {
     String ip;
     int port;
-    String name;
+    Socket socket;
 
     public GuestPlayer(String ip, int port) {
         this.ip = ip;
@@ -17,55 +17,40 @@ public class GuestPlayer extends Player {
     }
 
     // driver code
-    public  void start()
-    {
-        // establish a connection by providing host and port
-        // number
-        try (Socket socket = new Socket(ip, port)) {
+    public  void start() {
+        try {
+            socket = new Socket(ip, port);
+            System.out.println("Connected to server.");
 
-            // writing to server
-            PrintWriter out = new PrintWriter(
-                    socket.getOutputStream(), true);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            BufferedReader serverReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
 
-            // reading from server
-            BufferedReader in
-                    = new BufferedReader(new InputStreamReader(
-                    socket.getInputStream()));
+            System.out.print("Enter your name: ");
+            String clientName = reader.readLine();
+            writer.println(clientName);
 
-            // object of scanner class
-            Scanner sc = new Scanner(System.in);
-            String line = null;
-            System.out.println("Please enter your name: ");
-            name = sc.nextLine();
-            System.out.println("Server replied: hi "
-                    + name);
+            Thread receiveThread = new Thread(() -> {
+                try {
+                    String message;
+                    while ((message = serverReader.readLine()) != null) {
+                        System.out.println(message);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            receiveThread.start();
 
-            while (!"exit".equalsIgnoreCase(line)) {
-
-                // reading from user
-                line = sc.nextLine();
-
-                // sending the user input to server
-                out.println(line);
-                out.flush();
-
-                // displaying server reply
-                System.out.println("Server replied "
-                        + in.readLine());
+            String message;
+            while ((message = reader.readLine()) != null) {
+                writer.println(message);
             }
 
-
-            // closing the scanner object
-            sc.close();
-        }
-        catch (IOException e) {
+            socket.close();
+        } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public String getName()
-    {
-        return name;
     }
 
 }
