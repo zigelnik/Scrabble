@@ -54,7 +54,7 @@ public  class GameState {
         playersList = playersList.stream().sorted(Comparator.comparingInt(Player::getId).reversed())
                 .collect(Collectors.toList());
 
-        //first player at list is now the playing first randomly
+        //first player at list is now playing first randomly
         return playersList;
     }
 

@@ -49,15 +49,12 @@ public class Player {
             initPackAfterMove(w);
         }
         sumScore += tmpMoveScore;
+        //if tmpMoveScore is 0 then one of the checks is failed
         return tmpMoveScore;
     }
-    
-    public void convertStrToWord(String strQuery){
-        //TODO: getting ass argument Tile[],row,col,vert
-        //TODO: splitting with rejex to variables and structures
-        //TODO: creating new Word with those dataFiellds and send to make Move
-    }
 
+
+    //checking if the word tiles ar in player pack
     private boolean isContainTilesForWord(Word w) {
         for(Tile t: pack){
             if(!(Arrays.stream(w.getTiles()).toList().contains(t))){
@@ -68,10 +65,6 @@ public class Player {
     }
 
 
-
-
-    //Functions for managing players tiles pack
-
     // func for re-packing the player hand with tiles after placing word on board
     public void initPackAfterMove(Word w) {
         List<Tile>tmpWordList = Arrays.stream(w.getTiles()).toList();
@@ -81,14 +74,37 @@ public class Player {
             packSize++;
         }
     }
-
     // first initialization of players pack.
+
     public void initPack(){
         for(int i =0; i < packSize; i++){
             pack.add(Tile.Bag.getBag().getRand());
         }
     }
 
+    public void convertStrToWord(String strQuery){
+        //EXAMPLE: "CAR,5,6,False"
+        String[] res = strQuery.split(",");
+        String word = res[0];
+        int row = Integer.parseInt(res[1]);
+        int col = Integer.parseInt(res[2]);
+        boolean vert = Boolean.parseBoolean(res[3]);
+
+        //after parsing the strings , creating new Word
+        Word tmpQuery = new Word(getTileArr(word), row, col, vert);
+        setQuery(tmpQuery);
+    }
+
+    // converting string to Tiles[] for creating new Word
+    public Tile[] getTileArr(String str) {
+        Tile[] tileArr =new Tile[str.length()];
+        int i=0;
+        for(char ch: str.toCharArray()) {
+            tileArr[i]= Tile.Bag.getBag().getTile(ch);
+            i++;
+        }
+        return tileArr;
+    }
 
 
     //Getters

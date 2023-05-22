@@ -33,7 +33,7 @@ public class Model extends Observable implements ScrabbleFacade {
                 tmpPlayer.makeMove(tmpPlayer.getQuery());
             }
 
-            ind = (ind+1 % playerList.size());
+            ind = ((ind+1) % playerList.size());
             Player winner = GameState.isWinner();
         }
 
@@ -67,7 +67,6 @@ public class Model extends Observable implements ScrabbleFacade {
         addPlayer(client);
 
     }
-
 
 
     @Override
