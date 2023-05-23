@@ -60,9 +60,9 @@ public class GuestPlayer extends Player {
     }
 
     // sending queries to host
-    public void sendQuery(String message)
+    public void sendQuery()
     {
-
+            String message;
         try {
             if ((message = reader.readLine()) != null) {
                 writer.println(message);
@@ -70,6 +70,6 @@ public class GuestPlayer extends Player {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
+        this.setWordQuery(message);
     }
 }

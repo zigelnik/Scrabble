@@ -20,7 +20,7 @@ public class Model extends Observable implements Facade {
         int currPlayerInd = 1;
         List<Player> playerList = GameState.setTurns(); // players turns by their index in playerList
         playerList.stream().forEach((p)->p.initHand());
-        hostPlayer.loadBooks();
+       // hostPlayer.loadBooks();
         while(!GameState.isGameOver)
         {
             for(Player player: GameState.playersList)
@@ -69,20 +69,20 @@ public class Model extends Observable implements Facade {
                 tmpPlayer.makeMove(tmpPlayer.getWordQuery());
             }
             * */
-
+        String msg=null;
         if(player.getClass().equals(GuestPlayer.class))
         {
-            ((GuestPlayer) player).sendQuery(player.getWordQuery().toString());
+            ((GuestPlayer) player).sendQuery();
             /* client interacting with bookscrabble handler */
-            String msg = GameClientHandler.getMessageQuery();
-            player.setWordQuery(hostPlayer.convertStrToWord(msg));
+             msg = GameClientHandler.getMessageQuery();
+
         }
 
             boolean validQuery;
-            validQuery = ((HostPlayer) getHost()).tmpDictionaryLegal(player.getWordQuery().toString());
+            validQuery = hostPlayer.tmpDictionaryLegal(msg);
             if(validQuery)
             {
-              score=  player.makeMove(player.getWordQuery());
+              score=  player.makeMove(hostPlayer.convertStrToWord(msg));
 
                 return score != 0;
             }

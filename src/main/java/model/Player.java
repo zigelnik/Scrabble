@@ -14,7 +14,7 @@ public class Player {
     List<Tile> playerHand;
     int handSize; // physical size of tiles
     int sumScore;
-    Word wordQuery;
+    String wordQuery;
 boolean isTurnOver;
 
     public Player(){
@@ -101,14 +101,14 @@ boolean isTurnOver;
         return this.playerHand;
     }
 
-    public Word getWordQuery()
+    public String getWordQuery()
     {
         return wordQuery;
     }
 
     public int getId() {return id;}
 
-    public void setWordQuery(Word q)
+    public void setWordQuery(String q)
     {
         this.wordQuery = q;
     }
