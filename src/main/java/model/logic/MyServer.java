@@ -9,7 +9,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 
-public class MyServer extends Thread{
+public class QueryServer extends Thread{
 
     private int port;
     private ClientHandler ch;
@@ -19,7 +19,7 @@ public class MyServer extends Thread{
     private BufferedReader in;
     private static int numOfPlayers= 0;
 
-    public MyServer(int port, ClientHandler ch) {
+    public QueryServer(int port, ClientHandler ch) {
         this.port = port;
         this.ch = ch;
 

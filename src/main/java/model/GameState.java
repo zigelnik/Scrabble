@@ -4,58 +4,79 @@ import model.concrete.Board;
 import model.concrete.Tile;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public  class GameState {
     int curPlayerInd = 0;
-    Tile.Bag gameCash;
-    List<Player> playersList;
-    Board board;
-    boolean isGameOver;
+    static Tile.Bag bag;
+    static List<Player> playersList;
+    static Board board;
+    static boolean isGameOver;
     private static GameState gameStateInstance = null;
 
     //CTOR
     private GameState() {
-        this.board = Board.getBoard();
-        this.gameCash = Tile.Bag.getBag();
-        this.playersList = new ArrayList<>();
-        this.isGameOver = false;
+        GameState.board = Board.getBoard();
+        GameState.bag = Tile.Bag.getBag();
+        GameState.playersList = new ArrayList<>();
+        GameState.isGameOver = false;
     }
 
     //Getters
-    public Tile.Bag getGameCash() {
-        return gameCash;
+    public static Tile.Bag getBag() {
+        return bag;
     }
 
-    public List<Player> getPlayersList() {
+    public static List<Player> getPlayersList() {
         return playersList;
     }
 
-    public Board getBoard() {
+    public static Board getBoard() {
         return board;
     }
 
-    public boolean getIsGameOver(){return isGameOver;}
+    public static boolean getIsGameOver(){return isGameOver;}
 
 
     // Functions
-    Player playerTurn(Player tmpTurn){
-        // return the player that his id is next to the current player's id
-        curPlayerInd = (curPlayerInd + 1) % playersList.size();
-        return playersList.get(curPlayerInd);
+    public static List<Player> setTurns(){
+        //extracting randomly tile for each player, setting is id, returning to bag
+        int id = 1;
+
+        //
+        for(Player p : playersList){
+            Tile tempTile = bag.getRand();
+            p.id = tempTile.score;
+            bag.put(tempTile);
+        }
+        // sorting the list from big id to small id with sorting & reversing the order
+        playersList = playersList.stream().sorted(Comparator.comparingInt(Player::getId).reversed())
+                .collect(Collectors.toList());
+
+        for(Player p : playersList)
+        {
+            p.id = id;
+            id++;
+        }
+        //first player at list is now playing first randomly
+        return playersList;
     }
 
-    public void addPlayer(Player player)
+
+    public static void addPlayer(Player player)
     {
-       playersList.add(new Player());
+        playersList.add(new Player());
     }
 
-    Player isWinner(){
+    public static Player isWinner(){
         int max = 0;
         Player tmpPlayer = null;
-        if(gameCash.getTilesCounter() == 0){
+        //Winner: when the tiles bag is empty and the winner finished his pack
+        if(bag.getTilesCounter() == 0){
             for(Player p : playersList){
-                if(max < p.sumScore){
+                if(max < p.sumScore && p.handSize == 0){
                     max = p.sumScore;
                     tmpPlayer =  p;
                 }
@@ -66,10 +87,6 @@ public  class GameState {
         return null;
     }
 
-        public void initPack()
-        {       playersList.stream().forEach((p)->p.initPack());
-
-        }
     public static GameState getGameState() {
         if (gameStateInstance == null)
             gameStateInstance = new GameState();
