@@ -1,8 +1,6 @@
 package model;
 
-import model.logic.MyServer;
-
-public interface ScrabbleFacade {
+public interface Facade {
 
 
     void hostGame(int port);

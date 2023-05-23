@@ -1,6 +1,5 @@
 package model;
 
-import model.concrete.Board;
 import model.concrete.Tile;
 import model.concrete.Word;
 
@@ -12,48 +11,54 @@ import java.util.stream.Collectors;
 public class Player {
     String playerName;
     int id;
-    List<Tile> pack;
-    int packSize; // physical size of tiles
+    List<Tile> playerHand;
+    int handSize; // physical size of tiles
     int sumScore;
-    Word query;
+    Word wordQuery;
+boolean isTurnOver;
 
     public Player(){
-        // players id is from 1-4
         this.id = 0;
-        this.pack = new ArrayList<>();
-        this.packSize = 7;
+        this.playerHand = new ArrayList<>();
+        this.handSize = 7;
         this.sumScore = 0;
+        isTurnOver = false;
     }
 
     public int makeMove(Word w){
+        // if makeMove fails this integer will stay 0.
         int tmpMoveScore = 0;
+
         // if tiles are over
-        if(packSize == 0){
+        if(handSize == 0){
             System.out.println("Tiles are over");
             return tmpMoveScore;
         }
-        // if the player wants to place a word with no enough tiles
-        else if(w.getTiles().length > packSize){
+        // if the player wants to place a word with not enough tiles
+        else if(w.getTiles().length > handSize){
             System.out.println("Tiles are over");
             return tmpMoveScore;
         }
-        // if the player dont have all the tiles for word
-        else if(!isContainTilesForWord(w)){
+        // if the player don't have all the tiles for the word
+        else if(!isContain(w)){
             System.out.println("Not all word tiles are existed");
             return tmpMoveScore;
         }
-        tmpMoveScore += Board.getBoard().tryPlaceWord(w);
+        tmpMoveScore += GameState.getBoard().tryPlaceWord(w); // placing the word at the same board
         // after all checks,decline the words size from pack and init pack back to 7.
         if(tmpMoveScore != 0){
-            packSize -= w.getTiles().length;
-            initPackAfterMove(w);
+            handSize -= w.getTiles().length;
+            initHandAfterMove(w);
         }
         sumScore += tmpMoveScore;
+        //if tmpMoveScore is 0 then one of the checks is failed
         return tmpMoveScore;
     }
 
-    private boolean isContainTilesForWord(Word w) {
-        for(Tile t: pack){
+
+    //checking if the word tiles ar in player pack
+    private boolean isContain(Word w) {
+        for(Tile t: playerHand){
             if(!(Arrays.stream(w.getTiles()).toList().contains(t))){
                 return false;
             }
@@ -62,64 +67,52 @@ public class Player {
     }
 
 
-    //Functions for managing players tiles pack
-
     // func for re-packing the player hand with tiles after placing word on board
-    public void initPackAfterMove(Word w) {
+    public void initHandAfterMove(Word w) {
         List<Tile>tmpWordList = Arrays.stream(w.getTiles()).toList();
-        pack = pack.stream().filter((t)->!tmpWordList.contains(t)).collect(Collectors.toList());
-        while(!packIsFull()){
-            pack.add(Tile.Bag.getBag().getRand());
-            packSize++;
+        playerHand = playerHand.stream().filter((t)->!tmpWordList.contains(t)).collect(Collectors.toList());
+        while(!handIsFull()){
+            playerHand.add(Tile.Bag.getBag().getRand());
+            handSize++;
         }
     }
-
     // first initialization of players pack.
-    public void initPack(){
-        for(int i =0; i < packSize; i++){
-            pack.add(Tile.Bag.getBag().getRand());
+
+    public void initHand(){
+        for(int i = 0; i < handSize; i++){
+            playerHand.add(Tile.Bag.getBag().getRand());
         }
     }
-
-
-//    //get specific tile by index
-//    public Tile getAndRemoveFromPack(int tileInd)
-//    {
-//        Tile temp = pack.get(tileInd);
-//        pack.set(tileInd,null);
-//        return temp;
-//    }
-
 
 
     //Getters
-    public boolean packIsFull()
+    public boolean handIsFull()
     {
-        return pack.size() == 7;
+        return playerHand.size() == 7;
     }
 
-    public int getPackSize()
+    public int getHandSize()
     {
-        return packSize;
+        return handSize;
     }
 
-    public List<Tile> getPack()
+    public List<Tile> getPlayerHand()
     {
-        return this.pack;
+        return this.playerHand;
     }
 
-    public Word getQuery()
+    public Word getWordQuery()
     {
-        return query;
+        return wordQuery;
     }
 
     public int getId() {return id;}
 
-    public void setQuery(Word q)
+    public void setWordQuery(Word q)
     {
-        this.query = q;
+        this.wordQuery = q;
     }
 
-    //todo: pick a tile from live board to create a tile[] so we can send it
+
 
 }

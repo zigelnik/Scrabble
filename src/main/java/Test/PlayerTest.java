@@ -1,7 +1,6 @@
 package Test;
 
 import model.GameState;
-import model.Model;
 import model.Player;
 import model.concrete.Tile;
 import model.concrete.Word;
@@ -42,11 +41,11 @@ public class PlayerTest {
 
         // checking initial packsize and tiles
         for(Player p : pList){
-            p.initPack();
-            if(p.getPackSize() != 7){
+            p.initHand();
+            if(p.getHandSize() != 7){
                 System.out.println("Problem with player initial hand (-10) ");
             }
-            for(Tile t: p.getPack()){
+            for(Tile t: p.getPlayerHand()){
                 if(t == null){
                     System.out.println("Problem with Tile at players hand (-10)");
                 }
@@ -57,12 +56,12 @@ public class PlayerTest {
         Word w2 = new Word(get("CAR"), 7, 5, false);
         Word w3 = new Word(get("WHEEL"), 7, 5, false);
         for (Player p: pList){
-            p.initPack();
+            p.initHand();
         }
         if(p1.makeMove(w1) > 0){
             System.out.println("Problem with packSize at p1 hand (-10)");
         }
-        if(p1.getPackSize() != 7 && !GameState.getGameState().getIsGameOver()){
+        if(p1.getHandSize() != 7 && !GameState.getGameState().getIsGameOver()){
             System.out.println("Problem with player re-packing while game not over (-10)");
         }
 
