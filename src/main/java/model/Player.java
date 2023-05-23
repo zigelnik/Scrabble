@@ -92,7 +92,7 @@ public class Player {
 
         //after parsing the strings , creating new Word
         Word tmpQuery = new Word(getTileArr(word), row, col, vert);
-        setQuery(tmpQuery);
+
     }
 
     // converting string to Tiles[] for creating new Word

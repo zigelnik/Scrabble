@@ -48,7 +48,7 @@ public class Model extends Observable implements ScrabbleFacade {
 
     //Getting the host from players list, if null: Host not found
     public Player getHost(){
-        for( Player p: playerList) {
+        for( Player p: GameState.getPlayersList()) {
             if (p.getClass().equals(HostPlayer.class)) {
                 return p;
             }
