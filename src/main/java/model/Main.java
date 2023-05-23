@@ -15,7 +15,10 @@ public class Main
             m.joinGame(args[1],Integer.parseInt(args[2]));
         }
 
-//        Model m= new Model();
-//        m.initGame();
+        if(m.getHost() != null)
+        {
+            m.initGame();
+
+        }
     }
 }

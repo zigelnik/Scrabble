@@ -11,6 +11,10 @@ public class GuestPlayer extends Player {
     int port;
     Socket socket;
 
+    BufferedReader reader;
+    BufferedReader serverReader;
+    PrintWriter writer;
+
     public GuestPlayer(String ip, int port) {
         this.ip = ip;
         this.port = port;
@@ -30,6 +34,7 @@ public class GuestPlayer extends Player {
             String clientName = reader.readLine();
             writer.println(clientName);
 
+            // receiving msg
             Thread receiveThread = new Thread(() -> {
                 try {
                     String message;
@@ -42,6 +47,7 @@ public class GuestPlayer extends Player {
             });
             receiveThread.start();
 
+            // sending msg
             String message;
             while ((message = reader.readLine()) != null) {
                 writer.println(message);
@@ -53,4 +59,17 @@ public class GuestPlayer extends Player {
         }
     }
 
+    // sending queries to host
+    public void sendQuery(String message)
+    {
+
+        try {
+            if ((message = reader.readLine()) != null) {
+                writer.println(message);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 }

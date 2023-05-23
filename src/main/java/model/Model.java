@@ -1,6 +1,5 @@
 package model;
 
-import model.logic.MyServer;
 
 import java.util.List;
 import java.util.Observable;
@@ -73,9 +72,9 @@ public class Model extends Observable implements Facade {
 
         if(player.getClass().equals(GuestPlayer.class))
         {
-            player.uploadQuery(player.getWordQuery());
+            ((GuestPlayer) player).sendQuery(player.getWordQuery().toString());
             /* client interacting with bookscrabble handler */
-            String msg = GameServer.getMsg();
+            String msg = GameClientHandler.getMessageQuery();
             player.setWordQuery(hostPlayer.convertStrToWord(msg));
         }
 
