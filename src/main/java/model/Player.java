@@ -3,6 +3,9 @@ package model;
 import model.concrete.Tile;
 import model.concrete.Word;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,6 +18,7 @@ public class Player {
     int handSize; // physical size of tiles
     int sumScore;
     String wordQuery;
+
 boolean isTurnOver;
 
     public Player(){

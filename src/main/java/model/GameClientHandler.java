@@ -10,7 +10,7 @@ class GameClientHandler extends Thread {
     private Socket clientSocket;
     static private BufferedReader reader;
     private PrintWriter writer;
-
+String clientName;
     public GameClientHandler(Socket socket) {
         try {
             clientSocket = socket;
@@ -23,7 +23,7 @@ class GameClientHandler extends Thread {
 
     public void run() {
         try {
-            String clientName = reader.readLine();
+             clientName = reader.readLine();
             System.out.println("Client name set: " + clientName);
 
             String message;
@@ -60,5 +60,10 @@ class GameClientHandler extends Thread {
             throw new RuntimeException(e);
         }
         return message;
+    }
+
+    public String getClientName()
+    {
+        return this.clientName;
     }
 }

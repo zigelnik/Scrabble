@@ -10,8 +10,14 @@ public class GameServer {
     int port;
     private static final int MAX_CLIENTS = 3;
     private static List<GameClientHandler> clients = new ArrayList<>();
+    private HostPlayer hostPlayer;
     public GameServer(int port) {
         this.port = port;
+        hostPlayer = new HostPlayer();
+    }
+    public HostPlayer getHost()
+    {
+        return hostPlayer;
     }
 
 
@@ -26,6 +32,10 @@ public class GameServer {
                     try {
                         String message = hostReader.readLine();
                         broadcastToClients("Server: " + message);
+                        if(message.equals("/start"))
+                        {
+                            hostPlayer.initGame();
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -37,11 +47,13 @@ public class GameServer {
                 Socket clientSocket = serverSocket.accept();
 
                 if (clients.size() < MAX_CLIENTS) {
-                    System.out.println("New client connected: " + clientSocket);
 
-                    GameClientHandler gameClientHandler = new GameClientHandler(clientSocket);
-                    clients.add(gameClientHandler);
-                    gameClientHandler.start();
+                    GameClientHandler gch = new GameClientHandler(clientSocket);
+                    clients.add(gch);
+
+                    System.out.println("New client connected: " +gch.getClientName()+" | From: "+ clientSocket);
+
+                    gch.start();
                 }
                 else {
                     System.out.println("too much clients");

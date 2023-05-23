@@ -51,24 +51,6 @@ public class QueryServer extends Thread{
 
             try {
                 Socket aClient = server.accept();
-                if(numOfPlayers < 3) {
-                    numOfPlayers++;
-                    String clientName = "Client #"+numOfPlayers;
-                    // socket object to receive incoming client
-                    // requests
-
-                    // Displaying that new client is connected
-                    // to server
-                    System.out.println("\nNew client connected from: "
-                            + aClient.getInetAddress()
-                            .getHostAddress()+" number of clients: "+numOfPlayers);
-                }
-                         else{
-                                 System.out.println("too much clients!");
-                                   aClient.close();
-                               }
-                out = new PrintWriter(aClient.getOutputStream(), true);
-                in = new BufferedReader(new InputStreamReader(aClient.getInputStream()));
 
                 try {
 

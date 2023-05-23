@@ -31,8 +31,8 @@ public class GuestPlayer extends Player {
             PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
 
             System.out.print("Enter your name: ");
-            String clientName = reader.readLine();
-            writer.println(clientName);
+             playerName = reader.readLine();
+            writer.println(playerName);
 
             // receiving msg
             Thread receiveThread = new Thread(() -> {
@@ -62,14 +62,15 @@ public class GuestPlayer extends Player {
     // sending queries to host
     public void sendQuery()
     {
-            String message;
+            String message=null;
         try {
             if ((message = reader.readLine()) != null) {
                 writer.println(message);
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
         this.setWordQuery(message);
+        System.out.println("after senqauery");
     }
 }

@@ -45,7 +45,7 @@ public  class GameState {
         //extracting randomly tile for each player, setting is id, returning to bag
         int id = 1;
 
-        //
+        System.out.println("inside set turns");
         for(Player p : playersList){
             Tile tempTile = bag.getRand();
             p.id = tempTile.score;
