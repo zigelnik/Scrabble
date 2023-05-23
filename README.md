@@ -4,7 +4,7 @@ This is a JavaFX implementation of the Scrabble game using the Model-View-ViewMo
 ## Team Members
 [Tal Zigelnik](https://github.com/xxxlr1)  
 [Or Shimon](https://github.com/Orshimon810)  
-Jonathan Cwengel  
+[Jonathan Cwengel](https://github.com/JoniXDrama)  
 [Tal Lovton](https://github.com/TalLovton)
 
 
