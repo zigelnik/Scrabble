@@ -9,7 +9,7 @@ public class Model extends Observable implements ScrabbleFacade {
 
     MyServer hostServer;
     GuestPlayer client;
-    List<Player> playerList;
+
 
 
     public Model() {
@@ -21,7 +21,7 @@ public class Model extends Observable implements ScrabbleFacade {
     // should be in the main?
     public void initGame(){
         int ind = 0;
-        playerList = GameState.setTurns(); // players turns by their index in playerList
+        List<Player> playerList = GameState.setTurns(); // players turns by their index in playerList
         playerList.stream().forEach((p)->p.initPack());
 
         while(!GameState.isGameOver)
