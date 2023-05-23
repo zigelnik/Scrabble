@@ -11,13 +11,15 @@ public  class GameState {
     Tile.Bag gameCash;
     List<Player> playersList;
     Board board;
+    boolean isGameOver;
     private static GameState gameStateInstance = null;
 
     //CTOR
-    public GameState() {
+    private GameState() {
         this.board = Board.getBoard();
         this.gameCash = Tile.Bag.getBag();
         this.playersList = new ArrayList<>();
+        this.isGameOver = false;
     }
 
     //Getters
@@ -33,6 +35,8 @@ public  class GameState {
         return board;
     }
 
+    public boolean getIsGameOver(){return isGameOver;}
+
 
     // Functions
     Player playerTurn(Player tmpTurn){
@@ -41,11 +45,12 @@ public  class GameState {
         return playersList.get(curPlayerInd);
     }
 
-    public void addPlayer(String name)
+    public void addPlayer(Player player)
     {
-        playersList.add(new Player(name));
+       playersList.add(new Player());
     }
-    Player isGameOver(){
+
+    Player isWinner(){
         int max = 0;
         Player tmpPlayer = null;
         if(gameCash.getTilesCounter() == 0){
@@ -55,13 +60,16 @@ public  class GameState {
                     tmpPlayer =  p;
                 }
             }
+            isGameOver = true;
             return tmpPlayer;
         }
         return null;
     }
 
+        public void initPack()
+        {       playersList.stream().forEach((p)->p.initPack());
 
-
+        }
     public static GameState getGameState() {
         if (gameStateInstance == null)
             gameStateInstance = new GameState();

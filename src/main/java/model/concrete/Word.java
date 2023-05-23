@@ -40,4 +40,16 @@ public class Word {
     public boolean isVertical() {
         return vertical;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder();
+        for(Tile t: getTiles())
+        {
+            str.append(t);
+        }
+        return str.toString();
+    }
+
 }
+
