@@ -11,6 +11,7 @@ public class Model extends Observable implements ScrabbleFacade {
     GuestPlayer client;
     List<Player> playerList;
 
+
     public Model() {
 
     }
