@@ -28,8 +28,7 @@ public class HostPlayer extends  Player{
         System.out.println("init");
 
         int currPlayerInd = 1;
-      //  List<Player> playerList = GameState.setTurns(); // players turns by their index in playerList
-        List<Player> playerList = GameState.getPlayersList();
+        List<Player> playerList = GameState.setTurns(); // players turns by their index in playerList
         playerList.stream().forEach((p)->p.initHand());
 
         System.out.println("after playerlist");
@@ -83,9 +82,9 @@ public class HostPlayer extends  Player{
         if(player.getClass().equals(GuestPlayer.class))
         {
 //            System.out.println("before sendquery");
-//            ((GuestPlayer) player).sendQuery();
+           ((GuestPlayer) player).sendQuery();
 //            /* client interacting with bookscrabble handler */
-//            msg = GameClientHandler.getMessageQuery();
+           msg = GameClientHandler.getMessageQuery();
 
         }
         msg = "Q,mobydick.txt,"+"TOKEN";
@@ -94,7 +93,7 @@ public class HostPlayer extends  Player{
         if(validQuery)
         {
             System.out.println("before make move");
-            score=  player.makeMove(convertStrToWord(msg));
+          //  score=  player.makeMove(convertStrToWord(msg));
 
             return score != 0;
         }

@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Player {
@@ -88,6 +89,18 @@ boolean isTurnOver;
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Player player = (Player) o;
+        return id == player.id && handSize == player.handSize && sumScore == player.sumScore && isTurnOver == player.isTurnOver && Objects.equals(playerName, player.playerName) && Objects.equals(playerHand, player.playerHand) && Objects.equals(wordQuery, player.wordQuery);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(playerName, id, playerHand, handSize, sumScore, wordQuery, isTurnOver);
+    }
 
     //Getters
     public boolean handIsFull()
@@ -117,6 +130,9 @@ boolean isTurnOver;
         this.wordQuery = q;
     }
 
-
+public void setName(String name)
+{
+    this.playerName = name;
+}
 
 }
