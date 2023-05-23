@@ -29,6 +29,9 @@ public class Model extends Observable implements ScrabbleFacade {
             Player tmpPlayer = playerList.get(ind);
             if (getHost() != null)
             {
+                //TODO: make the clients always trying to attend to the host, only when its clear the host
+                //will coneect him else he will get message : its not you turn
+                //TODO: put all of this in loop, what if he mistakes? it his turn again.
                 ((HostPlayer) getHost()).tmpDictionaryLegal(tmpPlayer.getQuery().toString());
                 tmpPlayer.makeMove(tmpPlayer.getQuery());
             }
