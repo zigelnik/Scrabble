@@ -43,7 +43,7 @@ public class HostPlayer extends  Player{
                 System.out.println("after for player list");
 
                 while(!player.isTurnOver)
-                {
+               {
                     System.out.println("before legal move");
                     player.isTurnOver =  legalMove(player);
 

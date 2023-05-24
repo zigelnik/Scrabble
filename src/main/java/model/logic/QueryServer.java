@@ -15,8 +15,7 @@ public class QueryServer extends Thread{
     private ClientHandler ch;
     private volatile boolean stop;
     private ServerSocket server;
-    private PrintWriter out;
-    private BufferedReader in;
+
     private static int numOfPlayers= 0;
 
     public QueryServer(int port, ClientHandler ch) {
@@ -56,8 +55,7 @@ public class QueryServer extends Thread{
 
                     ch.handleClient(aClient.getInputStream(), aClient.getOutputStream());
                     ch.close();
-                    aClient.getInputStream().close();
-                    aClient.getOutputStream().close();
+
                     aClient.close();
 
 
