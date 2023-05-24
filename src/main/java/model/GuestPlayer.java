@@ -33,7 +33,7 @@ public class GuestPlayer extends Player {
             System.out.print("Enter your name: ");
             playerName = reader.readLine();
             this.setName(playerName);
-        //    writer.println(playerName);
+           writer.println(playerName+ " connected.");
 
             // receiving msg
             Thread receiveThread = new Thread(() -> {

@@ -23,8 +23,7 @@ String clientName;
 
     public void run() {
         try {
-             clientName = reader.readLine();
-            System.out.println("Client name set: " + clientName);
+
 
             String message;
             while ((message = reader.readLine()) != null) {

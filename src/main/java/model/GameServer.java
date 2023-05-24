@@ -51,10 +51,10 @@ public class GameServer {
 
                     GameClientHandler gch = new GameClientHandler(clientSocket);
                     clients.add(gch);
+                    gch.start();
 
                     System.out.println("New client connected: " +gch.getClientName()+" | From: "+ clientSocket);
 
-                    gch.start();
                 }
                 else {
                     System.out.println("too much clients");
