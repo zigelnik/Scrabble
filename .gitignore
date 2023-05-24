@@ -1,10 +1,5 @@
 ### IntelliJ IDEA ###
-.idea/
-build.gradle
-gradlew
-gradlew.bat
-package.json
-settings.gradle
+
 
 ### Eclipse ###
 .apt_generated
@@ -31,8 +26,3 @@ bin/
 
 ### Mac OS ###
 .DS_Store
-
-.idea
-build/
-.gradle
-gradle/wrapper
