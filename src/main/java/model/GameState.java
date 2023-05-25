@@ -10,38 +10,37 @@ import java.util.stream.Collectors;
 
 public  class GameState {
     int curPlayerInd = 0;
-    static Tile.Bag bag;
-    static List<Player> playersList;
-    static Board board;
-    static boolean isGameOver;
-    private static GameState gameStateInstance = null;
+     Tile.Bag bag;
+     List<Player> playersList;
+     Board board;
+     public boolean isGameOver;
 
     //CTOR
-    private GameState() {
-        GameState.board = Board.getBoard();
-        GameState.bag = Tile.Bag.getBag();
-        GameState.playersList = new ArrayList<>();
-        GameState.isGameOver = false;
+    public  GameState() {
+      board = Board.getBoard();
+       bag = Tile.Bag.getBag();
+        playersList = new ArrayList<>();
+      isGameOver = false;
     }
 
     //Getters
-    public static Tile.Bag getBag() {
+    public  Tile.Bag getBag() {
         return bag;
     }
 
-    public static List<Player> getPlayersList() {
+    public  List<Player> getPlayersList() {
         return playersList;
     }
 
-    public static Board getBoard() {
+    public  Board getBoard() {
         return board;
     }
 
-    public static boolean getIsGameOver(){return isGameOver;}
+    public  boolean getIsGameOver(){return isGameOver;}
 
 
     // Functions
-    public static List<Player> setTurns(){
+    public  void setTurns(){
         //extracting randomly tile for each player, setting is id, returning to bag
         int id = 1;
 
@@ -61,16 +60,15 @@ public  class GameState {
             id++;
         }
         //first player at list is now playing first randomly
-        return playersList;
     }
 
 
-    public static void addPlayer(Player player)
+    public  void addPlayer(Player player)
     {
-        playersList.add(new Player());
+        playersList.add(player);
     }
 
-    public static Player isWinner(){
+    public  Player isWinner(){
         int max = 0;
         Player tmpPlayer = null;
         //Winner: when the tiles bag is empty and the winner finished his pack
@@ -87,11 +85,5 @@ public  class GameState {
         return null;
     }
 
-    public static GameState getGameState() {
-        if (gameStateInstance == null)
-            gameStateInstance = new GameState();
-
-        return gameStateInstance;
-    }
 
 }

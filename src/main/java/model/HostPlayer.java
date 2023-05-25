@@ -17,10 +17,14 @@ import java.util.Scanner;
 
 public class HostPlayer extends  Player{
 
+    private  GameState gameState;
     public QueryServer queryServer;
     public int port = 9998;
+    static boolean flag = false;
 
-    public HostPlayer() {
+    public HostPlayer(GameState gs) {
+        gameState = gs;
+        gameState.addPlayer(this);
         queryServer = new QueryServer(port,new BookScrabbleHandler());
     }
 
@@ -28,32 +32,33 @@ public class HostPlayer extends  Player{
         System.out.println("init");
 
         int currPlayerInd = 1;
-        List<Player> playerList = GameState.setTurns(); // players turns by their index in playerList
-        playerList.stream().forEach((p)->p.initHand());
+       gameState.setTurns(); // players turns by their index in playerList
+        gameState.playersList.stream().forEach((p)->p.initHand());
 
         System.out.println("after playerlist");
 
 
         loadBooks();
-        while(!GameState.isGameOver)
+        while(!gameState.isGameOver)
         {
             System.out.println("after game is over");
-            for(Player player: GameState.playersList)
+            for(GameClientHandler gch: GameServer.getClients())
             {
+
                 System.out.println("after for player list");
 
-                while(!player.isTurnOver)
+                while(!gch.player.isTurnOver)
                {
                     System.out.println("before legal move");
-                    player.isTurnOver =  legalMove(player);
+                    gch.player.isTurnOver =  legalMove(gch);
 
                 }
-                player.isTurnOver = false; // returning so next round the player can play again his turn.
+                gch.player.isTurnOver = false; // returning so next round the player can play again his turn.
 
-                currPlayerInd = ((currPlayerInd+1) % playerList.size());
+                currPlayerInd = ((currPlayerInd+1) % gameState.playersList.size());
 
                 // do we need to get the winner as object or change the isWinner to void?
-                Player winner = GameState.isWinner();
+                Player winner = gameState.isWinner();
             }
 
         }
@@ -63,7 +68,7 @@ public class HostPlayer extends  Player{
     }
 
 
-    public boolean legalMove(Player player)
+    public boolean legalMove(GameClientHandler gch)
     {
         int score=0;
         /*
@@ -79,21 +84,21 @@ public class HostPlayer extends  Player{
             }
             * */
         String msg=null;
-        if(player.getClass().equals(GuestPlayer.class))
+        if(gch.player.getClass().equals(Player.class))
         {
 //            System.out.println("before sendquery");
-           ((GuestPlayer) player).sendQuery();
+                 //gch.sendQuery();
 //            /* client interacting with bookscrabble handler */
-           msg = GameClientHandler.getMessageQuery();
+           msg = gch.player.getWordQuery();
 
         }
-        msg = "Q,mobydick.txt,"+"TOKEN";
-        boolean validQuery;
-        validQuery = tmpDictionaryLegal(msg);
+       // msg = "Q,mobydick.txt,"+"TOKEN";
+        boolean validQuery = true;
+        //validQuery = tmpDictionaryLegal("C");
         if(validQuery)
         {
             System.out.println("before make move");
-          //  score=  player.makeMove(convertStrToWord(msg));
+            score=  gch.player.makeMove(convertStrToWord(msg),gameState);
 
             return score != 0;
         }
@@ -155,8 +160,8 @@ public class HostPlayer extends  Player{
 
         public void loadBooks()
         {
-
-            Dictionary d = new Dictionary("mobydick.txt");
+            System.out.println("in laod books");
+          //  Dictionary d = new Dictionary("mobydick.txt");
         }
 
 

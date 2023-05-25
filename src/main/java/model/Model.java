@@ -1,16 +1,12 @@
 package model;
 
 
-import java.util.List;
 import java.util.Observable;
 
 public class Model extends Observable implements Facade {
 
     GameServer hostServer;
-    HostPlayer hostPlayer;
-    GameState gameState;
     public Model() {
-             gameState= GameState.getGameState();
     }
 
 
@@ -18,15 +14,6 @@ public class Model extends Observable implements Facade {
     // should be in the main?
 
 
-    //Getting the host from players list, if null: Host not found
-    public Player getHost(){
-        for( Player p: GameState.getPlayersList()) {
-            if (p.getClass().equals(HostPlayer.class)) {
-                return p;
-            }
-        }
-        return null;
-    }
 
 
     @Override
@@ -34,7 +21,7 @@ public class Model extends Observable implements Facade {
        // hostPlayer = new HostPlayer();
 
         hostServer= new GameServer(port);
-        addPlayer(hostServer.getHost());
+       // addPlayer(new HostPlayer());
 
         hostServer.start();
 
@@ -42,8 +29,8 @@ public class Model extends Observable implements Facade {
 
     @Override
     public void joinGame(String ip, int port) {
-        GuestPlayer client = new GuestPlayer(ip,port);
-        addPlayer(client);
+        Client client = new Client(ip,port);
+      //  addPlayer(client);
 
         client.start();
 
@@ -52,7 +39,7 @@ public class Model extends Observable implements Facade {
 
     @Override
     public void addPlayer(Player player) {
-        GameState.addPlayer(player);
+       // GameState.addPlayer(player);
     }
 
     @Override

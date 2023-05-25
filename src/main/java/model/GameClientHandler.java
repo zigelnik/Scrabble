@@ -1,5 +1,7 @@
 package model;
 
+import model.concrete.Word;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,9 +12,14 @@ class GameClientHandler extends Thread {
     private Socket clientSocket;
     static private BufferedReader reader;
     private PrintWriter writer;
-String clientName;
-    public GameClientHandler(Socket socket) {
+    Player player;
+    String clientName;
+
+    String stringWord;
+
+    public GameClientHandler(Socket socket, Player p) {
         try {
+            player = p;
             clientSocket = socket;
             reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             writer = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -23,10 +30,16 @@ String clientName;
 
     public void run() {
         try {
-             clientName = reader.readLine();
-            System.out.println("Client name set: " + clientName);
+//             clientName = reader.readLine();
+//            System.out.println("Client name set: " + clientName);
+//            player.setName(clientName);
 
-            String message;
+            String message = reader.readLine();
+            if(message.equals("/query"))
+            {
+                stringWord = message;
+                System.out.println("query: "+stringWord);
+            }
             while ((message = reader.readLine()) != null) {
                 System.out.println("Received message from client " + clientName + ": " + message);
             }
@@ -49,21 +62,19 @@ String clientName;
         writer.println(message);
     }
 
-    public static String getMessageQuery()
+    public  String getMessageQuery()
     {
-        String message;
-        try {
-            if ((message = reader.readLine()) != null) {
-                System.out.println("query from client: "+message);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return message;
+             return stringWord;
     }
 
     public String getClientName()
     {
         return this.clientName;
     }
+
+
 }
+
+
+
+

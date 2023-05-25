@@ -1,12 +1,11 @@
 package model;
 import java.io.*;
 import java.net.*;
-import java.util.*;
 
 //TODO: why we need GameClient? why just not consider GuestPlayer as GameClinet and just open the sovket overthere?
 
 // Client class
-public class GuestPlayer extends Player {
+public class Client {
     String ip;
     int port;
     Socket socket;
@@ -15,7 +14,7 @@ public class GuestPlayer extends Player {
     BufferedReader serverReader;
     PrintWriter writer;
 
-    public GuestPlayer(String ip, int port) {
+    public Client(String ip, int port) {
         this.ip = ip;
         this.port = port;
     }
@@ -30,10 +29,7 @@ public class GuestPlayer extends Player {
             BufferedReader serverReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
 
-            System.out.print("Enter your name: ");
-            playerName = reader.readLine();
-            this.setName(playerName);
-        //    writer.println(playerName);
+            Player.setWordQuery("CAR,4,5,true");
 
             // receiving msg
             Thread receiveThread = new Thread(() -> {
@@ -71,7 +67,7 @@ public class GuestPlayer extends Player {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.setWordQuery(message);
+      //  this.setWordQuery(message);
         System.out.println("after senqauery");
     }
 }

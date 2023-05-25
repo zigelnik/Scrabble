@@ -1,5 +1,6 @@
 package model;
 
+import model.concrete.Board;
 import model.concrete.Tile;
 import model.concrete.Word;
 
@@ -18,7 +19,7 @@ public class Player {
     List<Tile> playerHand;
     int handSize; // physical size of tiles
     int sumScore;
-    String wordQuery;
+    static String wordQuery;
 
 boolean isTurnOver;
 
@@ -30,7 +31,7 @@ boolean isTurnOver;
         isTurnOver = false;
     }
 
-    public int makeMove(Word w){
+    public int makeMove(Word w, GameState gameState){
         // if makeMove fails this integer will stay 0.
         int tmpMoveScore = 0;
 
@@ -49,7 +50,7 @@ boolean isTurnOver;
             System.out.println("Not all word tiles are existed");
             return tmpMoveScore;
         }
-        tmpMoveScore += GameState.getBoard().tryPlaceWord(w); // placing the word at the same board
+        tmpMoveScore += gameState.getBoard().tryPlaceWord(w); // placing the word at the same board
         // after all checks,decline the words size from pack and init pack back to 7.
         if(tmpMoveScore != 0){
             handSize -= w.getTiles().length;
@@ -125,9 +126,9 @@ boolean isTurnOver;
 
     public int getId() {return id;}
 
-    public void setWordQuery(String q)
+    public static void setWordQuery(String q)
     {
-        this.wordQuery = q;
+        wordQuery = q;
     }
 
 public void setName(String name)
