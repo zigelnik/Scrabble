@@ -31,64 +31,64 @@ boolean isTurnOver;
         isTurnOver = false;
     }
 
-    public int makeMove(Word w, GameState gameState){
-        // if makeMove fails this integer will stay 0.
-        int tmpMoveScore = 0;
-
-        // if tiles are over
-        if(handSize == 0){
-            System.out.println("Tiles are over");
-            return tmpMoveScore;
-        }
-        // if the player wants to place a word with not enough tiles
-        else if(w.getTiles().length > handSize){
-            System.out.println("Tiles are over");
-            return tmpMoveScore;
-        }
-        // if the player don't have all the tiles for the word
-        else if(!isContain(w)){
-            System.out.println("Not all word tiles are existed");
-            return tmpMoveScore;
-        }
-        tmpMoveScore += gameState.getBoard().tryPlaceWord(w); // placing the word at the same board
-        // after all checks,decline the words size from pack and init pack back to 7.
-        if(tmpMoveScore != 0){
-            handSize -= w.getTiles().length;
-            initHandAfterMove(w);
-        }
-        sumScore += tmpMoveScore;
-        //if tmpMoveScore is 0 then one of the checks is failed
-        return tmpMoveScore;
-    }
+//    public int makeMove(Word w, GameState gameState){
+//        // if makeMove fails this integer will stay 0.
+//        int tmpMoveScore = 0;
+//
+//        // if tiles are over
+//        if(handSize == 0){
+//            System.out.println("Tiles are over");
+//            return tmpMoveScore;
+//        }
+//        // if the player wants to place a word with not enough tiles
+//        else if(w.getTiles().length > handSize){
+//            System.out.println("Tiles are over");
+//            return tmpMoveScore;
+//        }
+//        // if the player don't have all the tiles for the word
+//        else if(!isContain(w)){
+//            System.out.println("Not all word tiles are existed");
+//            return tmpMoveScore;
+//        }
+//        tmpMoveScore += gameState.board.tryPlaceWord(w); // placing the word at the same board
+//        // after all checks,decline the words size from pack and init pack back to 7.
+//        if(tmpMoveScore != 0){
+//            handSize -= w.getTiles().length;
+//            initHandAfterMove(w);
+//        }
+//        sumScore += tmpMoveScore;
+//        //if tmpMoveScore is 0 then one of the checks is failed
+//        return tmpMoveScore;
+//    }
 
 
     //checking if the word tiles ar in player pack
-    private boolean isContain(Word w) {
-        for(Tile t: playerHand){
-            if(!(Arrays.stream(w.getTiles()).toList().contains(t))){
-                return false;
-            }
-        }
-        return true;
-    }
+//    private boolean isContain(Word w) {
+//        for(Tile t: playerHand){
+//            if(!(Arrays.stream(w.getTiles()).toList().contains(t))){
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
 
 
     // func for re-packing the player hand with tiles after placing word on board
-    public void initHandAfterMove(Word w) {
-        List<Tile>tmpWordList = Arrays.stream(w.getTiles()).toList();
-        playerHand = playerHand.stream().filter((t)->!tmpWordList.contains(t)).collect(Collectors.toList());
-        while(!handIsFull()){
-            playerHand.add(Tile.Bag.getBag().getRand());
-            handSize++;
-        }
-    }
-    // first initialization of players pack.
-
-    public void initHand(){
-        for(int i = 0; i < handSize; i++){
-            playerHand.add(Tile.Bag.getBag().getRand());
-        }
-    }
+//    public void initHandAfterMove(Word w) {
+//        List<Tile>tmpWordList = Arrays.stream(w.getTiles()).toList();
+//        playerHand = playerHand.stream().filter((t)->!tmpWordList.contains(t)).collect(Collectors.toList());
+//        while(!handIsFull()){
+//            playerHand.add(GameState.bag.getRand());
+//            handSize++;
+//        }
+//    }
+//    // first initialization of players pack.
+//
+//    public void initHand(){
+//        for(int i = 0; i < handSize; i++){
+//            playerHand.add(GameState.getBag().getRand());
+//        }
+//    }
 
     @Override
     public boolean equals(Object o) {

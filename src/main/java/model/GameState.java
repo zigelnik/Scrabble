@@ -9,10 +9,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public  class GameState {
-    int curPlayerInd = 0;
-     Tile.Bag bag;
+     public Tile.Bag bag;
      List<Player> playersList;
-     Board board;
+    public   Board board;
      public boolean isGameOver;
 
     //CTOR
@@ -24,17 +23,12 @@ public  class GameState {
     }
 
     //Getters
-    public  Tile.Bag getBag() {
-        return bag;
-    }
+
 
     public  List<Player> getPlayersList() {
         return playersList;
     }
 
-    public  Board getBoard() {
-        return board;
-    }
 
     public  boolean getIsGameOver(){return isGameOver;}
 

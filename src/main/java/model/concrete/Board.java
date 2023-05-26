@@ -13,9 +13,13 @@ public class Board {
     private final char TRIPLE_LETTER_SCR = '#';
     private final char DOUBLE_LETTER_SCR = '$';
     private final char STAR_SIGN = '*';
-    private static Board boardInstance = null;
     private static boolean firstWord = false;
-
+private static class BoardHolder{
+    public static final Board board = new Board();
+}
+public static Board getBoard(){
+    return BoardHolder.board;
+}
     private Board() {
 
         /*                            Board should look like this:
@@ -105,12 +109,7 @@ public class Board {
 
     }
 
-    public static Board getBoard() {
-        if (boardInstance == null)
-            boardInstance = new Board();
 
-        return boardInstance;
-    }
 
     // get the tiles that are currently on the board
     public Tile[][] getTiles() {

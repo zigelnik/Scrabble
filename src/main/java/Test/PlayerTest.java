@@ -41,7 +41,7 @@ public class PlayerTest {
 
         // checking initial packsize and tiles
         for(Player p : pList){
-            p.initHand();
+        //    p.initHand();
             if(p.getHandSize() != 7){
                 System.out.println("Problem with player initial hand (-10) ");
             }
@@ -56,7 +56,7 @@ public class PlayerTest {
         Word w2 = new Word(get("CAR"), 7, 5, false);
         Word w3 = new Word(get("WHEEL"), 7, 5, false);
         for (Player p: pList){
-            p.initHand();
+         //   p.initHand();
         }
 //        if(p1.makeMove(w1) > 0){
 //            System.out.println("Problem with packSize at p1 hand (-10)");

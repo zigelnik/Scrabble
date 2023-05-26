@@ -12,8 +12,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class HostPlayer extends  Player{
 
@@ -27,18 +29,68 @@ public class HostPlayer extends  Player{
         gameState.addPlayer(this);
         queryServer = new QueryServer(port,new BookScrabbleHandler());
     }
+    public void initHands(){
+        for(int i = 0; i < gameState.playersList.size(); i++){
+            for(int j=0;j<gameState.playersList.get(i).handSize;j++)
+            gameState.playersList.get(i).playerHand.add(gameState.bag.getRand());
+        }
+    }
+    // func for re-packing the player hand with tiles after placing word on board
+    public void initHandAfterMove(Word w) {
+        List<Tile>tmpWordList = Arrays.stream(w.getTiles()).toList();
+        playerHand = playerHand.stream().filter((t)->!tmpWordList.contains(t)).collect(Collectors.toList());
+        while(!handIsFull()){
+            playerHand.add(gameState.bag.getRand());
+            handSize++;
+        }
+    }
+    private boolean isContain(Word w) {
+        for(Tile t: playerHand){
+            if(!(Arrays.stream(w.getTiles()).toList().contains(t))){
+                return false;
+            }
+        }
+        return true;
+    }
+    public int makeMove(Word w, GameState gameState){
+        // if makeMove fails this integer will stay 0.
+        int tmpMoveScore = 0;
 
+        // if tiles are over
+        if(handSize == 0){
+            System.out.println("Tiles are over");
+            return tmpMoveScore;
+        }
+        // if the player wants to place a word with not enough tiles
+        else if(w.getTiles().length > handSize){
+            System.out.println("Tiles are over");
+            return tmpMoveScore;
+        }
+        // if the player don't have all the tiles for the word
+        else if(!isContain(w)){
+            System.out.println("Not all word tiles are existed");
+            return tmpMoveScore;
+        }
+        tmpMoveScore += gameState.board.tryPlaceWord(w); // placing the word at the same board
+        // after all checks,decline the words size from pack and init pack back to 7.
+        if(tmpMoveScore != 0){
+            handSize -= w.getTiles().length;
+            initHandAfterMove(w);
+        }
+        sumScore += tmpMoveScore;
+        //if tmpMoveScore is 0 then one of the checks is failed
+        return tmpMoveScore;
+    }
     public void initGame(){
         System.out.println("init");
 
         int currPlayerInd = 1;
-        gameState.setTurns(); // players turns by their index in playerList
-        gameState.playersList.stream().forEach((p)->p.initHand());
-
+      //  gameState.setTurns(); // players turns by their index in playerList
+        initHands();
         System.out.println("after playerlist");
 
 
-        loadBooks();
+      //  loadBooks();
         while(!gameState.isGameOver)
         {
             System.out.println("after game is over");
@@ -71,35 +123,23 @@ public class HostPlayer extends  Player{
     public boolean legalMove(GameClientHandler gch)
     {
         int score=0;
-        /*
-        *
-        *             //this is the player that his turn now
-            if (getHost() != null)
-            {
-                //TODO: make the clients always trying to attend to the host, only when its clear the host
-                //will coneect him else he will get message : its not you turn
-                //TODO: put all of this in loop, what if he mistakes? it his turn again.
-                ((HostPlayer) getHost()).tmpDictionaryLegal(tmpPlayer.getWordQuery().toString());
-                tmpPlayer.makeMove(tmpPlayer.getWordQuery());
-            }
-            * */
-        String msg=null;
-       msg = gch.getMessageQuery();
-//            System.out.println("before sendquery");
-                 //gch.sendQuery();
-//            /* client interacting with bookscrabble handler */
+
+        String msg = gch.getMessageQuery();
+
                     // CAR,4,5,true
           // msg = gch.player.getWordQuery();
 
         String[] query = msg.split(",");
+
        // msg = "Q,mobydick.txt,"+"TOKEN";
         String dicWord = "Q,mobydick.txt,"+query[0];
         boolean validQuery;
         validQuery = tmpDictionaryLegal(dicWord);
+        Word word = convertStrToWord(msg);
         if(validQuery)
         {
             System.out.println("before make move");
-            score=  gch.player.makeMove(convertStrToWord(msg),gameState);
+            score=  makeMove(word,gameState);
 
             return score != 0;
         }
@@ -122,8 +162,7 @@ public class HostPlayer extends  Player{
         // [*] put tests here like eli did in mainTrain -> testBSCH
         try {
             DictionaryManager dm = DictionaryManager.get();
-            dm.query("TOKEN");
-
+          //  dm.query("mobydick.txt,LONDON");
             System.out.println("before socket");
             Socket server = new Socket("localhost", port);
             PrintWriter out = new PrintWriter(server.getOutputStream());
@@ -163,7 +202,8 @@ public class HostPlayer extends  Player{
         {
 
             System.out.println("in laod books");
-         //   Dictionary d = new Dictionary("mobydick.txt");
+           Dictionary d = new Dictionary("mobydick.txt");
+
 
         }
 
@@ -177,19 +217,32 @@ public class HostPlayer extends  Player{
         boolean vert = Boolean.parseBoolean(res[3]);
 
         //after parsing the strings , creating new Word
-        Word tmpQuery = new Word(getTileArr(word), row, col, vert);
+        Tile[] wordTile = getTileArr(word);
+        Word tmpQuery = new Word(wordTile, row, col, vert);
         System.out.println("after convert str to word");
             return tmpQuery;
     }
 
     // converting string to Tiles[] for creating new Word
-    public Tile[] getTileArr(String str) {
+    public  Tile[] getTileArr(String str) {
         Tile[] tileArr =new Tile[str.length()];
         int i=0;
         for(char ch: str.toCharArray()) {
-            tileArr[i]= Tile.Bag.getBag().getTile(ch);
+            tileArr[i]= gameState.bag.getTile(ch);
             i++;
         }
         return tileArr;
     }
 }
+
+/*
+	private static Tile[] get(String s) {
+		Tile[] ts=new Tile[s.length()];
+		int i=0;
+		for(char c: s.toCharArray()) {
+			ts[i]=Bag.getBag().getTile(c);
+			i++;
+		}
+		return ts;
+	}
+ */

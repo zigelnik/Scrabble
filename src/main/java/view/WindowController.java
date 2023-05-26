@@ -21,7 +21,7 @@ Button joinB;
     public void host()
     {
         Thread hostThread = new Thread(() -> {
-            m.hostGame(9994);
+            m.hostGame(9996);
         });
         hostThread.start();
     }
@@ -29,7 +29,7 @@ Button joinB;
     public void join()
     {
         Thread joinThread = new Thread(()-> {
-            m.joinGame("localhost", 9994);
+            m.joinGame("localhost", 9996);
         });
         joinThread.start();
     }

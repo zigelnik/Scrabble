@@ -41,17 +41,7 @@ class GameClientHandler extends Thread {
 //                System.out.println("query: "+stringWord);
 //            }
             while ((message = reader.readLine()) != null) {
-                switch (message)
-                {
-                    case "/query":
-                    {
-                        System.out.println("Enter you query: ");
-                        break;
-                    }
-                    default:
-                        System.out.println("Received message from client " + clientName + ": " + message);
-                        break;
-                }
+                System.out.println(message);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -77,6 +67,7 @@ class GameClientHandler extends Thread {
         System.out.println("Enter you query: ");
         try {
             stringWord = reader.readLine();
+            writer.println(stringWord);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
