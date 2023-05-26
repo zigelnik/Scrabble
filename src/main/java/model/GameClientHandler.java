@@ -34,14 +34,24 @@ class GameClientHandler extends Thread {
 //            System.out.println("Client name set: " + clientName);
 //            player.setName(clientName);
 
-            String message = reader.readLine();
-            if(message.equals("/query"))
-            {
-                stringWord = message;
-                System.out.println("query: "+stringWord);
-            }
+            String message;
+//            if(message.equals("/query"))
+//            {
+//                stringWord = message;
+//                System.out.println("query: "+stringWord);
+//            }
             while ((message = reader.readLine()) != null) {
-                System.out.println("Received message from client " + clientName + ": " + message);
+                switch (message)
+                {
+                    case "/query":
+                    {
+                        System.out.println("Enter you query: ");
+                        break;
+                    }
+                    default:
+                        System.out.println("Received message from client " + clientName + ": " + message);
+                        break;
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -64,7 +74,13 @@ class GameClientHandler extends Thread {
 
     public  String getMessageQuery()
     {
-             return stringWord;
+        System.out.println("Enter you query: ");
+        try {
+            stringWord = reader.readLine();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return stringWord;
     }
 
     public String getClientName()

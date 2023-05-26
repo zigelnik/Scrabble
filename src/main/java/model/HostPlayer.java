@@ -32,7 +32,7 @@ public class HostPlayer extends  Player{
         System.out.println("init");
 
         int currPlayerInd = 1;
-       gameState.setTurns(); // players turns by their index in playerList
+        gameState.setTurns(); // players turns by their index in playerList
         gameState.playersList.stream().forEach((p)->p.initHand());
 
         System.out.println("after playerlist");
@@ -84,17 +84,18 @@ public class HostPlayer extends  Player{
             }
             * */
         String msg=null;
-        if(gch.player.getClass().equals(Player.class))
-        {
+       msg = gch.getMessageQuery();
 //            System.out.println("before sendquery");
                  //gch.sendQuery();
 //            /* client interacting with bookscrabble handler */
-           msg = gch.player.getWordQuery();
+                    // CAR,4,5,true
+          // msg = gch.player.getWordQuery();
 
-        }
+        String[] query = msg.split(",");
        // msg = "Q,mobydick.txt,"+"TOKEN";
-        boolean validQuery = true;
-        //validQuery = tmpDictionaryLegal("C");
+        String dicWord = "Q,mobydick.txt,"+query[0];
+        boolean validQuery;
+        validQuery = tmpDictionaryLegal(dicWord);
         if(validQuery)
         {
             System.out.println("before make move");
@@ -160,8 +161,10 @@ public class HostPlayer extends  Player{
 
         public void loadBooks()
         {
+
             System.out.println("in laod books");
-          //  Dictionary d = new Dictionary("mobydick.txt");
+         //   Dictionary d = new Dictionary("mobydick.txt");
+
         }
 
 
