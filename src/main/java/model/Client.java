@@ -10,9 +10,9 @@ public class Client {
     int port;
     Socket socket;
 
-    BufferedReader reader;
-    BufferedReader serverReader;
-    PrintWriter writer;
+    BufferedReader consoleReader;
+    BufferedReader readFromServer;
+    PrintWriter writeToServer;
 
     public Client(String ip, int port) {
         this.ip = ip;
@@ -25,17 +25,16 @@ public class Client {
             socket = new Socket(ip, port);
             System.out.println("Connected to server.");
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-            BufferedReader serverReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
+             consoleReader = new BufferedReader(new InputStreamReader(System.in));
+             readFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+             writeToServer = new PrintWriter(socket.getOutputStream(), true);
 
-            Player.setWordQuery("CAR,4,5,true");
 
             // receiving msg
             Thread receiveThread = new Thread(() -> {
                 try {
                     String message;
-                    while ((message = serverReader.readLine()) != null) {
+                    while ((message = readFromServer.readLine()) != null) {
                         System.out.println(message);
                     }
                 } catch (IOException e) {
@@ -46,8 +45,8 @@ public class Client {
 
             // sending msg
             String message;
-            while ((message = reader.readLine()) != null) {
-                writer.println(message);
+            while ((message = consoleReader.readLine()) != null) {
+                writeToServer.println(message);
             }
 
             socket.close();
@@ -57,17 +56,17 @@ public class Client {
     }
 
     // sending queries to host
-    public void sendQuery()
-    {
-            String message=null;
-        try {
-            if ((message = reader.readLine()) != null) {
-                writer.println(message);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-      //  this.setWordQuery(message);
-        System.out.println("after senqauery");
-    }
+//    public void sendQuery()
+//    {
+//            String message=null;
+//        try {
+//            if ((message = consoleReader.readLine()) != null) {
+//                writer.println(message);
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        //  this.setWordQuery(message);
+//        System.out.println("after senqauery");
+//    }
 }

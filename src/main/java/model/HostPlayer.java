@@ -85,7 +85,7 @@ public class HostPlayer extends  Player{
         System.out.println("init");
 
         int currPlayerInd = 1;
-      //  gameState.setTurns(); // players turns by their index in playerList
+         gameState.setTurns(); // players turns by their index in playerList
         initHands();
         System.out.println("after playerlist");
 

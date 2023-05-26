@@ -136,4 +136,7 @@ public void setName(String name)
     this.playerName = name;
 }
 
+    public String getPlayerName() {
+        return playerName;
+    }
 }

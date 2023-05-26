@@ -1,7 +1,5 @@
 package model;
 
-import model.concrete.Word;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,10 +8,9 @@ import java.net.Socket;
 
 class GameClientHandler extends Thread {
     private Socket clientSocket;
-    static private BufferedReader reader;
-    private PrintWriter writer;
+    static private BufferedReader readFromClient;
+    private PrintWriter writeToClient;
     Player player;
-    String clientName;
 
     String stringWord;
 
@@ -21,8 +18,8 @@ class GameClientHandler extends Thread {
         try {
             player = p;
             clientSocket = socket;
-            reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            writer = new PrintWriter(clientSocket.getOutputStream(), true);
+            readFromClient = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            writeToClient = new PrintWriter(clientSocket.getOutputStream(), true);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -30,25 +27,21 @@ class GameClientHandler extends Thread {
 
     public void run() {
         try {
-//             clientName = reader.readLine();
-//            System.out.println("Client name set: " + clientName);
-//            player.setName(clientName);
+
+            writeToClient.println("enter your name: ");
+            player.setName(readFromClient.readLine());
+            System.out.println("New client connected: " +player.getPlayerName()+" | From: "+ clientSocket.getInetAddress());
 
             String message;
-//            if(message.equals("/query"))
-//            {
-//                stringWord = message;
-//                System.out.println("query: "+stringWord);
-//            }
-            while ((message = reader.readLine()) != null) {
+            while ((message = readFromClient.readLine()) != null) {
                 System.out.println(message);
             }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
             try {
-                reader.close();
-                writer.close();
+                readFromClient.close();
+                writeToClient.close();
                 clientSocket.close();
                 GameServer.removeClient(this);
                 GameServer.broadcastToClients("Client " + clientSocket + " has left the chat.");
@@ -59,25 +52,22 @@ class GameClientHandler extends Thread {
     }
 
     public void sendMessage(String message) {
-        writer.println(message);
+        writeToClient.println(message);
     }
 
     public  String getMessageQuery()
     {
-        System.out.println("Enter you query: ");
+        writeToClient.println("Enter you query: ");
         try {
-            stringWord = reader.readLine();
-            writer.println(stringWord);
+            stringWord = readFromClient.readLine();
+            writeToClient.println(stringWord);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         return stringWord;
     }
 
-    public String getClientName()
-    {
-        return this.clientName;
-    }
+
 
 
 }

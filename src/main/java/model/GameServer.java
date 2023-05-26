@@ -56,7 +56,6 @@ public class GameServer {
                     Player p = new Player();
                     GameClientHandler gch = new GameClientHandler(clientSocket, p);
                     clients.add(gch);
-                    System.out.println("New client connected: " +gch.getClientName()+" | From: "+ clientSocket);
                     gch.start();
                     gameState.addPlayer(p);
 
