@@ -7,10 +7,9 @@ import model.logic.Dictionary;
 import model.logic.DictionaryManager;
 import model.logic.QueryServer;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
+import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,6 +19,7 @@ import java.util.stream.Collectors;
 public class HostPlayer extends  Player{
 
     private  GameState gameState;
+    private BufferedReader consoleReader;
     public QueryServer queryServer;
     public int port = 9998;
     static boolean flag = false;
@@ -28,6 +28,8 @@ public class HostPlayer extends  Player{
         gameState = gs;
         gameState.addPlayer(this);
         queryServer = new QueryServer(port,new BookScrabbleHandler());
+        consoleReader = new BufferedReader(new InputStreamReader(System.in));
+
     }
     public void initHands(){
         for(int i = 0; i < gameState.playersList.size(); i++){
@@ -89,23 +91,22 @@ public class HostPlayer extends  Player{
         initHands();
         System.out.println("after playerlist");
 
-
       //  loadBooks();
         while(!gameState.isGameOver)
         {
             System.out.println("after game is over");
-            for(GameClientHandler gch: GameServer.getClients())
+            for(Player player : gameState.playersList)
             {
 
                 System.out.println("after for player list");
 
-                while(!gch.player.isTurnOver)
+                while(!player.isTurnOver)
                {
                     System.out.println("before legal move");
-                    gch.player.isTurnOver =  legalMove(gch);
+                    player.isTurnOver =  legalMove(player);
 
                 }
-                gch.player.isTurnOver = false; // returning so next round the player can play again his turn.
+                player.isTurnOver = false; // returning so next round the player can play again his turn.
 
                 currPlayerInd = ((currPlayerInd+1) % gameState.playersList.size());
 
@@ -120,19 +121,35 @@ public class HostPlayer extends  Player{
     }
 
 
-    public boolean legalMove(GameClientHandler gch)
+    public boolean legalMove(Player player)
     {
+        String msg = null;
         int score=0;
+        if(player.getClass().equals(this.getClass()))
+        {
+            System.out.println("Host, enter your query: ");
+            try {
+                msg = consoleReader.readLine();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        else {
+            for (GameClientHandler gch : GameServer.getClients()) {
+                if (gch.player.equals(player)) {
+                    msg = gch.getMessageQuery();
 
-        String msg = gch.getMessageQuery();
-
+                }
+            }
+        }
                     // CAR,4,5,true
           // msg = gch.player.getWordQuery();
 
         String[] query = msg.split(",");
 
-       // msg = "Q,mobydick.txt,"+"TOKEN";
-        String dicWord = "Q,mobydick.txt,"+query[0];
+        // msg = "Q,mobydick.txt,"+"TOKEN";
+        String tmp = getTextFiles();
+        String dicWord = "Q," + tmp + query[0];
         boolean validQuery;
         validQuery = tmpDictionaryLegal(dicWord);
         Word word = convertStrToWord(msg);
@@ -233,16 +250,20 @@ public class HostPlayer extends  Player{
         }
         return tileArr;
     }
+
+    public String getTextFiles(){
+        String folderPath = "search_folder";
+        StringBuilder textFilesBuilder = new StringBuilder();
+        File folder = new File(folderPath);
+        File[] files = folder.listFiles();
+
+        if(files != null){
+            for(File file: files){
+                textFilesBuilder.append(file.getName());
+                textFilesBuilder.append(',');
+            }
+        }
+        return textFilesBuilder.toString();
+    }
 }
 
-/*
-	private static Tile[] get(String s) {
-		Tile[] ts=new Tile[s.length()];
-		int i=0;
-		for(char c: s.toCharArray()) {
-			ts[i]=Bag.getBag().getTile(c);
-			i++;
-		}
-		return ts;
-	}
- */

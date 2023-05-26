@@ -40,7 +40,7 @@ public class Dictionary {
         String[] newWords;
 
         try (BufferedReader buffer = new BufferedReader(
-                new FileReader(file))) {
+                new FileReader("search_folder/" +file))) {
 
             String str;
 
