@@ -20,14 +20,14 @@ public class Client {
     }
 
     // driver code
-    public  void start() {
+    public void start() {
         try {
             socket = new Socket(ip, port);
             System.out.println("Connected to server.");
 
-             consoleReader = new BufferedReader(new InputStreamReader(System.in));
-             readFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-             writeToServer = new PrintWriter(socket.getOutputStream(), true);
+            consoleReader = new BufferedReader(new InputStreamReader(System.in));
+            readFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            writeToServer = new PrintWriter(socket.getOutputStream(), true);
 
 
             // receiving msg
@@ -55,18 +55,4 @@ public class Client {
         }
     }
 
-    // sending queries to host
-//    public void sendQuery()
-//    {
-//            String message=null;
-//        try {
-//            if ((message = consoleReader.readLine()) != null) {
-//                writer.println(message);
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        //  this.setWordQuery(message);
-//        System.out.println("after senqauery");
-//    }
 }

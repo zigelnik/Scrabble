@@ -17,10 +17,7 @@ public class GameServer {
         gameState = new GameState();
         hostPlayer = new HostPlayer(gameState);
     }
-    public HostPlayer getHost()
-    {
-        return hostPlayer;
-    }
+
 
     public static List<GameClientHandler> getClients() {
         return clients;

@@ -9,8 +9,6 @@ public interface Facade {
 
 
 
-    void addPlayer(Player player);
-
     void disconnect();
 
 

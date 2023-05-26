@@ -84,25 +84,19 @@ public class HostPlayer extends  Player{
         return tmpMoveScore;
     }
     public void initGame(){
-        System.out.println("init");
 
         int currPlayerInd = 1;
          gameState.setTurns(); // players turns by their index in playerList
-        initHands();
-        System.out.println("after playerlist");
+          initHands();
 
       //  loadBooks();
         while(!gameState.isGameOver)
         {
-            System.out.println("after game is over");
             for(Player player : gameState.playersList)
             {
 
-                System.out.println("after for player list");
-
                 while(!player.isTurnOver)
                {
-                    System.out.println("before legal move");
                     player.isTurnOver =  legalMove(player);
 
                 }
@@ -116,13 +110,11 @@ public class HostPlayer extends  Player{
 
         }
 
-
-        // System.out.println(hp.tmpDictionaryLegal("Q,mobydick.txt,"+"TOKEN"));
     }
-
 
     public boolean legalMove(Player player)
     {
+        boolean validQuery;
         String msg = null;
         int score=0;
         if(player.getClass().equals(this.getClass()))
@@ -142,20 +134,18 @@ public class HostPlayer extends  Player{
                 }
             }
         }
-                    // CAR,4,5,true
-          // msg = gch.player.getWordQuery();
+
 
         String[] query = msg.split(",");
 
-        // msg = "Q,mobydick.txt,"+"TOKEN";
+
         String tmp = getTextFiles();
         String dicWord = "Q," + tmp + query[0];
-        boolean validQuery;
+
         validQuery = tmpDictionaryLegal(dicWord);
         Word word = convertStrToWord(msg);
         if(validQuery)
         {
-            System.out.println("before make move");
             score=  makeMove(word,gameState);
 
             return score != 0;
@@ -174,25 +164,18 @@ public class HostPlayer extends  Player{
 
         boolean rightWord = false;
         queryServer.start();
-        // [*] get input(tiles) from client(button's gui?) make it to a string so we can
-        // send it as a query to the BookScrabbleHandler
-        // [*] put tests here like eli did in mainTrain -> testBSCH
+
         try {
             DictionaryManager dm = DictionaryManager.get();
-          //  dm.query("mobydick.txt,LONDON");
-            System.out.println("before socket");
+
             Socket server = new Socket("localhost", port);
             PrintWriter out = new PrintWriter(server.getOutputStream());
-            System.out.println("before scanner");
 
             Scanner in = new Scanner(server.getInputStream());
-            System.out.println("before outprintln(query)");
 
             out.println(query);
             out.flush();
-            System.out.println("after flush, before in,next");
             String res = in.next();
-            System.out.println("after in next");
             System.out.println(res);
             if ( res.equals("true")) {
                 rightWord = true;
@@ -210,19 +193,9 @@ public class HostPlayer extends  Player{
 
         }
         queryServer.close();
-        System.out.println("after dictionaryLegal");
 
         return rightWord;
     }
-
-        public void loadBooks()
-        {
-
-            System.out.println("in laod books");
-           Dictionary d = new Dictionary("mobydick.txt");
-
-
-        }
 
 
     public Word convertStrToWord(String strQuery){
