@@ -158,7 +158,7 @@ public static Board getBoard(){
                 return true;
         }
         System.out.println("Invalid move!! , first word has to cross the star");
-        
+
         return false;
     }
 

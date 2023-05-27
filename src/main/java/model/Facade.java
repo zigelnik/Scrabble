@@ -7,8 +7,6 @@ public interface Facade {
 
     void joinGame(String ip, int port );
 
-
-
     void disconnect();
 
 

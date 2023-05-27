@@ -2,18 +2,20 @@ package model;
 
 import model.concrete.Board;
 import model.concrete.Tile;
+import model.concrete.Word;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public  class GameState {
+public class GameState implements Serializable {
      public Tile.Bag bag;
      List<Player> playersList;
-    public   Board board;
-     public boolean isGameOver;
+     public Board board;
+     private boolean isGameOver;
 
     //CTOR
     public  GameState() {
@@ -24,21 +26,21 @@ public  class GameState {
     }
 
     //Getters
-
-
+    public Board getBoard()
+    {
+        return this.board;
+    }
+    public Tile.Bag getBag()
+    {
+        return this.bag;
+    }
     public  List<Player> getPlayersList() {
         return playersList;
     }
 
-
     public  boolean getIsGameOver(){return isGameOver;}
 
-    public void initHands(){
-        for(int i = 0; i < playersList.size(); i++){
-            for(int j=0;j<playersList.get(i).handSize;j++)
-                playersList.get(i).playerHand.add(bag.getRand());
-        }
-    }
+
     // Functions
     public  void setTurns(){
         //extracting randomly tile for each player, setting is id, returning to bag
@@ -62,7 +64,12 @@ public  class GameState {
         //first player at list is now playing first randomly
     }
 
-
+    public void initHands(){
+        for(int i = 0; i < playersList.size(); i++){
+            for(int j=0;j<playersList.get(i).handSize;j++)
+                playersList.get(i).playerHand.add(bag.getRand());
+        }
+    }
     public  void addPlayer(Player player)
     {
         playersList.add(player);
@@ -100,4 +107,29 @@ public  class GameState {
         return textFilesBuilder.toString();
     }
 
+    // converting string to Tiles[] for creating new Word
+    public Word convertStrToWord(String strQuery){
+        //EXAMPLE: "CAR,5,6,False"
+        String[] res = strQuery.split(",");
+        String word = res[0];
+        int row = Integer.parseInt(res[1]);
+        int col = Integer.parseInt(res[2]);
+        boolean vert = Boolean.parseBoolean(res[3]);
+
+        //after parsing the strings , creating new Word
+        Tile[] wordTile = getTileArr(word.toUpperCase());
+        Word tmpQuery = new Word(wordTile, row, col, vert);
+        System.out.println("after convert str to word");
+        return tmpQuery;
+    }
+
+    public  Tile[] getTileArr(String str) {
+        Tile[] tileArr =new Tile[str.length()];
+        int i=0;
+        for(char ch: str.toCharArray()) {
+            tileArr[i]= bag.getTile(ch);
+            i++;
+        }
+        return tileArr;
+    }
 }

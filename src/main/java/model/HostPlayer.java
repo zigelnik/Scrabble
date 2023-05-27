@@ -18,17 +18,21 @@ import java.util.stream.Collectors;
 
 public class HostPlayer extends  Player{
 
-    private GameState gameState;
     private BufferedReader consoleReader;
     public QueryServer queryServer;
     public int port = 9998;
-    static boolean flag = false;
 
     public HostPlayer(GameState gs) {
+        System.out.println("Host, enter your name:");
+        try {
+            consoleReader = new BufferedReader(new InputStreamReader(System.in));
+            this.setName(consoleReader.readLine());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         gameState = gs;
         gameState.addPlayer(this);
         queryServer = new QueryServer(port,new BookScrabbleHandler());
-        consoleReader = new BufferedReader(new InputStreamReader(System.in));
 
     }
     public void initGame(){
@@ -45,64 +49,41 @@ public class HostPlayer extends  Player{
         }
 
         //  loadBooks();
-        while(!gameState.isGameOver)
+        while(!gameState.getIsGameOver())
         {
             for(Player player : gameState.playersList)
             {
-
                 while(!player.isTurnOver)
                 {
                     player.isTurnOver =  legalMove(player);
-
                 }
                 player.isTurnOver = false; // returning so next round the player can play again his turn.
-
                 currPlayerInd = ((currPlayerInd+1) % gameState.playersList.size());
 
                 // do we need to get the winner as object or change the isWinner to void?
                 Player winner = gameState.isWinner();
+
+               // updateGame();
             }
-
         }
-
     }
 
-    public int makeMove(Word w){
-        // if makeMove fails this integer will stay 0.
-        int tmpMoveScore = 0;
-
-        // if tiles are over
-        if(handSize == 0){
-            System.out.println("Tiles are over");
-            return tmpMoveScore;
+    // optional: updating all clients with the updates game state
+        public void updateGame()
+        {
+            for(GameClientHandler gch: GameServer.getClients())
+            {
+                gch.updateClientsState(gameState);
+            }
         }
-        // if the player wants to place a word with not enough tiles
-        else if(w.getTiles().length > handSize){
-            System.out.println("Tiles are over");
-            return tmpMoveScore;
-        }
-        // if the player don't have all the tiles for the word
-//        else if(!isContain(w)){
-//            System.out.println("Not all word tiles are existed");
-//            return tmpMoveScore;
-//        }
-        tmpMoveScore += gameState.board.tryPlaceWord(w); // placing the word at the same board
-        // after all checks,decline the words size from pack and init pack back to 7.
-        if(tmpMoveScore != 0){
-            handSize -= w.getTiles().length;
-            initHandAfterMove(w);
-        }
-        sumScore += tmpMoveScore;
-        //if tmpMoveScore is 0 then one of the checks is failed
-        return tmpMoveScore;
-    }
-
 
     public boolean legalMove(Player player)
     {
         boolean validQuery;
         String msg = null;
         int score=0;
+
+                  // if the player is the host
         if(player.getClass().equals(this.getClass()))
         {
             System.out.println("Host, enter your query: ");
@@ -112,7 +93,8 @@ public class HostPlayer extends  Player{
                 throw new RuntimeException(e);
             }
         }
-        else {
+
+        else { // if the player is a regular player
             for (GameClientHandler gch : GameServer.getClients()) {
                 if (gch.player.equals(player)) {
                     msg = gch.getMessageQuery();
@@ -121,17 +103,15 @@ public class HostPlayer extends  Player{
             }
         }
 
-
         String[] query = msg.split(",");
-
-
         String tmp = gameState.getTextFiles();
         String dicWord = "Q," + tmp + query[0];
+        // TODO: should we get a _ from the query and try to complete the word before sending it to make move?
 
         validQuery = tmpDictionaryLegal(dicWord);
         if(validQuery)
         {
-            score=  makeMove(convertStrToWord(msg));
+            score=  makeMove(gameState.convertStrToWord(msg),player);
             player.sumScore += score;
             return score != 0;
         }
@@ -139,6 +119,35 @@ public class HostPlayer extends  Player{
         return false; //set to change
     }
 
+    public int makeMove(Word w, Player p){
+        // if makeMove fails this integer will stay 0.
+        int tmpMoveScore = 0;
+
+        // if tiles are over
+        if(p.getHandSize() == 0){
+            System.out.println("Tiles are over");
+            return tmpMoveScore;
+        }
+        // if the player wants to place a word with not enough tiles
+        else if(w.getTiles().length > p.getHandSize()){
+            System.out.println("Tiles are over");
+            return tmpMoveScore;
+        }
+        // if the player don't have all the tiles for the word
+        else if(!isContain(w,p)){
+            System.out.println("Not all word tiles are existed");
+            return tmpMoveScore;
+        }
+        tmpMoveScore += gameState.board.tryPlaceWord(w); // placing the word at the same board
+        // after all checks,decline the words size from pack and init pack back to 7.
+        if(tmpMoveScore != 0){
+            p.setHandSize(p.getHandSize() - w.getTiles().length);
+            initHandAfterMove(w , p);
+        }
+        p.setSumScore(p.getSumScore()+ tmpMoveScore);
+        //if tmpMoveScore is 0 then one of the checks is failed
+        return tmpMoveScore;
+    }
 
     // there is dictionaryLegal method from patam1 , return always True.
     public boolean tmpDictionaryLegal(String query ){
@@ -183,48 +192,18 @@ public class HostPlayer extends  Player{
     }
 
 
-    public Word convertStrToWord(String strQuery){
-        //EXAMPLE: "CAR,5,6,False"
-        String[] res = strQuery.split(",");
-        String word = res[0];
-        int row = Integer.parseInt(res[1]);
-        int col = Integer.parseInt(res[2]);
-        boolean vert = Boolean.parseBoolean(res[3]);
-
-        //after parsing the strings , creating new Word
-        Tile[] wordTile = getTileArr(word.toUpperCase());
-        Word tmpQuery = new Word(wordTile, row, col, vert);
-        System.out.println("after convert str to word");
-            return tmpQuery;
-    }
-
-    // converting string to Tiles[] for creating new Word
-    public  Tile[] getTileArr(String str) {
-        Tile[] tileArr =new Tile[str.length()];
-        int i=0;
-        for(char ch: str.toCharArray()) {
-            tileArr[i]= gameState.bag.getTile(ch);
-            i++;
-        }
-        return tileArr;
-    }
-
-
-
-
     // func for re-packing the player hand with tiles after placing word on board
-    public void initHandAfterMove(Word w) {
+    public void initHandAfterMove(Word w, Player p) {
         List<Tile>tmpWordList = Arrays.stream(w.getTiles()).toList();
-        playerHand = playerHand.stream().filter((t)->!tmpWordList.contains(t)).collect(Collectors.toList());
+        p.setPlayerHand(p.getPlayerHand().stream().filter((t)->!tmpWordList.contains(t)).collect(Collectors.toList()));
         while(!handIsFull()){
-            playerHand.add(gameState.bag.getRand());
-            handSize++;
+            p.getPlayerHand().add(gameState.bag.getRand());
+            p.setHandSize(p.getHandSize()+1);
         }
     }
 
-
-    private boolean isContain(Word w) {
-        for(Tile t: playerHand){
+    public boolean isContain(Word w, Player p) {
+        for(Tile t: p.getPlayerHand()){
             if(!(Arrays.stream(w.getTiles()).toList().contains(t)) && t != null){
                 return false;
             }

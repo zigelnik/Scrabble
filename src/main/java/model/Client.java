@@ -9,17 +9,17 @@ public class Client {
     String ip;
     int port;
     Socket socket;
-
     BufferedReader consoleReader;
     BufferedReader readFromServer;
     PrintWriter writeToServer;
+
+    private GameState gameState;
 
     public Client(String ip, int port) {
         this.ip = ip;
         this.port = port;
     }
 
-    // driver code
     public void start() {
         try {
             socket = new Socket(ip, port);
@@ -42,6 +42,23 @@ public class Client {
                 }
             });
             receiveThread.start();
+
+            // --- should the client get a game state as object input stream and deal with it? ----
+//            Thread stateThread = new Thread(() -> {
+//                try {
+//                    System.out.println("reading objects in client");
+//                    ObjectInputStream inputStream= new ObjectInputStream(socket.getInputStream());
+//                    gameState = (GameState) inputStream.readObject();
+//
+//
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                } catch (ClassNotFoundException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            });
+//            stateThread.start();
+//               -------------------------------------------------------
 
             // sending msg
             String message;
