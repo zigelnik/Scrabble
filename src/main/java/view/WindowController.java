@@ -10,8 +10,8 @@ public class WindowController extends Observable {
 
     @FXML
     Button hostB;
-@FXML
-Button joinB;
+    @FXML
+    Button joinB;
 
     Model m = new Model();
 

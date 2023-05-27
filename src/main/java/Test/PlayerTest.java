@@ -58,12 +58,7 @@ public class PlayerTest {
         for (Player p: pList){
          //   p.initHand();
         }
-//        if(p1.makeMove(w1) > 0){
-//            System.out.println("Problem with packSize at p1 hand (-10)");
-//        }
-//        if(p1.getHandSize() != 7 && !GameState.getGameState().getIsGameOver()){
-//            System.out.println("Problem with player re-packing while game not over (-10)");
-//        }
+
 
     }
 }
