@@ -3,14 +3,13 @@ package model;
 import model.concrete.Tile;
 import model.concrete.Word;
 import model.logic.BookScrabbleHandler;
-import model.logic.Dictionary;
 import model.logic.DictionaryManager;
-import model.logic.QueryServer;
+import model.network.QueryServer;
+import model.network.GameClientHandler;
+import model.network.GameServer;
 
 import java.io.*;
 import java.net.Socket;
-import java.security.PrivateKey;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;

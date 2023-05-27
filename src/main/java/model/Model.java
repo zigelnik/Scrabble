@@ -1,6 +1,9 @@
 package model;
 
 
+import model.network.Client;
+import model.network.GameServer;
+
 import java.util.Observable;
 
 public class Model extends Observable implements Facade {

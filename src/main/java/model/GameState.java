@@ -93,7 +93,7 @@ public class GameState implements Serializable {
     }
 
     public String getTextFiles(){
-        String folderPath = "search_folder";
+        String folderPath = "src\\main\\resources\\search_folder";
         StringBuilder textFilesBuilder = new StringBuilder();
         File folder = new File(folderPath);
         File[] files = folder.listFiles();
