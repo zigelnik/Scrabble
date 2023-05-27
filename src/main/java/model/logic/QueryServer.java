@@ -52,7 +52,6 @@ public class QueryServer extends Thread{
                 Socket aClient = server.accept();
 
                 try {
-
                     ch.handleClient(aClient.getInputStream(), aClient.getOutputStream());
                     ch.close();
 

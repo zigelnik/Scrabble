@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module version="4">
+  <component name="NewModuleRootManager">
+    <output url="file://$MODULE_DIR$/../../build/classes/java/main" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../../src/main">
+      <sourceFolder url="file://$MODULE_DIR$/../../src/main/java" isTestSource="false" />
+    </content>
+    <orderEntry type="jdk" jdkName="temurin-18 (2)" jdkType="JavaSDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Gradle: org.apiguardian:apiguardian-api:1.1.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.openjfx:javafx-base:win:18.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.openjfx:javafx-graphics:18.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.openjfx:javafx-graphics:win:18.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.junit.jupiter:junit-jupiter-api:5.9.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.openjfx:javafx-fxml:win:18.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.openjfx:javafx-controls:win:18.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.junit.jupiter:junit-jupiter-engine:5.9.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.openjfx:javafx-base:18.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.opentest4j:opentest4j:1.2.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.junit.platform:junit-platform-commons:1.9.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.junit.platform:junit-platform-engine:1.9.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.openjfx:javafx-controls:18.0.2" level="project" />
+  </component>
+</module>

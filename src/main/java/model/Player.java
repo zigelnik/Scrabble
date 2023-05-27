@@ -19,8 +19,7 @@ public class Player {
     int handSize; // physical size of tiles
     int sumScore;
     String wordQuery;
-
-boolean isTurnOver;
+    boolean isTurnOver;
 
     public Player(){
         this.id = 0;
