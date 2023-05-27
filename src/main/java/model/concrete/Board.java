@@ -157,6 +157,8 @@ public static Board getBoard(){
             else if (w.isVertical() && col == STAR && row + wordSize > STAR)
                 return true;
         }
+        System.out.println("Invalid move!! , first word has to cross the star");
+        
         return false;
     }
 
@@ -227,7 +229,6 @@ public static Board getBoard(){
         }
 
         if (firstWord == false){
-            System.out.println("Invalid move!! , first word has to cross the star");
             return FirstWordOnStar(w);
         }
 

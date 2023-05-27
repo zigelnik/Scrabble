@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 public class HostPlayer extends  Player{
 
-    private  GameState gameState;
+    private GameState gameState;
     private BufferedReader consoleReader;
     public QueryServer queryServer;
     public int port = 9998;
@@ -31,72 +31,27 @@ public class HostPlayer extends  Player{
         consoleReader = new BufferedReader(new InputStreamReader(System.in));
 
     }
-    public void initHands(){
-        for(int i = 0; i < gameState.playersList.size(); i++){
-            for(int j=0;j<gameState.playersList.get(i).handSize;j++)
-            gameState.playersList.get(i).playerHand.add(gameState.bag.getRand());
-        }
-    }
-    // func for re-packing the player hand with tiles after placing word on board
-    public void initHandAfterMove(Word w) {
-        List<Tile>tmpWordList = Arrays.stream(w.getTiles()).toList();
-        playerHand = playerHand.stream().filter((t)->!tmpWordList.contains(t)).collect(Collectors.toList());
-        while(!handIsFull()){
-            playerHand.add(gameState.bag.getRand());
-            handSize++;
-        }
-    }
-    private boolean isContain(Word w) {
-        for(Tile t: playerHand){
-            if(!(Arrays.stream(w.getTiles()).toList().contains(t))){
-                return false;
-            }
-        }
-        return true;
-    }
-    public int makeMove(Word w, GameState gameState){
-        // if makeMove fails this integer will stay 0.
-        int tmpMoveScore = 0;
-
-        // if tiles are over
-        if(handSize == 0){
-            System.out.println("Tiles are over");
-            return tmpMoveScore;
-        }
-        // if the player wants to place a word with not enough tiles
-        else if(w.getTiles().length > handSize){
-            System.out.println("Tiles are over");
-            return tmpMoveScore;
-        }
-        // if the player don't have all the tiles for the word
-        else if(!isContain(w)){
-            System.out.println("Not all word tiles are existed");
-            return tmpMoveScore;
-        }
-        tmpMoveScore += gameState.board.tryPlaceWord(w); // placing the word at the same board
-        // after all checks,decline the words size from pack and init pack back to 7.
-        if(tmpMoveScore != 0){
-            handSize -= w.getTiles().length;
-            initHandAfterMove(w);
-        }
-        sumScore += tmpMoveScore;
-        //if tmpMoveScore is 0 then one of the checks is failed
-        return tmpMoveScore;
-    }
     public void initGame(){
 
         int currPlayerInd = 1;
-         gameState.setTurns(); // players turns by their index in playerList
-          initHands();
+        gameState.setTurns(); // players turns by their index in playerList
 
-      //  loadBooks();
+        try {
+            gameState.initHands();
+        }catch(Exception e)
+        {
+            System.out.println("problem inithands");
+            e.printStackTrace();
+        }
+
+        //  loadBooks();
         while(!gameState.isGameOver)
         {
             for(Player player : gameState.playersList)
             {
 
                 while(!player.isTurnOver)
-               {
+                {
                     player.isTurnOver =  legalMove(player);
 
                 }
@@ -111,6 +66,37 @@ public class HostPlayer extends  Player{
         }
 
     }
+
+    public int makeMove(Word w){
+        // if makeMove fails this integer will stay 0.
+        int tmpMoveScore = 0;
+
+        // if tiles are over
+        if(handSize == 0){
+            System.out.println("Tiles are over");
+            return tmpMoveScore;
+        }
+        // if the player wants to place a word with not enough tiles
+        else if(w.getTiles().length > handSize){
+            System.out.println("Tiles are over");
+            return tmpMoveScore;
+        }
+        // if the player don't have all the tiles for the word
+//        else if(!isContain(w)){
+//            System.out.println("Not all word tiles are existed");
+//            return tmpMoveScore;
+//        }
+        tmpMoveScore += gameState.board.tryPlaceWord(w); // placing the word at the same board
+        // after all checks,decline the words size from pack and init pack back to 7.
+        if(tmpMoveScore != 0){
+            handSize -= w.getTiles().length;
+            initHandAfterMove(w);
+        }
+        sumScore += tmpMoveScore;
+        //if tmpMoveScore is 0 then one of the checks is failed
+        return tmpMoveScore;
+    }
+
 
     public boolean legalMove(Player player)
     {
@@ -139,15 +125,14 @@ public class HostPlayer extends  Player{
         String[] query = msg.split(",");
 
 
-        String tmp = getTextFiles();
+        String tmp = gameState.getTextFiles();
         String dicWord = "Q," + tmp + query[0];
 
         validQuery = tmpDictionaryLegal(dicWord);
-        Word word = convertStrToWord(msg);
         if(validQuery)
         {
-            score=  makeMove(word,gameState);
-
+            score=  makeMove(convertStrToWord(msg));
+            player.sumScore += score;
             return score != 0;
         }
 
@@ -207,7 +192,7 @@ public class HostPlayer extends  Player{
         boolean vert = Boolean.parseBoolean(res[3]);
 
         //after parsing the strings , creating new Word
-        Tile[] wordTile = getTileArr(word);
+        Tile[] wordTile = getTileArr(word.toUpperCase());
         Word tmpQuery = new Word(wordTile, row, col, vert);
         System.out.println("after convert str to word");
             return tmpQuery;
@@ -224,19 +209,27 @@ public class HostPlayer extends  Player{
         return tileArr;
     }
 
-    public String getTextFiles(){
-        String folderPath = "search_folder";
-        StringBuilder textFilesBuilder = new StringBuilder();
-        File folder = new File(folderPath);
-        File[] files = folder.listFiles();
 
-        if(files != null){
-            for(File file: files){
-                textFilesBuilder.append(file.getName());
-                textFilesBuilder.append(',');
+
+
+    // func for re-packing the player hand with tiles after placing word on board
+    public void initHandAfterMove(Word w) {
+        List<Tile>tmpWordList = Arrays.stream(w.getTiles()).toList();
+        playerHand = playerHand.stream().filter((t)->!tmpWordList.contains(t)).collect(Collectors.toList());
+        while(!handIsFull()){
+            playerHand.add(gameState.bag.getRand());
+            handSize++;
+        }
+    }
+
+
+    private boolean isContain(Word w) {
+        for(Tile t: playerHand){
+            if(!(Arrays.stream(w.getTiles()).toList().contains(t)) && t != null){
+                return false;
             }
         }
-        return textFilesBuilder.toString();
+        return true;
     }
 }
 

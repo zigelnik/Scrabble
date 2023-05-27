@@ -35,12 +35,8 @@ public class Model extends Observable implements Facade {
         client.start();
 
     }
+    
 
-
-    @Override
-    public void addPlayer(Player player) {
-       // GameState.addPlayer(player);
-    }
 
     @Override
     public void disconnect() {

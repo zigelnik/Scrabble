@@ -3,6 +3,7 @@ package model;
 import model.concrete.Board;
 import model.concrete.Tile;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -32,7 +33,12 @@ public  class GameState {
 
     public  boolean getIsGameOver(){return isGameOver;}
 
-
+    public void initHands(){
+        for(int i = 0; i < playersList.size(); i++){
+            for(int j=0;j<playersList.get(i).handSize;j++)
+                playersList.get(i).playerHand.add(bag.getRand());
+        }
+    }
     // Functions
     public  void setTurns(){
         //extracting randomly tile for each player, setting is id, returning to bag
@@ -79,5 +85,19 @@ public  class GameState {
         return null;
     }
 
+    public String getTextFiles(){
+        String folderPath = "search_folder";
+        StringBuilder textFilesBuilder = new StringBuilder();
+        File folder = new File(folderPath);
+        File[] files = folder.listFiles();
+
+        if(files != null){
+            for(File file: files){
+                textFilesBuilder.append(file.getName());
+                textFilesBuilder.append(',');
+            }
+        }
+        return textFilesBuilder.toString();
+    }
 
 }
