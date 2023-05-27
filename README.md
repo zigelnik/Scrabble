@@ -2,7 +2,11 @@
 This is a JavaFX implementation of the Scrabble game using the Model-View-ViewModel (MVVM) architecture and Observer-Observable design pattern. The game operates with Server-Socket and has two modes: Guest and Host mode. This project was developed as part of a college course and demonstrates knowledge of advanced programming concepts, including design patterns, object-oriented programming, and user interface design.
 
 ## Planning
-![WhatsApp Image 2023-05-07 at 17 32 12](https://user-images.githubusercontent.com/78549129/236684145-508429e7-3f76-489a-b24c-910df4b8264a.jpeg)
+![אבן דרך 2+3](https://github.com/zigelnik/Scrabble/assets/78549129/ad4c92b8-9189-45b8-9337-739db5faf0ee)
+![מיין טייבל1](https://github.com/zigelnik/Scrabble/assets/78549129/fd62b428-ba60-4232-8e9d-724d5da03e49)
+![מיין טייבל2](https://github.com/zigelnik/Scrabble/assets/78549129/dee0162b-af88-437d-a467-c5a4dae6e882)
+![אבן דרך 1](https://github.com/zigelnik/Scrabble/assets/78549129/310c3d0c-de4e-441f-94ce-5efb54b4105d)
+
 
 
 
@@ -35,5 +39,3 @@ The project is structured using the MVVM architecture and Observer-Observable de
 
 **ViewModel**: Contains the view model classes for the game, which handle the game logic and communication between the model and view. The classes in this package act as intermediaries between the model and view, responding to user input and updating the view accordingly.
 
-## Conclusion
-This project demonstrates the use of advanced programming concepts in the development of a JavaFX application. The use of the MVVM architecture and Observer-Observable design pattern improves code quality, making the application easier to read, maintain, and extend. The project also demonstrates effective user interface design and implementation, providing an intuitive and engaging experience for the user. Overall, this project represents a high level of competency in programming and is a testament to the skills and knowledge gained through.
