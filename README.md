@@ -10,6 +10,9 @@ This is a JavaFX implementation of the Scrabble game using the Model-View-ViewMo
 
 ## Planning
 ![Screenshot 2023-05-27 133800](https://github.com/zigelnik/Scrabble/assets/78549129/3ea44ac2-c5db-4ccb-a62e-5e07b2711377)
+![Screenshot 2023-05-27 133929](https://github.com/zigelnik/Scrabble/assets/78549129/eb8177c6-02f1-46d8-a76b-8007330f5830)
+![Screenshot 2023-05-27 134018](https://github.com/zigelnik/Scrabble/assets/78549129/426e368e-45be-45ab-af41-1c178f4ec2ed)
+![Screenshot 2023-05-27 134042](https://github.com/zigelnik/Scrabble/assets/78549129/b0ce5f1b-7e5f-4e00-acc5-663128c8aaee)
 
 
 
