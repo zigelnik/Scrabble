@@ -5,23 +5,20 @@ import model.Model;
 public class ModelTest
 {
 
+    // to start run the jar file in artifacts/Scrabble.jar from 2 terminals:
+    // the first run should host the game "java -jar Scrabble.jar host <port number>
+    // the second terminal should run the command: java-jar Scrabble.jar join <ip> <port>
+        public static void main(String[] args) {
+            Model m = new Model();
+            if(args[0].equals("host"))
+            {
+                m.hostGame(Integer.parseInt(args[1]));
 
-    public static void main(String[] args) {
-        Model m = new Model();
-
-
-        Thread hostThread = new Thread(() -> {
-            m.hostGame(9998);
-        });
-        hostThread.start();
-
-
-
-        Thread joinThread = new Thread(()-> {
-            m.joinGame("localhost", 9998);
-        });
-        joinThread.start();
-
+            }
+            else if(args[0].equals("join"))
+            {
+                m.joinGame(args[1],Integer.parseInt(args[2]));
+            }
 
 
 

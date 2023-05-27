@@ -23,7 +23,7 @@ public class HostPlayer extends  Player{
     public int port = 9998;
 
     public HostPlayer(GameState gs) {
-      //  System.out.println("Host, enter your name:");
+       System.out.println("Host, enter your name:");
         try {
             consoleReader = new BufferedReader(new InputStreamReader(System.in));
             this.setName(consoleReader.readLine());
