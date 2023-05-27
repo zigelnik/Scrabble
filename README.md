@@ -8,11 +8,6 @@ This is a JavaFX implementation of the Scrabble game using the Model-View-ViewMo
 [Tal Lovton](https://github.com/TalLovton)
 
 ## Planning
-[Main Table-1](https://github.com/TalLovton/Scrabble-Game/files/11582382/Scrabble.Project2.pdf)<br />
-[GANT-1](https://github.com/TalLovton/Scrabble-Game/files/11582394/WhatsApp.Image.2023-05-27.at.18.43.59.pdf)<br />
-[Main Table-2](https://github.com/TalLovton/Scrabble-Game/files/11582383/Scrabble.Project1.pdf)<br />
-[GANT-2](https://github.com/TalLovton/Scrabble-Game/files/11582395/WhatsApp.Image.2023-05-27.at.18.43.04.pdf)
-
 <img src="https://github.com/zigelnik/Scrabble/assets/107995222/ca366541-eabe-4f1b-9beb-acd700e6afbf" width = "200" height = "200">
 <img src="https://github.com/zigelnik/Scrabble/assets/107995222/7a2a4c10-74b9-42f4-b714-7dd72b0a7d1d" width = "200" height = "200">
 <img src="https://github.com/zigelnik/Scrabble/assets/107995222/3d1b48b9-d3eb-4e8d-9eeb-571f55ce4637" width = "200" height = "200">
