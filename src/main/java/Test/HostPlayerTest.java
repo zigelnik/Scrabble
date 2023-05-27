@@ -5,7 +5,7 @@ import model.Player;
 import model.concrete.Tile;
 import model.concrete.Word;
 
-
+// HostPlayer extends PLayer so it tests his methods as well
 public class HostPlayerTest {
     public static void main(String [] args){
         HostPlayer host = new HostPlayer(new GameState());

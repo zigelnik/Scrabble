@@ -2,6 +2,7 @@ package Test;
 
 import model.Model;
 
+        // this class is also testing Client, GameClientHandler and GameServer classes.
 public class ModelTest
 {
 
