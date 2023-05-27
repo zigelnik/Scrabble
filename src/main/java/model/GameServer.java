@@ -9,15 +9,24 @@ import java.util.List;
 public class GameServer {
     int port;
     private static final int MAX_CLIENTS = 3;
-    private static List<ClientHandler> clients = new ArrayList<>();
+    private static List<GameClientHandler> clients = new ArrayList<>();
+    private HostPlayer hostPlayer;
+    GameState gameState;
     public GameServer(int port) {
         this.port = port;
+        gameState = new GameState();
+        hostPlayer = new HostPlayer(gameState);
     }
 
+
+    public static List<GameClientHandler> getClients() {
+        return clients;
+    }
 
     public  void start() {
         try {
             ServerSocket serverSocket = new ServerSocket(port);
+
             System.out.println("Server started. Listening on port: "+port);
 
             Thread hostThread = new Thread(() -> {
@@ -26,6 +35,10 @@ public class GameServer {
                     try {
                         String message = hostReader.readLine();
                         broadcastToClients("Server: " + message);
+                        if(message.equals("/start"))
+                        {
+                            hostPlayer.initGame();
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -37,11 +50,12 @@ public class GameServer {
                 Socket clientSocket = serverSocket.accept();
 
                 if (clients.size() < MAX_CLIENTS) {
-                    System.out.println("New client connected: " + clientSocket);
+                    Player p = new Player();
+                    GameClientHandler gch = new GameClientHandler(clientSocket, p);
+                    clients.add(gch);
+                    gch.start();
+                    gameState.addPlayer(p);
 
-                    ClientHandler clientHandler = new ClientHandler(clientSocket);
-                    clients.add(clientHandler);
-                    clientHandler.start();
                 }
                 else {
                     System.out.println("too much clients");
@@ -56,59 +70,23 @@ public class GameServer {
 
     public static void broadcastToClients(String message) {
         synchronized (clients) {
-            for (ClientHandler client : clients) {
+            for (GameClientHandler client : clients) {
                 client.sendMessage(message);
             }
         }
     }
-
-    public static void removeClient(ClientHandler clientHandler) {
+    public static void sendStatetoClients(GameState gameState) {
         synchronized (clients) {
-            clients.remove(clientHandler);
+            for (GameClientHandler client : clients) {
+                client.updateClientsState(gameState);
+            }
+        }
+    }
+    public static void removeClient(GameClientHandler gameClientHandler) {
+        synchronized (clients) {
+            clients.remove(gameClientHandler);
         }
     }
 }
 
-class ClientHandler extends Thread {
-    private Socket clientSocket;
-    private BufferedReader reader;
-    private PrintWriter writer;
 
-    public ClientHandler(Socket socket) {
-        try {
-            clientSocket = socket;
-            reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            writer = new PrintWriter(clientSocket.getOutputStream(), true);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void run() {
-        try {
-            String clientName = reader.readLine();
-            System.out.println("Client name set: " + clientName);
-
-            String message;
-            while ((message = reader.readLine()) != null) {
-                System.out.println("Received message from client " + clientName + ": " + message);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                reader.close();
-                writer.close();
-                clientSocket.close();
-                GameServer.removeClient(this);
-                GameServer.broadcastToClients("Client " + clientSocket + " has left the chat.");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void sendMessage(String message) {
-        writer.println(message);
-    }
-}

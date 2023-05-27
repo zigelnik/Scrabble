@@ -34,24 +34,28 @@ public class Dictionary {
         }
     }
 
-    public String[] getWordsFromFile(String file) {
+    private String[] getWordsFromFile(String file) {
 
         StringBuilder builder = new StringBuilder();
         String[] newWords;
 
         try (BufferedReader buffer = new BufferedReader(
-                new FileReader(file))) {
+                new FileReader("search_folder/" +file))) {
 
             String str;
 
             // holding true upto that the while loop runs
             while ((str = buffer.readLine()) != null)
+            {
+                if(str.equals("")) continue;
                 builder.append(str).append("\n");
+
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        newWords = builder.toString().split("\\W");
+        newWords = builder.toString().split("\\W+");
 
 
         return newWords;

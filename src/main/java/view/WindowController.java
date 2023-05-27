@@ -2,6 +2,7 @@ package view;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import model.Model;
 
 import java.util.Observable;
 
@@ -9,18 +10,28 @@ public class WindowController extends Observable {
 
     @FXML
     Button hostB;
-@FXML
-Button joinB;
+    @FXML
+    Button joinB;
+
+    Model m = new Model();
+
+
 
 
     public void host()
     {
-       // GameServer.start();
+        Thread hostThread = new Thread(() -> {
+            m.hostGame(9996);
+        });
+        hostThread.start();
     }
 
     public void join()
     {
-        //GameClient.start();
+        Thread joinThread = new Thread(()-> {
+            m.joinGame("localhost", 9996);
+        });
+        joinThread.start();
     }
 
 

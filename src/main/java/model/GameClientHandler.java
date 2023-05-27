@@ -1,66 +1,85 @@
 package model;
 
-import model.logic.ClientHandler;
-
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 
-public class GameClientHandler implements ClientHandler{
+class GameClientHandler extends Thread {
+    private Socket clientSocket;
+    static private BufferedReader readFromClient;
+    private PrintWriter writeToClient;
+    Player player;
 
+    String stringWord;
 
-    public static List<GameClientHandler> handlerList= new ArrayList();
-    private String clientName;
-    PrintWriter out ;
-    BufferedReader in ;
-    public static GameState gameInstance = GameState.getGameState();
-
-    public GameClientHandler() {
-    }
-
-    @Override
-    public void handleClient(InputStream inFromclient, OutputStream outToClient) {
-          handlerList.add(this);
-
+    public GameClientHandler(Socket socket, Player p) {
         try {
-//     TODO:       ObjectOutput op =  new ObjectOutputStream(outToClient);
-//            op.writeObject(gameInstance);
-
-            out = new PrintWriter(
-                    outToClient, true);
-
-            in = new BufferedReader(
-                    new InputStreamReader(
-                            inFromclient));
-
-
-            String line;
-            while ((line = in.readLine()) != null) {
-
-                // writing the received message from
-                // client
-                System.out.printf(
-                        " Sent from client: " /*+ clientName */+ " " + line + "\n");
-                out.println(line);
-                out.flush();
-
-            }
-        }catch (IOException e)
-        {
+            player = p;
+            clientSocket = socket;
+            readFromClient = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            writeToClient = new PrintWriter(clientSocket.getOutputStream(), true);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    @Override
-    public void close() {
+    public void run() {
         try {
-            in.close();
-            out.close();
 
+            writeToClient.println("enter your name: ");
+            player.setName(readFromClient.readLine());
+            System.out.println("New client connected: " +player.getPlayerName()+" | From: "+ clientSocket.getInetAddress());
+
+            String message;
+            while ((message = readFromClient.readLine()) != null) {
+                System.out.println(message);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                readFromClient.close();
+                writeToClient.close();
+                clientSocket.close();
+                GameServer.removeClient(this);
+                GameServer.broadcastToClients("Client " + clientSocket + " has left the chat.");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void sendMessage(String message) {
+        writeToClient.println(message);
+    }
+
+    public  String getMessageQuery()
+    {
+        writeToClient.println("Enter you query: ");
+        try {
+            stringWord = readFromClient.readLine();
+            writeToClient.println(stringWord);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
+        return stringWord;
     }
+
+
+    public void updateClientsState(GameState gameState)
+    {
+        try {
+            ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+            outputStream.writeObject(gameState);
+            outputStream.flush();
+            outputStream.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }
+
+
+
+

@@ -12,6 +12,7 @@ public class BookScrabbleHandler implements  ClientHandler{
     @Override
     public void handleClient(InputStream inFromclient, OutputStream outToClient) {
         try{
+            System.out.println("before bookhandler");
 
             dm = new DictionaryManager();
             in = new Scanner(inFromclient);
@@ -33,6 +34,8 @@ public class BookScrabbleHandler implements  ClientHandler{
 
             out.flush();
             outToClient.flush();
+
+            System.out.println("after bookhandler");
 
         } catch (IOException e)
         {

@@ -38,7 +38,6 @@ public class Tile {
 
     public static class Bag
     {
-        private static Bag bag=null;
         private int tilesCounter = 26;
         private final int[] currAmount =            {9,2,2,4,12,2,3,2,9,1,1,4,2,6,8,2,1,6,4,6,4,2,2,1,2,1};
         private final int[] maxAmount =              {9,2,2,4,12,2,3,2,9,1,1,4,2,6,8,2,1,6,4,6,4,2,2,1,2,1};
@@ -121,13 +120,14 @@ public class Tile {
             return getBag().currAmount.clone();
         }
 
-        public static Bag getBag()
-        {
-             if (bag==null)
-                 bag = new Bag();
+      private  static class BagHolder{
+            public static final Bag bag = new Bag();
+      }
 
-             return bag;
-        }
+      public static Bag getBag()
+      {
+          return BagHolder.bag;
+      }
 
         public int getTilesCounter() {
             return tilesCounter;
