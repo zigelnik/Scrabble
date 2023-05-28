@@ -1,5 +1,5 @@
 package model.network;
-import model.GameState;
+import model.concrete.GameState;
 
 import java.io.*;
 import java.net.*;

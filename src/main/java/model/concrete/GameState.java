@@ -1,8 +1,4 @@
-package model;
-
-import model.concrete.Board;
-import model.concrete.Tile;
-import model.concrete.Word;
+package model.concrete;
 
 import java.io.File;
 import java.io.Serializable;
