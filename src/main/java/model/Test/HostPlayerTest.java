@@ -1,7 +1,7 @@
 package model.Test;
-import model.GameState;
-import model.HostPlayer;
-import model.Player;
+import model.concrete.GameState;
+import model.concrete.HostPlayer;
+import model.concrete.Player;
 import model.concrete.Tile;
 import model.concrete.Word;
 

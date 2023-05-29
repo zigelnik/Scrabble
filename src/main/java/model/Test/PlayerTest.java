@@ -1,6 +1,6 @@
 package model.Test;
 
-import model.Player;
+import model.concrete.Player;
 import model.concrete.Tile;
 import model.concrete.Word;
 import java.util.ArrayList;

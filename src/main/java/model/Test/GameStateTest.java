@@ -1,9 +1,10 @@
-package model;
+package model.Test;
 
 import model.concrete.Board;
+import model.concrete.GameState;
+import model.concrete.Player;
 import model.concrete.Tile;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GameStateTest {
@@ -42,9 +43,9 @@ public class GameStateTest {
         p.setName("tal");
         p2.setName("Joe");
         p3.setName("ZigBig");
-        gameState.playersList.add(p);
-        gameState.playersList.add(p2);
-        gameState.playersList.add(p3);
+        gameState.getPlayersList().add(p);
+        gameState.getPlayersList().add(p2);
+        gameState.getPlayersList().add(p3);
 
         gameState.setTurns();
     }
@@ -67,12 +68,12 @@ public class GameStateTest {
         p.setName("tal");
         p2.setName("Joe");
         p3.setName("ZigBig");
-        p.sumScore = 100;
-        p.handSize = 0;
-        p2.sumScore = 75;
-        p2.handSize = 0;
-        p3.sumScore = 62;
-        p3.handSize = 0;
+        p.setSumScore(100);
+        p.setHandSize(0);
+        p2.setSumScore(75);
+        p2.setHandSize(0);
+        p3.setSumScore(62);
+        p3.setHandSize(0);
 
 //        gameState.playersList.add(p);
 //        gameState.playersList.add(p2);

@@ -1,17 +1,10 @@
-package model;
+package model.concrete;
 
-import model.concrete.Board;
+import model.concrete.GameState;
 import model.concrete.Tile;
-import model.concrete.Word;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class Player {
 

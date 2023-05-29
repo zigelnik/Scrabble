@@ -1,13 +1,17 @@
 # Scrabble Game
 This is a JavaFX implementation of the Scrabble game using the Model-View-ViewModel (MVVM) architecture and Observer-Observable design pattern. The game operates with Server-Socket and has two modes: Guest and Host mode. This project was developed as part of a college course and demonstrates knowledge of advanced programming concepts, including design patterns, object-oriented programming, and user interface design.
 
+## Team
+[Tal Zigelnik](https://github.com/zigelnik)<br />
+[Or Shimon](https://github.com/Orshimon810)<br />
+[Jonathan Cewingel](https://github.com/JoniXDrama)<br />
+[Tal Lovton](https://github.com/TalLovton)
+
 ## Planning
-![אבן דרך 2+3](https://github.com/zigelnik/Scrabble/assets/78549129/ad4c92b8-9189-45b8-9337-739db5faf0ee)
-![מיין טייבל1](https://github.com/zigelnik/Scrabble/assets/78549129/fd62b428-ba60-4232-8e9d-724d5da03e49)
-![מיין טייבל2](https://github.com/zigelnik/Scrabble/assets/78549129/dee0162b-af88-437d-a467-c5a4dae6e882)
-![אבן דרך 1](https://github.com/zigelnik/Scrabble/assets/78549129/310c3d0c-de4e-441f-94ce-5efb54b4105d)
-
-
+<img src="https://github.com/zigelnik/Scrabble/assets/107995222/ca366541-eabe-4f1b-9beb-acd700e6afbf" width = "200" height = "200">
+<img src="https://github.com/zigelnik/Scrabble/assets/107995222/7a2a4c10-74b9-42f4-b714-7dd72b0a7d1d" width = "200" height = "200">
+<img src="https://github.com/zigelnik/Scrabble/assets/107995222/3d1b48b9-d3eb-4e8d-9eeb-571f55ce4637" width = "200" height = "200">
+<img src="https://github.com/zigelnik/Scrabble/assets/107995222/ecf1b71d-1429-44e8-9063-3e21cbddb26d" width = "200" height = "200">
 
 
 ## Usage

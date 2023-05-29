@@ -1,5 +1,7 @@
-package model;
+package model.concrete;
 
+import model.concrete.GameState;
+import model.concrete.Player;
 import model.concrete.Tile;
 import model.concrete.Word;
 import model.logic.BookScrabbleHandler;
@@ -15,7 +17,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-public class HostPlayer extends  Player{
+public class HostPlayer extends Player {
 
     private BufferedReader consoleReader;
     public QueryServer queryServer;
@@ -89,7 +91,7 @@ public class HostPlayer extends  Player{
             try {
                 msg = consoleReader.readLine();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                System.out.println("bad input");;
             }
         }
 
@@ -153,7 +155,6 @@ public class HostPlayer extends  Player{
         //TODO: with given word we will open new thread to dictionaryServer
         //TODO: check with dm if the word is legal , return true or false
         //TODO: closing the tread, this method will run each time a player want to make move
-        System.out.println("before dictionaryLegal");
 
         boolean rightWord = false;
         queryServer.start();

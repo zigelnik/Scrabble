@@ -11,7 +11,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 
-public class QueryServer extends Thread{
+public class QueryServer {
 
     private int port;
     private ClientHandler ch;
@@ -26,11 +26,6 @@ public class QueryServer extends Thread{
 
     }
 
-    @Override
-    public void run()
-    {
-        start();
-    }
     public void start()
     {
         stop = false;

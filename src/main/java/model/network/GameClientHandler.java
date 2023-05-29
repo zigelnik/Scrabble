@@ -1,7 +1,7 @@
 package model.network;
 
-import model.GameState;
-import model.Player;
+import model.concrete.GameState;
+import model.concrete.Player;
 import java.io.*;
 import java.net.Socket;
 
