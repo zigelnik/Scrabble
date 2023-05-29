@@ -5,11 +5,11 @@ import model.concrete.Tile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Player {
 
-        // data members ////////
-    protected GameState gameState;
+    // data members ////////
     String playerName;
     int id;
     List<Tile> playerHand;
@@ -17,7 +17,7 @@ public class Player {
     int sumScore;
     static String wordQuery;
     boolean isTurnOver;
-        ///////////////////////
+    ///////////////////////
 
 
     public Player(){
@@ -47,9 +47,6 @@ public class Player {
 
 
     // Getters
-    public GameState getGameState() {
-        return gameState;
-    }
     public int getHandSize()
     {
         return handSize;
@@ -76,5 +73,16 @@ public class Player {
         return playerHand.size() == 7;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Player player = (Player) o;
+        return id == player.id && handSize == player.handSize && sumScore == player.sumScore && isTurnOver == player.isTurnOver && Objects.equals(playerName, player.playerName) && Objects.equals(playerHand, player.playerHand);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(playerName, id, playerHand, handSize, sumScore, isTurnOver);
+    }
 }

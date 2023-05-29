@@ -3,15 +3,12 @@ package model.network;
 
 import model.logic.ClientHandler;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 
-public class QueryServer {
+public class MyServer {
 
     private int port;
     private ClientHandler ch;
@@ -20,7 +17,7 @@ public class QueryServer {
 
     private static int numOfPlayers= 0;
 
-    public QueryServer(int port, ClientHandler ch) {
+    public MyServer(int port, ClientHandler ch) {
         this.port = port;
         this.ch = ch;
 
