@@ -1,6 +1,6 @@
 package model.Test;
 
-import model.logic.BookScrabbleHandler;
+import model.network.BookScrabbleHandler;
 import model.logic.ClientHandler;
 import model.logic.DictionaryManager;
 import model.network.MyServer;

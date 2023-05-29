@@ -1,10 +1,13 @@
-package model.logic;
+package model.network;
+
+import model.logic.ClientHandler;
+import model.logic.DictionaryManager;
 
 import java.io.*;
 import java.util.Scanner;
 
 
-public class BookScrabbleHandler implements  ClientHandler{
+public class BookScrabbleHandler implements ClientHandler {
     Scanner in;
     PrintWriter out;
     DictionaryManager dm;

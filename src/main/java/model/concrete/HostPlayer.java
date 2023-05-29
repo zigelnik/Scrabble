@@ -1,6 +1,6 @@
 package model.concrete;
 
-import model.logic.BookScrabbleHandler;
+import model.network.BookScrabbleHandler;
 import model.logic.DictionaryManager;
 import model.network.MyServer;
 import model.network.GameClientHandler;
