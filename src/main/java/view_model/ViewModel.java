@@ -7,8 +7,10 @@ import model.Model;
 import java.util.Observable;
 import java.util.Observer;
 
-public class ViewModel implements Observer {
+public class ViewModel extends Observable implements Observer {
     Model m;
+
+
 
 
     public ViewModel(Model m) {
@@ -20,4 +22,6 @@ public class ViewModel implements Observer {
     public void update(Observable o, Object arg) {
 
     }
+
+    public Model getModel() {return m;}
 }

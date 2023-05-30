@@ -3,35 +3,40 @@ package view;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import model.Model;
+import view_model.ViewModel;
 
 import java.util.Observable;
+import java.util.Observer;
 
-public class WindowController extends Observable {
+public class WindowController implements Observer {
 
     @FXML
     Button hostB;
     @FXML
     Button joinB;
-
-    Model m = new Model();
-
+    ViewModel vm;
 
 
-
+    
     public void host()
     {
-        Thread hostThread = new Thread(() -> {
-            m.hostGame(9996);
-        });
-        hostThread.start();
+        vm.getModel().hostGame(9996);
+
     }
 
     public void join()
     {
-        Thread joinThread = new Thread(()-> {
-            m.joinGame("localhost", 9996);
-        });
-        joinThread.start();
+        vm.getModel().joinGame("localhost", 9996);
+    }
+
+
+    public void setViewModel(ViewModel gameViewModel) {
+        this.vm = gameViewModel;
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+
     }
 
 

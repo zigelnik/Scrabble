@@ -13,9 +13,16 @@ public class Main extends Application {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("hello-view.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 200, 200);
-            //Model m = new Model("properties.txt");
-            WindowController wc = fxmlLoader.getController();
-           // ViewModel vm = new ViewModel(m);
+
+            Model gameModel = new Model();
+            ViewModel gameViewModel = new ViewModel(gameModel);
+            gameModel.addObserver(gameViewModel);
+
+            WindowController gameView = fxmlLoader.getController();
+            gameView.setViewModel(gameViewModel);
+            gameViewModel.addObserver(gameView);
+
+
 
 
             stage.setTitle("hello");
