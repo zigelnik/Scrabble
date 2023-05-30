@@ -19,7 +19,7 @@ public class GameClientHandler implements ClientHandler {
     Scanner in;
     PrintWriter out;
     String stringWord;
-
+String name;
 
     public GameClientHandler() {
         hostPlayer = new HostPlayer();
@@ -93,6 +93,7 @@ public class GameClientHandler implements ClientHandler {
 
         out.println("please enter your name:");
         p.setName(in.nextLine());
+        name = p.getPlayerName();
         playersList.add(p);
         System.out.println(p.getPlayerName()+" has connected to the server.");
 
@@ -101,7 +102,7 @@ public class GameClientHandler implements ClientHandler {
             if(message.equals("/start"))
                 hostPlayer.initGame();
             else {
-                out.println(message);
+                out.println("Server: "+message);
             }
         }
 
@@ -122,6 +123,8 @@ public class GameClientHandler implements ClientHandler {
         } finally {
             synchronized (clients)
             {
+                System.out.println(name+"has left.");
+
                 clients.remove(this);
                 clientCount--;
             }
