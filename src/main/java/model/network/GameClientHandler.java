@@ -19,7 +19,8 @@ public class GameClientHandler implements ClientHandler {
     Scanner in;
     PrintWriter out;
     String stringWord;
-String name;
+    String name;
+
 
     public GameClientHandler() {
         hostPlayer = new HostPlayer();
@@ -86,16 +87,10 @@ String name;
             clients.add(this);
             clientCount++;
         }
-        Player p = new Player();
+
         Scanner console = new Scanner(new InputStreamReader(System.in));
         in = new Scanner(inFromclient);
         out = new PrintWriter(outToClient,true);
-
-        out.println("please enter your name:");
-        p.setName(in.nextLine());
-        name = p.getPlayerName();
-        playersList.add(p);
-        System.out.println(p.getPlayerName()+" has connected to the server.");
 
         String message;
         while ((message = console.nextLine()) != null) {
@@ -111,6 +106,14 @@ String name;
         } catch (IOException e) {
             System.out.println("error flush in gch");
         }
+    }
+
+    public void setPlayerName(Player p, String pName) {
+        out.println("please enter your name:");
+        p.setName(pName);
+        name = pName;
+        playersList.add(p);
+        System.out.println(p.getPlayerName()+" has connected to the server.");
     }
 
     @Override
@@ -143,6 +146,9 @@ String name;
         }
     }
 
+    // Getter's
+    public static int getClientCount() {return clientCount;}
+    public HostPlayer getHostPlayer() {return hostPlayer;}
     public static List<GameClientHandler> getClients()
     {
         return clients;

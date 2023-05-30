@@ -13,10 +13,14 @@ import model.network.MyServer;
     public class Model extends Observable implements Facade {
 
         MyServer hostServer;
+        GameClientHandler gch;
+
+
 
         @Override
         public void hostGame(int port) {
-            hostServer = new MyServer(port, new GameClientHandler());
+            this.gch = new GameClientHandler();
+            hostServer = new MyServer(port, gch);
             hostServer.start();
         }
 
@@ -30,4 +34,7 @@ import model.network.MyServer;
         public void disconnect() {
             
         }
+
+
+        public GameClientHandler getGch() {return gch;}
     }

@@ -13,6 +13,7 @@ public class Main extends Application {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("hello-view.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 200, 200);
+            scene.getStylesheets().add("/view/gameGui.css");
 
             Model gameModel = new Model();
             ViewModel gameViewModel = new ViewModel(gameModel);

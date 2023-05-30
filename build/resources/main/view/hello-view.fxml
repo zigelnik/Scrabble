@@ -14,7 +14,11 @@
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <Button fx:id="hostB" mnemonicParsing="false" onAction="#host" prefHeight="38.0" prefWidth="324.0" text="Host Game" GridPane.rowIndex="2" />
-      <Button fx:id="joinB" mnemonicParsing="false" onAction="#join" prefHeight="37.0" prefWidth="300.0" text="Join Game" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      <Button fx:id="hostB" mnemonicParsing="false" onAction="#host" prefHeight="38.0" prefWidth="324.0" text="Host Game" GridPane.rowIndex="2" styleClass="btn" />
+      <Button fx:id="joinB" mnemonicParsing="false" onAction="#join" prefHeight="37.0" prefWidth="300.0" text="Join Game" GridPane.columnIndex="1" GridPane.rowIndex="2" styleClass="btn" />
+       <TextField fx:id="nameLabel" text="Enter your name:" visible="false" styleClass="name-input"/>
    </children>
+
+
+
 </GridPane>
