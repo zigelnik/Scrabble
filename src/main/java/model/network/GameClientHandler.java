@@ -9,12 +9,13 @@ import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class GameClientHandler implements ClientHandler {
     public static List<GameClientHandler> clients = new ArrayList<>();
     public static List<Player> playersList = new ArrayList<>();
-    private static int clientCount =0;
+    public static int clientCount =0;
     private HostPlayer hostPlayer;
     Scanner in;
     PrintWriter out;
@@ -87,29 +88,33 @@ String name;
             clientCount++;
         }
         Player p = new Player();
-        Scanner console = new Scanner(new InputStreamReader(System.in));
+        Scanner console = new Scanner(System.in);
         in = new Scanner(inFromclient);
         out = new PrintWriter(outToClient,true);
 
-        out.println("please enter your name:");
+        out.println("please enter your name.");
         p.setName(in.nextLine());
         name = p.getPlayerName();
         playersList.add(p);
         System.out.println(p.getPlayerName()+" has connected to the server.");
+        out.println("You have been connected to the server.");
 
-        String message;
-        while ((message = console.nextLine()) != null) {
-            if(message.equals("/start"))
-                hostPlayer.initGame();
-            else {
-                out.println("Server: "+message);
+        Thread t = new Thread(() -> {
+            String message;
+            try {
+                while ((message = in.nextLine()) != null) {
+                    System.out.println(name+": "+message);
+                }
+            } catch (NoSuchElementException e) {
+                // Client has disconnected
+                System.out.println(name + " has left.");
             }
-        }
+        });
+        t.start();
 
-        try {
-            outToClient.flush();
-        } catch (IOException e) {
-            System.out.println("error flush in gch");
+        String msg;
+        while ((msg = console.nextLine()) != null) {
+            GameClientHandler.broadcastToClients("Server: " + msg);
         }
     }
 
@@ -121,9 +126,10 @@ String name;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
+            System.out.println(name+" has left.");
+
             synchronized (clients)
             {
-                System.out.println(name+"has left.");
 
                 clients.remove(this);
                 clientCount--;

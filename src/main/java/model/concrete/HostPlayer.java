@@ -101,25 +101,21 @@ public class HostPlayer extends Player {
             }
         }
 
-        String[] query = msg.split(",");
-        String tmp = gameState.getTextFiles();
-        String dicWord = "Q," + tmp + query[0];
         // TODO: should we get a _ from the query and try to complete the word before sending it to make move?
 
-        validQuery = tmpDictionaryLegal(dicWord);
-        if(validQuery)
-        {
-            score=  makeMove(gameState.convertStrToWord(msg),player);
+            score=  makeMove(msg,player);
             player.sumScore += score;
             return score != 0;
-        }
-
-        return false; //set to change
     }
 
-    public int makeMove(Word w, Player p){
+    public int makeMove(String msg , Player p){
         // if makeMove fails this integer will stay 0.
         int tmpMoveScore = 0;
+        String[] args = msg.split(","); // splitting the query by 4 commas <word,ROW,COL,alignment>
+        String books = gameState.getTextFiles();
+        String queryWord = "Q,"+books+args[0];
+        Word w = gameState.convertStrToWord(msg);
+        boolean validQuery;
 
         // if tiles are over
         if(p.getHandSize() == 0){
@@ -136,7 +132,13 @@ public class HostPlayer extends Player {
             System.out.println("Not all word tiles are existed");
             return tmpMoveScore;
         }
-        tmpMoveScore += gameState.board.tryPlaceWord(w); // placing the word at the same board
+
+        // after checking all exceptions, check if the word exist in the books
+            validQuery = tmpDictionaryLegal(queryWord);
+
+        if(validQuery) // if validQuery returned true -> the word exists, now we try placing the word on the board
+            tmpMoveScore += gameState.board.tryPlaceWord(w);
+
         // after all checks,decline the words size from pack and init pack back to 7.
         if(tmpMoveScore != 0){
             p.setHandSize(p.getHandSize() - w.getTiles().length);

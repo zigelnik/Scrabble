@@ -3,6 +3,7 @@ import model.concrete.GameState;
 
 import java.io.*;
 import java.net.*;
+import java.util.Scanner;
 
 
 // Client class
@@ -10,7 +11,7 @@ public class Client {
     String ip;
     int port;
     Socket socket;
-    BufferedReader consoleReader;
+    Scanner consoleReader;
     BufferedReader readFromServer;
     PrintWriter writeToServer;
 
@@ -24,25 +25,30 @@ public class Client {
     public void start() {
         try {
             socket = new Socket(ip, port);
-            System.out.println("Connected to server.");
 
-            consoleReader = new BufferedReader(new InputStreamReader(System.in));
+            consoleReader = new Scanner(System.in);
             readFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             writeToServer = new PrintWriter(socket.getOutputStream(), true);
 
 
-            // receiving msg
+            // Receiving messages from the server
             Thread receiveThread = new Thread(() -> {
                 try {
                     String message;
                     while ((message = readFromServer.readLine()) != null) {
-                        System.out.println(message);
+                        System.out.println( message);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             });
             receiveThread.start();
+
+            // Sending messages to the server
+            String msg;
+            while ((msg = consoleReader.nextLine()) != null) {
+                writeToServer.println(msg);
+            }
 
             // --- should the client get a game state as object input stream and deal with it? ----
 //            Thread stateThread = new Thread(() -> {
@@ -62,22 +68,17 @@ public class Client {
 //               -------------------------------------------------------
 
             // sending msg
-            String message;
-            while ((message = consoleReader.readLine()) != null) {
-                writeToServer.println(message);
-            }
+
 
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
-                writeToServer.println(socket.getInetAddress()+"has left");
+                System.out.println("Closing the client");
                 socket.close();
-
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
-
         }
     }
 
