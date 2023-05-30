@@ -1,14 +1,9 @@
 package model.concrete;
 
-import model.concrete.GameState;
-import model.concrete.Player;
-import model.concrete.Tile;
-import model.concrete.Word;
-import model.logic.BookScrabbleHandler;
+import model.network.BookScrabbleHandler;
 import model.logic.DictionaryManager;
-import model.network.QueryServer;
+import model.network.MyServer;
 import model.network.GameClientHandler;
-import model.network.GameServer;
 
 import java.io.*;
 import java.net.Socket;
@@ -19,21 +14,21 @@ import java.util.stream.Collectors;
 
 public class HostPlayer extends Player {
 
-    private BufferedReader consoleReader;
-    public QueryServer queryServer;
+    private GameState gameState;
+    private Scanner consoleReader;
+    public MyServer myServer;
     public int port = 9998;
 
-    public HostPlayer(GameState gs) {
-       System.out.println("Host, enter your name:");
-        try {
-            consoleReader = new BufferedReader(new InputStreamReader(System.in));
-            this.setName(consoleReader.readLine());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        gameState = gs;
+    public HostPlayer() {
+        gameState  = new GameState();
         gameState.addPlayer(this);
-        queryServer = new QueryServer(port,new BookScrabbleHandler());
+        System.out.println("Host, enter your name:");
+        try {
+            consoleReader = new Scanner(System.in);
+            this.setName(consoleReader.nextLine());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
     public void initGame(){
@@ -52,31 +47,31 @@ public class HostPlayer extends Player {
         //  loadBooks();
         while(!gameState.getIsGameOver())
         {
-            for(Player player : gameState.playersList)
+            for(Player player : GameClientHandler.playersList)
             {
                 while(!player.isTurnOver)
                 {
                     player.isTurnOver =  legalMove(player);
                 }
                 player.isTurnOver = false; // returning so next round the player can play again his turn.
-                currPlayerInd = ((currPlayerInd+1) % gameState.playersList.size());
+                currPlayerInd = ((currPlayerInd+1) % GameClientHandler.playersList.size());
 
                 // do we need to get the winner as object or change the isWinner to void?
                 Player winner = gameState.isWinner();
 
-               // updateGame();
+                // updateGame();
             }
         }
     }
 
     // optional: updating all clients with the updates game state
-        public void updateGame()
-        {
-            for(GameClientHandler gch: GameServer.getClients())
-            {
-                gch.updateClientsState(gameState);
-            }
-        }
+//    public void updateGame()
+//    {
+//        for(GameClientHandler gch: GameClientHandler.getClients())
+//        {
+//            gch.updateClientsState(gameState);
+//        }
+//    }
 
     public boolean legalMove(Player player)
     {
@@ -84,22 +79,24 @@ public class HostPlayer extends Player {
         String msg = null;
         int score=0;
 
-                  // if the player is the host
+        // if the player is the host
         if(player.getClass().equals(this.getClass()))
         {
             System.out.println("Host, enter your query: ");
             try {
-                msg = consoleReader.readLine();
-            } catch (IOException e) {
+                msg = consoleReader.nextLine();
+            } catch (Exception e) {
                 System.out.println("bad input");;
             }
         }
 
         else { // if the player is a regular player
-            for (GameClientHandler gch : GameServer.getClients()) {
-                if (gch.player.equals(player)) {
-                    msg = gch.getMessageQuery();
+            for (GameClientHandler gch : GameClientHandler.clients) {
+                for(Player p : GameClientHandler.playersList) {
+                    if (p.equals(player)){
+                        msg = gch.getMessageQuery();
 
+                    }
                 }
             }
         }
@@ -157,7 +154,8 @@ public class HostPlayer extends Player {
         //TODO: closing the tread, this method will run each time a player want to make move
 
         boolean rightWord = false;
-        queryServer.start();
+        myServer = new MyServer(port,new BookScrabbleHandler());
+        myServer.start();
 
         try {
             DictionaryManager dm = DictionaryManager.get();
@@ -186,7 +184,7 @@ public class HostPlayer extends Player {
             e.printStackTrace();
 
         }
-        queryServer.close();
+        myServer.close();
 
         return rightWord;
     }
@@ -211,4 +209,3 @@ public class HostPlayer extends Player {
         return true;
     }
 }
-

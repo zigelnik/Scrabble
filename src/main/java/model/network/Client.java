@@ -4,7 +4,6 @@ import model.concrete.GameState;
 import java.io.*;
 import java.net.*;
 
-//TODO: why we need GameClient? why just not consider GuestPlayer as GameClinet and just open the sovket overthere?
 
 // Client class
 public class Client {
@@ -68,9 +67,17 @@ public class Client {
                 writeToServer.println(message);
             }
 
-            socket.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }finally {
+            try {
+                writeToServer.println(socket.getInetAddress()+"has left");
+                socket.close();
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
         }
     }
 
