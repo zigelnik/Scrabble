@@ -28,31 +28,24 @@ public class WindowController implements Observer {
 
     public void setViewModel(ViewModel gameViewModel) {
         this.vm = gameViewModel;
-        // binding the score at view to playerScore and converting StringProp to IntegerProp
-//        score.textProperty().bindBidirectional(vm.getPlayerScore(),new StringToIntegerConverter());
+
     }
 
-    @FXML
+
     public void host()
     {
-        Thread t = new Thread(){
-        }
-        hostB.setVisible(false);
-        joinB.setVisible(false);
-        nameLabel.setVisible(true);
-        System.out.println(nameLabel.getText());
-        vm.getModel().getGch().getHostPlayer().setName(nameLabel.getText());
+        Thread hostThread = new Thread(()-> {
+            vm.getModel().hostGame( 9996);
+        });
 
     }
 
     public void join()
     {
+        Thread joinThread = new Thread(()-> {
+            vm.getModel().joinGame("localhost", 9996);
+        });
 
-        hostB.setVisible(false);
-        joinB.setVisible(false);
-        nameLabel.setVisible(true);
-        vm.getModel().getGch().setPlayerName(new Player(),nameLabel.getText());
-        vm.getModel().joinGame("localhost", 9996);
 
     }
 
