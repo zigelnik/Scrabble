@@ -19,6 +19,8 @@ public class WindowController implements Observer {
     Button joinB;
     @FXML
      TextField nameLabel;
+    @FXML
+     Label score;
 
     ViewModel vm;
 
@@ -26,18 +28,21 @@ public class WindowController implements Observer {
 
     public void setViewModel(ViewModel gameViewModel) {
         this.vm = gameViewModel;
-
-
+        // binding the score at view to playerScore and converting StringProp to IntegerProp
+//        score.textProperty().bindBidirectional(vm.getPlayerScore(),new StringToIntegerConverter());
     }
 
     @FXML
     public void host()
-    {   hostB.setVisible(false);
+    {
+        Thread t = new Thread(){
+        }
+        hostB.setVisible(false);
         joinB.setVisible(false);
         nameLabel.setVisible(true);
         System.out.println(nameLabel.getText());
         vm.getModel().getGch().getHostPlayer().setName(nameLabel.getText());
-        vm.getModel().hostGame(9996);
+
     }
 
     public void join()

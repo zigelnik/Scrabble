@@ -10,6 +10,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class GameClientHandler implements ClientHandler {
     public static List<GameClientHandler> clients = new ArrayList<>();
