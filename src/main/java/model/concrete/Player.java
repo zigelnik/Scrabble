@@ -17,6 +17,7 @@ public class Player {
     int handSize; // physical size of tiles
     int sumScore;
     boolean isTurnOver;
+    String acceptedQuery;
     ///////////////////////
 
 

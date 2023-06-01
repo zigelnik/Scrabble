@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class GameState implements Serializable {
-     private Tile.Bag bag;
+     public Tile.Bag bag;
      List<Player> playersList;
-     private Board board;
+     public Board board;
      private boolean isGameOver;
 
     //CTOR
@@ -24,11 +24,11 @@ public class GameState implements Serializable {
     //Getters
     public Board getBoard()
     {
-        return board;
+        return this.board;
     }
     public Tile.Bag getBag()
     {
-        return bag;
+        return this.bag;
     }
     public  List<Player> getPlayersList() {
         return playersList;

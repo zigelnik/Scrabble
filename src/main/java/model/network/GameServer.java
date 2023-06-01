@@ -50,7 +50,8 @@ public class GameServer {
             });
             hostThread.start();
 
-            while (true) {
+            hostPlayer.stop=false;
+            while (!hostPlayer.stop) {
                 Socket clientSocket = serverSocket.accept();
 
                 if (clients.size() < MAX_CLIENTS) {

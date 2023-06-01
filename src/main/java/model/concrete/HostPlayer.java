@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 public class HostPlayer extends Player {
 
     private BufferedReader consoleReader;
+    public volatile boolean stop;
     public QueryServer queryServer;
     public int port = 9998;
 
@@ -50,6 +51,7 @@ public class HostPlayer extends Player {
         {
             for(Player player : gameState.playersList)
             {
+                player.acceptedQuery= "you,suck";
                 while(!player.isTurnOver)
                 {
                     player.isTurnOver =  legalMove(player);
@@ -60,13 +62,14 @@ public class HostPlayer extends Player {
                 // do we need to get the winner as object or change the isWinner to void?
                 Player winner = gameState.isWinner();
 
-               // updateGame();
+                GameServer.broadcastToClients(player.acceptedQuery);
             }
         }
+        stop=true;
     }
 
     // optional: updating all clients with the updates game state
-        public void updateGame()
+        public void updateGame(String msg)
         {
             for(GameClientHandler gch: GameServer.getClients())
             {
@@ -140,6 +143,7 @@ public class HostPlayer extends Player {
         if(tmpMoveScore != 0){
             p.setHandSize(p.getHandSize() - w.getTiles().length);
             initHandAfterMove(w , p);
+            p.acceptedQuery = msg;
         }
         p.setSumScore(p.getSumScore()+ tmpMoveScore);
         //if tmpMoveScore is 0 then one of the checks is failed
