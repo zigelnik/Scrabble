@@ -13,27 +13,22 @@ import java.util.Observer;
 
 public class WindowController implements Observer {
 
-    @FXML
-    Button hostB;
-    @FXML
-    Button joinB;
-    @FXML
-     TextField nameLabel;
-    @FXML
-     Label score;
-
     ViewModel vm;
+    LandingPage entryPage;
+    WaitingPage waitingPage;
+    GamePage gamePage;
 
 
-
-    public void setViewModel(ViewModel gameViewModel) {
-        this.vm = gameViewModel;
-
+    public WindowController(ViewModel vm, LandingPage entryPage, WaitingPage waitingPage, GamePage gamePage) {
+        this.vm = vm;
+        this.entryPage = entryPage;
+        this.waitingPage = waitingPage;
+        this.gamePage = gamePage;
     }
-
 
     public void host()
     {
+
         Thread hostThread = new Thread(()-> {
             vm.getModel().hostGame( 9996);
         });
