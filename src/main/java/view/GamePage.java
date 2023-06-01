@@ -1,11 +1,11 @@
 package view;
 import javafx.application.Application;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -14,22 +14,10 @@ import javafx.stage.Stage;
 
 public class GamePage extends Application {
 
-    @FXML
     private GridPane gameBoard;
-
-    @FXML
-    private VBox playersVBox;
-
-    @FXML
-    private Button quitButton;
-
-    @FXML
-    private Button passButton;
-
-    @FXML
-    private Button challengeButton;
-
-    public VBox root;
+    private CheckBox verticalCheckbox;
+    private Label tilesLabel;
+    private Label scoreLabel;
 
     private static final String[][] BOARD_LAYOUT = {
             {"3W", " ", " ", "2L", " ", " ", " ", "3W", " ", " ", " ", "2L", " ", " ", "3W"},
@@ -50,27 +38,13 @@ public class GamePage extends Application {
     };
 
     public static void main(String[] args) {
-        launch();
+        launch(args);
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        loadFXML();
-        Scene scene = new Scene(root, 800, 600);
-        scene.getStylesheets().add(getClass().getResource("/gameGui.css").toExternalForm());
-        primaryStage.setScene(scene);
+    public void start(Stage primaryStage) {
         primaryStage.setTitle("Scrabble Game");
-        primaryStage.show();
 
-    }
-
-    private void loadFXML() throws Exception {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxmlFiles/game-page.fxml"));
-        root = fxmlLoader.load();
-    }
-
-
-    private void initializeGameBoard() {
         // Game board
         gameBoard = new GridPane();
         gameBoard.setHgap(5);
@@ -86,6 +60,71 @@ public class GamePage extends Application {
                 gameBoard.add(cellLabel, col, row);
             }
         }
+
+
+        // Tiles label
+        tilesLabel = new Label("Player Tiles");
+        tilesLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
+
+        // Score label
+        scoreLabel = new Label("Score: 0");
+        scoreLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
+
+        // Buttons
+        Button passButton = new Button("Pass");
+        Button quitButton = new Button("Quit");
+        Button challengeButton = new Button("Challenge");
+
+
+        // Button event handlers
+        passButton.setOnAction(e -> {
+            System.out.println("Pass button pressed");
+            // Add your desired functionality here
+        });
+
+        quitButton.setOnAction(e -> {
+            System.out.println("Quit button pressed");
+            // Add your desired functionality here
+        });
+
+        challengeButton.setOnAction(e -> {
+            System.out.println("Challenge button pressed");
+            // Add your desired functionality here
+        });
+
+
+        // Vertical checkbox
+        verticalCheckbox = new CheckBox("Vertical");
+
+        //TODO:how to drag tiles to board and get the word tiles
+        // Place tile button
+//        Button placeTileButton = new Button("Place Tile");
+//        placeTileButton.setOnAction(e -> {
+//            int row = Integer.parseInt(rowInput.getText());
+//            int col = Integer.parseInt(colInput.getText());
+//            boolean isVertical = verticalCheckbox.isSelected();
+//            placeTile(row, col, tileInput.getText(), isVertical);
+//        });
+
+        // HBox for tile input and button
+        HBox labelsBox = new HBox(10);
+        labelsBox.setAlignment(Pos.CENTER);
+        labelsBox.getChildren().addAll(scoreLabel,tilesLabel,verticalCheckbox);
+
+        // HBox for buttons
+        HBox buttonsBox = new HBox(10);
+        buttonsBox.setAlignment(Pos.CENTER);
+        buttonsBox.getChildren().addAll(passButton,challengeButton,quitButton);
+
+        // VBox for game board and input box
+        VBox root = new VBox(10);
+        root.setAlignment(Pos.CENTER);
+        root.getChildren().addAll(gameBoard, labelsBox,buttonsBox);
+
+        Scene scene = new Scene(root, 600, 600);
+        primaryStage.setScene(scene);
+        scene.getStylesheets().add(getClass().getResource("/gameGui.css").toExternalForm());
+        primaryStage.show();
     }
 
     private Label createCellLabel(String cellValue, Color cellColor) {
@@ -119,111 +158,22 @@ public class GamePage extends Application {
                 (int) (color.getGreen() * 255),
                 (int) (color.getBlue() * 255));
     }
-    @FXML
-    private void quit() {
-        // Perform actions when the quit button is clicked
-        System.out.println("Quit button clicked");
+
+    private void placeTile(int row, int col, String tile, boolean isVertical) {
+        Label cellLabel = (Label) gameBoard.getChildren().stream()
+                .filter(node -> GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == col)
+                .findFirst().orElse(null);
+
+        if (cellLabel != null) {
+            cellLabel.setText(tile);
+            if (isVertical) {
+                cellLabel.setRotate(90); // Rotate the tile label to indicate vertical placement
+            } else {
+                cellLabel.setRotate(0); // Reset rotation for horizontal placement
+            }
+        }
     }
 
-    @FXML
-    private void pass() {
-        // Perform actions when the pass button is clicked
-        System.out.println("Pass button clicked");
-    }
 
-    @FXML
-    private void challenge() {
-        // Perform actions when the challenge button is clicked
-        System.out.println("Challenge button clicked");
-    }
 
 }
-
-
-//import javafx.application.Application;
-//        import javafx.geometry.Pos;
-//        import javafx.scene.Scene;
-//        import javafx.scene.control.Button;
-//        import javafx.scene.control.Label;
-//        import javafx.scene.control.TextField;
-//        import javafx.scene.layout.GridPane;
-//        import javafx.scene.layout.HBox;
-//        import javafx.scene.layout.VBox;
-//        import javafx.scene.paint.Color;
-//        import javafx.stage.Stage;
-//
-//public class ScrabbleGUI extends Application {
-//
-//
-//    private TextField tileInput;
-//    private TextField rowInput;
-//    private TextField colInput;
-//    private CheckBox verticalCheckbox;
-//
-//
-//    public static void main(String[] args) {
-//        launch(args);
-//    }
-//
-//    @Override
-//    public void start(Stage primaryStage) {
-//
-//
-//        // Tile input field
-//        tileInput = new TextField();
-//        tileInput.setPromptText("Enter a tile");
-//
-//        // Row input field
-//        rowInput = new TextField();
-//        rowInput.setPromptText("Row");
-//
-//        // Column input field
-//        colInput = new TextField();
-//        colInput.setPromptText("Column");
-//
-//        // Vertical checkbox
-//        verticalCheckbox = new CheckBox("Vertical");
-//
-//        // Place tile button
-//        Button placeTileButton = new Button("Place Tile");
-//        placeTileButton.setOnAction(e -> {
-//            int row = Integer.parseInt(rowInput.getText());
-//            int col = Integer.parseInt(colInput.getText());
-//            boolean isVertical = verticalCheckbox.isSelected();
-//            placeTile(row, col, tileInput.getText(), isVertical);
-//        });
-//
-//        // HBox for tile input and button
-//        HBox tileInputBox = new HBox(10);
-//        tileInputBox.setAlignment(Pos.CENTER);
-//        tileInputBox.getChildren().addAll(tileInput, rowInput, colInput, verticalCheckbox, placeTileButton);
-//
-//        // VBox for game board and input box
-//        VBox root = new VBox(10);
-//        root.setAlignment(Pos.CENTER);
-//        root.getChildren().addAll(gameBoard, tileInputBox);
-//
-//        Scene scene = new Scene(root, 600, 600);
-//        primaryStage.setScene(scene);
-//        primaryStage.show();
-//    }
-//
-//
-//    private void placeTile(int row, int col, String tile, boolean isVertical) {
-//        Label cellLabel = (Label) gameBoard.getChildren().stream()
-//                .filter(node -> GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == col)
-//                .findFirst().orElse(null);
-//
-//        if (cellLabel != null) {
-//            cellLabel.setText(tile);
-//            if (isVertical) {
-//                cellLabel.setRotate(90); // Rotate the tile label to indicate vertical placement
-//            } else {
-//                cellLabel.setRotate(0); // Reset rotation for horizontal placement
-//            }
-//        }
-//
-//
-//    }
-//
-//}

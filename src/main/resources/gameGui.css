@@ -73,3 +73,8 @@
 .button:hover {
     -fx-background-color: #DDDDDD;
 }
+
+.waiting-label{
+    -fx-font-size: 24px;
+    -fx-text-fill: white;
+}

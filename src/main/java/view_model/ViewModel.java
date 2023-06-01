@@ -1,9 +1,6 @@
 package view_model;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.*;
 import model.Model;
 
 import java.util.Observable;
@@ -12,14 +9,12 @@ import java.util.Observer;
 public class ViewModel extends Observable implements Observer {
     Model m;
     IntegerProperty playerScore;
-
+    StringProperty playerName;
 
 
     public ViewModel(Model m) {
         this.m = m;
         playerScore = new SimpleIntegerProperty();
-
-
 
     }
 

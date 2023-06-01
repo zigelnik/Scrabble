@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 public class WaitingPage extends Application {
 
     @FXML
-    private Label waitingLabel;
+    private Label waitingLabel = new Label();
 
     public VBox root;
 
@@ -25,7 +25,10 @@ public class WaitingPage extends Application {
         Scene scene = new Scene(root, 400, 300);
         scene.getStylesheets().add(getClass().getResource("/gameGui.css").toExternalForm());
         primaryStage.setScene(scene);
+        setMessage();
         primaryStage.show();
+
+
     }
 
     private void loadFXML() throws Exception {
@@ -33,7 +36,7 @@ public class WaitingPage extends Application {
         root = fxmlLoader.load();
     }
 
-    public void setMessage(String message) {
-        waitingLabel.setText(message);
+    public void setMessage() {
+        waitingLabel.setText("Waiting for Host to Start\n Ya Efes");
     }
 }
