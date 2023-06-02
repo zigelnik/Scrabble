@@ -1,24 +1,25 @@
 package view;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.Model;
 import view_model.ViewModel;
 
-public class Main  {
+public class Main extends Application  {
+
+
     public static void main(String[] args) {
+        launch(args);
+    }
+
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
         Model m = new Model();// Model
         ViewModel vm = new ViewModel(m);//View model
-        LandingPage entryPage = new LandingPage();
-        WaitingPage waitingPage = new WaitingPage();
-        GamePage gamePage = new GamePage();
+        View v = new View(vm);//View
 
-
-        WindowController wc = new WindowController(vm);//View
-
-
+        v.getLandingPage().start(new Stage());
 
     }
 }
