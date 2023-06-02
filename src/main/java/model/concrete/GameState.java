@@ -1,7 +1,5 @@
 package model.concrete;
 
-import model.network.GameClientHandler;
-
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -10,15 +8,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class GameState implements Serializable {
-    public Tile.Bag bag;
-    public Board board;
-    private boolean isGameOver;
+     public Tile.Bag bag;
+     List<Player> playersList;
+     public Board board;
+     private boolean isGameOver;
 
     //CTOR
     public  GameState() {
-        board = Board.getBoard();
-        bag = Tile.Bag.getBag();
-        isGameOver = false;
+      board = Board.getBoard();
+       bag = Tile.Bag.getBag();
+        playersList = new ArrayList<>();
+      isGameOver = false;
     }
 
     //Getters
@@ -30,6 +30,9 @@ public class GameState implements Serializable {
     {
         return this.bag;
     }
+    public  List<Player> getPlayersList() {
+        return playersList;
+    }
 
     public  boolean getIsGameOver(){return isGameOver;}
 
@@ -40,16 +43,16 @@ public class GameState implements Serializable {
         int id = 1;
 
         System.out.println("inside set turns");
-        for(Player p : GameClientHandler.playersList){
+        for(Player p : playersList){
             Tile tempTile = bag.getRand();
             p.id = tempTile.score;
             bag.put(tempTile);
         }
         // sorting the list from big id to small id with sorting & reversing the order
-        GameClientHandler.playersList = GameClientHandler.playersList.stream().sorted(Comparator.comparingInt(Player::getId).reversed())
+        playersList = playersList.stream().sorted(Comparator.comparingInt(Player::getId).reversed())
                 .collect(Collectors.toList());
 
-        for(Player p : GameClientHandler.playersList)
+        for(Player p : playersList)
         {
             p.id = id;
             id++;
@@ -58,14 +61,14 @@ public class GameState implements Serializable {
     }
 
     public void initHands(){
-        for(int i = 0; i < GameClientHandler.playersList.size(); i++){
-            for(int j=0;j<GameClientHandler.playersList.get(i).handSize;j++)
-                GameClientHandler.playersList.get(i).playerHand.add(bag.getRand());
+        for(int i = 0; i < playersList.size(); i++){
+            for(int j=0;j<playersList.get(i).handSize;j++)
+                playersList.get(i).playerHand.add(bag.getRand());
         }
     }
     public  void addPlayer(Player player)
     {
-        GameClientHandler.playersList.add(player);
+        playersList.add(player);
     }
 
     public  Player isWinner(){
@@ -73,7 +76,7 @@ public class GameState implements Serializable {
         Player tmpPlayer = null;
         //Winner: when the tiles bag is empty and the winner finished his pack
         if(bag.getTilesCounter() == 0){
-            for(Player p : GameClientHandler.playersList){
+            for(Player p : playersList){
                 if(max < p.sumScore && p.handSize == 0){
                     max = p.sumScore;
                     tmpPlayer =  p;

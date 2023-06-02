@@ -1,9 +1,10 @@
 package model.concrete;
 
-import model.network.BookScrabbleHandler;
+import model.logic.BookScrabbleHandler;
 import model.logic.DictionaryManager;
-import model.network.MyServer;
+import model.network.QueryServer;
 import model.network.GameClientHandler;
+import model.network.GameServer;
 
 import java.io.*;
 import java.net.Socket;
@@ -14,21 +15,22 @@ import java.util.stream.Collectors;
 
 public class HostPlayer extends Player {
 
-    private GameState gameState;
-    private Scanner consoleReader;
-    public MyServer myServer;
+    private BufferedReader consoleReader;
+    public volatile boolean stop;
+    public QueryServer queryServer;
     public int port = 9998;
 
-    public HostPlayer() {
-        gameState  = new GameState();
-        gameState.addPlayer(this);
-        System.out.println("Host, enter your name:");
+    public HostPlayer(GameState gs) {
+       System.out.println("Host, enter your name:");
         try {
-            consoleReader = new Scanner(System.in);
-            this.setName(consoleReader.nextLine());
-        } catch (Exception e) {
-            e.printStackTrace();
+            consoleReader = new BufferedReader(new InputStreamReader(System.in));
+            this.setName(consoleReader.readLine());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+        gameState = gs;
+        gameState.addPlayer(this);
+        queryServer = new QueryServer(port,new BookScrabbleHandler());
 
     }
     public void initGame(){
@@ -47,31 +49,33 @@ public class HostPlayer extends Player {
         //  loadBooks();
         while(!gameState.getIsGameOver())
         {
-            for(Player player : GameClientHandler.playersList)
+            for(Player player : gameState.playersList)
             {
+                player.acceptedQuery= "you,suck";
                 while(!player.isTurnOver)
                 {
                     player.isTurnOver =  legalMove(player);
                 }
                 player.isTurnOver = false; // returning so next round the player can play again his turn.
-                currPlayerInd = ((currPlayerInd+1) % GameClientHandler.playersList.size());
+                currPlayerInd = ((currPlayerInd+1) % gameState.playersList.size());
 
                 // do we need to get the winner as object or change the isWinner to void?
                 Player winner = gameState.isWinner();
 
-                // updateGame();
+                GameServer.broadcastToClients(player.acceptedQuery);
             }
         }
+        stop=true;
     }
 
     // optional: updating all clients with the updates game state
-//    public void updateGame()
-//    {
-//        for(GameClientHandler gch: GameClientHandler.getClients())
-//        {
-//            gch.updateClientsState(gameState);
-//        }
-//    }
+        public void updateGame(String msg)
+        {
+            for(GameClientHandler gch: GameServer.getClients())
+            {
+                gch.updateClientsState(gameState);
+            }
+        }
 
     public boolean legalMove(Player player)
     {
@@ -79,47 +83,39 @@ public class HostPlayer extends Player {
         String msg = null;
         int score=0;
 
-        // if the player is the host
+                  // if the player is the host
         if(player.getClass().equals(this.getClass()))
         {
             System.out.println("Host, enter your query: ");
             try {
-                msg = consoleReader.nextLine();
-            } catch (Exception e) {
+                msg = consoleReader.readLine();
+            } catch (IOException e) {
                 System.out.println("bad input");;
             }
         }
 
         else { // if the player is a regular player
-            for (GameClientHandler gch : GameClientHandler.clients) {
-                for(Player p : GameClientHandler.playersList) {
-                    if (p.equals(player)){
-                        msg = gch.getMessageQuery();
+            for (GameClientHandler gch : GameServer.getClients()) {
+                if (gch.player.equals(player)) {
+                    msg = gch.getMessageQuery();
 
-                    }
                 }
             }
         }
 
-        String[] query = msg.split(",");
-        String tmp = gameState.getTextFiles();
-        String dicWord = "Q," + tmp + query[0];
-        // TODO: should we get a _ from the query and try to complete the word before sending it to make move?
-
-        validQuery = tmpDictionaryLegal(dicWord);
-        if(validQuery)
-        {
-            score=  makeMove(gameState.convertStrToWord(msg),player);
-            player.sumScore += score;
-            return score != 0;
-        }
-
-        return false; //set to change
+        score=  makeMove(msg,player);
+        player.sumScore += score;
+        return score != 0;
     }
 
-    public int makeMove(Word w, Player p){
+    public int makeMove(String msg , Player p){
         // if makeMove fails this integer will stay 0.
         int tmpMoveScore = 0;
+        String[] args = msg.split(","); // splitting the query by 4 commas <word,ROW,COL,alignment>
+        String books = gameState.getTextFiles();
+        String queryWord = "Q,"+books+args[0];
+        Word w = gameState.convertStrToWord(msg);
+        boolean validQuery;
 
         // if tiles are over
         if(p.getHandSize() == 0){
@@ -136,11 +132,18 @@ public class HostPlayer extends Player {
             System.out.println("Not all word tiles are existed");
             return tmpMoveScore;
         }
-        tmpMoveScore += gameState.board.tryPlaceWord(w); // placing the word at the same board
+
+        // after checking all exceptions, check if the word exist in the books
+        validQuery = tmpDictionaryLegal(queryWord);
+
+        if(validQuery) // if validQuery returned true -> the word exists, now we try placing the word on the board
+            tmpMoveScore += gameState.getBoard().tryPlaceWord(w);
+
         // after all checks,decline the words size from pack and init pack back to 7.
         if(tmpMoveScore != 0){
             p.setHandSize(p.getHandSize() - w.getTiles().length);
             initHandAfterMove(w , p);
+            p.acceptedQuery = msg;
         }
         p.setSumScore(p.getSumScore()+ tmpMoveScore);
         //if tmpMoveScore is 0 then one of the checks is failed
@@ -154,8 +157,7 @@ public class HostPlayer extends Player {
         //TODO: closing the tread, this method will run each time a player want to make move
 
         boolean rightWord = false;
-        myServer = new MyServer(port,new BookScrabbleHandler());
-        myServer.start();
+        queryServer.start();
 
         try {
             DictionaryManager dm = DictionaryManager.get();
@@ -184,7 +186,7 @@ public class HostPlayer extends Player {
             e.printStackTrace();
 
         }
-        myServer.close();
+        queryServer.close();
 
         return rightWord;
     }
@@ -195,7 +197,7 @@ public class HostPlayer extends Player {
         List<Tile>tmpWordList = Arrays.stream(w.getTiles()).toList();
         p.setPlayerHand(p.getPlayerHand().stream().filter((t)->!tmpWordList.contains(t)).collect(Collectors.toList()));
         while(!handIsFull()){
-            p.getPlayerHand().add(gameState.bag.getRand());
+            p.getPlayerHand().add(gameState.getBag().getRand());
             p.setHandSize(p.getHandSize()+1);
         }
     }
@@ -209,3 +211,4 @@ public class HostPlayer extends Player {
         return true;
     }
 }
+
