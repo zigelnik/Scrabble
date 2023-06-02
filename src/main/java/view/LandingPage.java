@@ -49,10 +49,10 @@ public class LandingPage extends Application {
     @FXML
     private void hostBtn() {
         String name = nameField.getText();
-        if(name.equals("")){
-           showAlert("Error","Dont forget your name bitch");
-           nameField = null;
-           hostBtn();
+        while (name.isEmpty()) {
+            showAlert("Error", "Don't forget to enter your name.");
+            name = nameField.getText();
+            
         }
         System.out.println("Host button clicked. Name: " + name);
     }
