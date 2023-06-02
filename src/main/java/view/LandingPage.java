@@ -3,6 +3,7 @@ import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
@@ -46,16 +47,38 @@ public class LandingPage extends Application {
     }
 
     @FXML
-    private void host() {
+    private void hostBtn() {
         String name = nameField.getText();
-        // Perform actions when the host button is clicked, e.g., starting a host game
+        if(name.equals("")){
+           showAlert("Error","Dont forget your name bitch");
+           nameField = null;
+           hostBtn();
+        }
         System.out.println("Host button clicked. Name: " + name);
     }
 
     @FXML
-    private void join() {
+    private void joinBtn() {
         String name = nameField.getText();
-        // Perform actions when the join button is clicked, e.g., joining a game
         System.out.println("Join button clicked. Name: " + name);
+    }
+
+
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText("We have a problem!");
+        alert.setContentText(content);
+
+        // Apply custom CSS styles to the dialog pane
+        alert.getDialogPane().getStyleClass().add("my-dialog");
+
+        // Apply custom CSS styles to the buttons
+        alert.getDialogPane().getButtonTypes().forEach(buttonType -> {
+            Button button = (Button)alert.getDialogPane().lookupButton(buttonType);
+            button.getStyleClass().add("my-button");
+        });
+
+        alert.showAndWait();
     }
 }

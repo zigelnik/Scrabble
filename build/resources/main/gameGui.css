@@ -37,6 +37,18 @@
     -fx-text-fill: white;
 }
 
+.my-dialog {
+    -fx-background-color: #222;
+    -fx-text-fill: white;
+}
+
+.my-button {
+    -fx-background-color: #333;
+    -fx-text-fill: white;
+}
+
+
+
 /* Game Page */
 .board-grid {
     -fx-background-color: #f4f4f4; /* Background color of the board */

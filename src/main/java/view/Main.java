@@ -16,7 +16,7 @@ public class Main  {
         GamePage gamePage = new GamePage();
 
 
-        WindowController wc = new WindowController(vm,entryPage,waitingPage,gamePage);//View
+        WindowController wc = new WindowController(vm);//View
 
 
 

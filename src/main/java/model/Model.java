@@ -7,20 +7,20 @@ import java.util.Observable;
 
 import model.network.Client;
 import model.network.GameClientHandler;
-import model.network.MyServer;
+import model.network.GameServer;
+import model.network.QueryServer;
 
 
-    public class Model extends Observable implements Facade {
+public class Model extends Observable implements Facade {
 
-        MyServer hostServer;
-        GameClientHandler gch;
+        GameServer hostServer;
+
 
 
 
         @Override
         public void hostGame(int port) {
-            this.gch = new GameClientHandler();
-            hostServer = new MyServer(port, gch);
+            hostServer = new GameServer(port);
             hostServer.start();
         }
 
@@ -36,5 +36,4 @@ import model.network.MyServer;
         }
 
 
-        public GameClientHandler getGch() {return gch;}
     }

@@ -58,7 +58,7 @@ public class QueryServer {
 
                 } catch (IOException e) {
                     e.getMessage();
-                 ;}
+                    ;}
             } catch (SocketTimeoutException e) {
                 e.getMessage();
 

@@ -19,7 +19,7 @@ public class GamePage extends Application {
     private Label tilesLabel;
     private Label scoreLabel;
 
-    private static final String[][] BOARD_LAYOUT = {
+    private static String[][] BOARD_LAYOUT = {
             {"3W", " ", " ", "2L", " ", " ", " ", "3W", " ", " ", " ", "2L", " ", " ", "3W"},
             {" ", "2W", " ", " ", " ", "3L", " ", " ", " ", "3L", " ", " ", " ", "2W", " "},
             {" ", " ", "2W", " ", " ", " ", "2L", " ", "2L", " ", " ", " ", "2W", " ", " "},
@@ -41,10 +41,7 @@ public class GamePage extends Application {
         launch(args);
     }
 
-    @Override
-    public void start(Stage primaryStage) {
-        primaryStage.setTitle("Scrabble Game");
-
+    public void initBoard(){
         // Game board
         gameBoard = new GridPane();
         gameBoard.setHgap(5);
@@ -60,7 +57,12 @@ public class GamePage extends Application {
                 gameBoard.add(cellLabel, col, row);
             }
         }
+    }
+    @Override
+    public void start(Stage primaryStage) {
+        primaryStage.setTitle("Scrabble Game");
 
+        initBoard();
 
         // Tiles label
         tilesLabel = new Label("Player Tiles");

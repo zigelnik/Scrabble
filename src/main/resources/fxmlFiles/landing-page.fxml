@@ -10,6 +10,6 @@
         fx:id="root" alignment="CENTER" spacing="10.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.LandingPage">
     <Label text="Scrabble Game" styleClass="title-label" />
     <TextField fx:id="nameField" promptText="Enter your name" />
-    <Button fx:id="hostButton" text="Host" styleClass="button" onAction="#host" />
-    <Button fx:id="joinButton" text="Join" styleClass="button" onAction="#join" />
+    <Button fx:id="hostButton" text="Host" styleClass="button" onAction="#hostBtn" />
+    <Button fx:id="joinButton" text="Join" styleClass="button" onAction="#joinBtn" />
 </VBox>
