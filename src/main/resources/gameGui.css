@@ -37,10 +37,7 @@
     -fx-text-fill: white;
 }
 
-.my-dialog {
-    -fx-background-color: #222;
-    -fx-text-fill: white;
-}
+
 
 .my-button {
     -fx-background-color: #333;

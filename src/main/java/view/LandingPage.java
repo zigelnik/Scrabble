@@ -82,7 +82,16 @@ public class LandingPage extends Application {
                 if(isPortValid(port)){
                     System.out.println("Host button clicked." + " Port: " + port);
                    this.hostPort = port;
-                }
+
+                   //Displaying the waiting page
+                   WaitingPage wp = new WaitingPage();
+                    try {
+                        wp.setHost(true);
+                        wp.start(getPrimaryStage());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                        }
 
             });
 
@@ -102,13 +111,6 @@ public class LandingPage extends Application {
 
             //TODO: how to call to host method from View
 
-
-//            WaitingPage wp = new WaitingPage();
-//            try {
-//                wp.start(getPrimaryStage());
-//            } catch (Exception e) {
-//                throw new RuntimeException(e);
-//            }
         }
 
     }
@@ -141,6 +143,14 @@ public class LandingPage extends Application {
                 if(isiPValid(ip)&&isPortValid(port)){
                     System.out.println("Host button clicked." + " Port: " + port +  " IP: " + ip);
                     this.IP = ip;
+                    //Displaying the waiting page
+                    WaitingPage wp = new WaitingPage();
+                    try {
+                        wp.setHost(false);
+                        wp.start(getPrimaryStage());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
                 }
 
             });
