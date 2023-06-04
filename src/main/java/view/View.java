@@ -19,21 +19,6 @@ public class View implements Observer {
         this.gamePage = new GamePage();
     }
 
-    public  void host()
-    {
-        Thread hostThread = new Thread(()-> {
-            vm.getModel().hostGame( Integer.parseInt(landingPage.getHostPort()));
-        });
-
-    }
-
-    public void join()
-    {
-        Thread joinThread = new Thread(()-> {
-            vm.getModel().joinGame("localhost", 9996);
-        });
-
-    }
 
     @Override
     public void update(Observable o, Object arg) {

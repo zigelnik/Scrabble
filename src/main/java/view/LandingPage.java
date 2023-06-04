@@ -10,16 +10,16 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import view_model.ViewModel;
 
 import java.util.regex.Pattern;
 
 public class LandingPage extends Application {
 
-
     private String hostPort;
     private String playerName;
 
-
+    private WaitingPage wp = new WaitingPage();
     private String IP;
 
     private static Stage theStage;
@@ -81,17 +81,21 @@ public class LandingPage extends Application {
                 String port = portField.getText();
                 if(isPortValid(port)){
                     System.out.println("Host button clicked." + " Port: " + port);
-                   this.hostPort = port;
+                    this.hostPort = port;
 
-                   //Displaying the waiting page
-                   WaitingPage wp = new WaitingPage();
+                    Thread hostThread = new Thread(()-> {
+                        ViewModel.hostGame(Integer.parseInt(hostPort));
+                    });
+                    hostThread.start();
+
+                    //Displaying the waiting page
                     try {
                         wp.setHost(true);
                         wp.start(getPrimaryStage());
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
-                        }
+                }
 
             });
 
@@ -109,7 +113,7 @@ public class LandingPage extends Application {
             getPrimaryStage().setScene(initPortWindow);
 
 
-            //TODO: how to call to host method from View
+
 
         }
 
@@ -143,8 +147,13 @@ public class LandingPage extends Application {
                 if(isiPValid(ip)&&isPortValid(port)){
                     System.out.println("Host button clicked." + " Port: " + port +  " IP: " + ip);
                     this.IP = ip;
+
+                    Thread joinThread = new Thread(()-> {
+                        ViewModel.joinGame(IP, Integer.parseInt(port));
+                    });
+                    joinThread.start();
+
                     //Displaying the waiting page
-                    WaitingPage wp = new WaitingPage();
                     try {
                         wp.setHost(false);
                         wp.start(getPrimaryStage());
@@ -212,9 +221,9 @@ public class LandingPage extends Application {
 
             Pattern pattern = Pattern.compile(IP_PATTERN);
 
-                if(!pattern.matcher(ip).matches()) {
-                    throw new IllegalArgumentException("Invalid IP address entered. Please enter a valid IP address.");
-                }
+            if(!pattern.matcher(ip).matches()) {
+                throw new IllegalArgumentException("Invalid IP address entered. Please enter a valid IP address.");
+            }
 
         }catch (IllegalArgumentException e) {
             showAlert("Invalid IP",e.getMessage());
@@ -241,7 +250,7 @@ public class LandingPage extends Application {
     }
     public static Stage getPrimaryStage() {return theStage;}
     public String getPlayerName() {return playerName;}
-   public String getHostPort() {return hostPort;}
+    public String getHostPort() {return hostPort;}
     public String getIP() {
         return IP;
     }

@@ -7,7 +7,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class ViewModel extends Observable implements Observer {
-    Model m;
+    static Model m;
     IntegerProperty playerScore;
     StringProperty playerName;
 
@@ -16,6 +16,13 @@ public class ViewModel extends Observable implements Observer {
         this.m = m;
         playerScore = new SimpleIntegerProperty();
 
+    }
+    public static void hostGame(int port)
+    {
+        m.hostGame(port);
+    }
+    public static void joinGame(String ip, int port) {
+        m.joinGame(ip,port);
     }
 
     @Override
