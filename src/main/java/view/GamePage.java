@@ -216,6 +216,7 @@ public class GamePage extends Application {
                     // Double-click on a tile, return it to the player rack
                     cellLabel.setText("");
                     updatePlayerRack(cellLabel, tile);
+                    placedTiles.remove(cellLabel.getText());
                 }
             }
         });
