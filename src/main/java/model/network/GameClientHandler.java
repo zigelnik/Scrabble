@@ -11,6 +11,7 @@ public class GameClientHandler extends Thread {
     private PrintWriter writeToClient;
     public Player player;
 
+
     String stringWord;
 
     public GameClientHandler(Socket socket, Player p) {

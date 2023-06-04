@@ -1,26 +1,27 @@
 package view;
+
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.input.*;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class GamePage extends Application {
 
-    private static Stage theStage;
     private GridPane gameBoard;
-    private CheckBox verticalCheckbox;
-    private Label tilesLabel;
+    private final ObservableList<String> placedTiles = FXCollections.observableArrayList();
+    private GridPane playerRack;
     private Label scoreLabel;
 
-    private static String[][] BOARD_LAYOUT = {
+    private static final String[][] BOARD_LAYOUT = {
             {"3W", " ", " ", "2L", " ", " ", " ", "3W", " ", " ", " ", "2L", " ", " ", "3W"},
             {" ", "2W", " ", " ", " ", "3L", " ", " ", " ", "3L", " ", " ", " ", "2W", " "},
             {" ", " ", "2W", " ", " ", " ", "2L", " ", "2L", " ", " ", " ", "2W", " ", " "},
@@ -42,7 +43,10 @@ public class GamePage extends Application {
         launch(args);
     }
 
-    public void initBoard(){
+    @Override
+    public void start(Stage primaryStage) {
+        primaryStage.setTitle("Scrabble Game");
+
         // Game board
         gameBoard = new GridPane();
         gameBoard.setHgap(5);
@@ -55,110 +59,186 @@ public class GamePage extends Application {
                 Color cellColor = getColorForCell(cellValue);
 
                 Label cellLabel = createCellLabel(cellValue, cellColor);
+                enableDropOnCell(cellLabel);
                 gameBoard.add(cellLabel, col, row);
             }
         }
-    }
-
-    @Override
-    public void start(Stage primaryStage) {
-        theStage = primaryStage;
-        primaryStage.setTitle("Scrabble Game");
-
-        initBoard();
-
-        // Tiles label
-        tilesLabel = new Label("Player Tiles");
-        tilesLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
 
         // Score label
         scoreLabel = new Label("Score: 0");
-        scoreLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
-
-        // Buttons
-        Button passButton = new Button("Pass");
-        Button quitButton = new Button("Quit");
-        Button challengeButton = new Button("Challenge");
-
-
-        // Button event handlers
-        passButton.setOnAction(e -> {
-            System.out.println("Pass button pressed");
-            // Add your desired functionality here
-        });
-
-        quitButton.setOnAction(e -> {
-            System.out.println("Quit button pressed");
-            // Add your desired functionality here
-        });
-
-        challengeButton.setOnAction(e -> {
-            System.out.println("Challenge button pressed");
-            // Add your desired functionality here
-        });
-
+        scoreLabel.setStyle("-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;");
+        scoreLabel.setAlignment(Pos.BOTTOM_CENTER);
 
         // Vertical checkbox
-        verticalCheckbox = new CheckBox("Vertical");
+        CheckBox verticalCheckBox = new CheckBox("Vertical");
+        verticalCheckBox.setAlignment(Pos.BOTTOM_RIGHT);
+        verticalCheckBox.setTranslateY(-4); // Move the CheckBox 10 pixels up
 
-        //TODO:how to drag tiles to board and get the word tiles
-        // Place tile button
-//        Button placeTileButton = new Button("Place Tile");
-//        placeTileButton.setOnAction(e -> {
-//            int row = Integer.parseInt(rowInput.getText());
-//            int col = Integer.parseInt(colInput.getText());
-//            boolean isVertical = verticalCheckbox.isSelected();
-//            placeTile(row, col, tileInput.getText(), isVertical);
-//        });
+        // Button: Pass
+        Button passButton = new Button("Pass");
+        passButton.setOnAction(event -> {
+            // Handle pass button action
+        });
 
-        // HBox for tile input and button
-        HBox labelsBox = new HBox(10);
-        labelsBox.setAlignment(Pos.CENTER);
-        labelsBox.getChildren().addAll(scoreLabel,tilesLabel,verticalCheckbox);
+        // Button: Challenge
+        Button challengeButton = new Button("Challenge");
+        challengeButton.setOnAction(event -> {
+            // Handle challenge button action
+        });
+
+        // Button: Quit
+        Button quitButton = new Button("Quit");
+        quitButton.setOnAction(event -> {
+            // Handle quit button action
+        });
 
         // HBox for buttons
-        HBox buttonsBox = new HBox(10);
-        buttonsBox.setAlignment(Pos.CENTER);
-        buttonsBox.getChildren().addAll(passButton,challengeButton,quitButton);
+        HBox buttonContainer = new HBox(10);
+        buttonContainer.setAlignment(Pos.BOTTOM_CENTER);
+        buttonContainer.getChildren().addAll(passButton, challengeButton, quitButton , verticalCheckBox);
 
-        // VBox for game board and input box
+        // HBox for score label and checkbox
+        HBox topContainer = new HBox(10);
+        topContainer.setAlignment(Pos.BOTTOM_CENTER);
+        topContainer.getChildren().addAll(scoreLabel);
+
+        // VBox for game board and buttons
         VBox root = new VBox(10);
         root.setAlignment(Pos.CENTER);
-        root.getChildren().addAll(gameBoard, labelsBox,buttonsBox);
-        initGameDisplay(root);
+        root.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+        root.getChildren().addAll(topContainer, gameBoard, buttonContainer);
 
-    }
-
-    public void initGameDisplay(VBox root){
-        Scene scene = new Scene(root, 600, 600);
-        theStage.setScene(scene);
+        Scene scene = new Scene(root, 600, 650);
         scene.getStylesheets().add(getClass().getResource("/gameGui.css").toExternalForm());
-        theStage.show();
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
+        // Create a separate mini screen for the player rack
+        Stage playerRackStage = new Stage();
+        playerRackStage.setTitle("Player Rack");
+
+        playerRack = new GridPane();
+        playerRack.setHgap(5);
+        playerRack.setVgap(5);
+
+        // Create the player rack tiles
+        for (int i = 0; i < 7; i++) {
+            Label tileLabel = createTileLabel("Tile " + (i + 1), Color.LIGHTGREEN);
+            enableDrag(tileLabel);
+            playerRack.add(tileLabel, i, 0);
+        }
+
+        // Set the player rack as the root of the playerRackStage
+        Scene playerRackScene = new Scene(playerRack, 400, 50);
+        playerRackStage.setScene(playerRackScene);
+        playerRackStage.setX(primaryStage.getX() + primaryStage.getWidth() + 10);
+        playerRackStage.setY(primaryStage.getY());
+        scene.getStylesheets().add(getClass().getResource("/gameGui.css").toExternalForm());
+        playerRackStage.show();
     }
 
     private Label createCellLabel(String cellValue, Color cellColor) {
         Label cellLabel = new Label(cellValue);
         cellLabel.setPrefSize(40, 40);
         cellLabel.setAlignment(Pos.CENTER);
-        cellLabel.setStyle("-fx-background-color: " + toRGBCode(cellColor) + "; -fx-text-fill: black");
+        cellLabel.setStyle("-fx-background-color: " + toRGBCode(cellColor) + "; -fx-text-fill: black; -fx-font-weight: bold;");
         return cellLabel;
     }
 
+    private Label createTileLabel(String tileValue, Color tileColor) {
+        Label tileLabel = new Label(tileValue);
+        tileLabel.setPrefSize(40, 40);
+        tileLabel.setAlignment(Pos.CENTER);
+        tileLabel.setStyle("-fx-background-color: " + toRGBCode(tileColor) + "; -fx-text-fill: black -fx-font-weight: bold;");
+        return tileLabel;
+    }
+
+    private void enableDropOnCell(Label cellLabel) {
+        cellLabel.setOnDragOver(event -> {
+            if (event.getGestureSource() != cellLabel && event.getDragboard().hasString()) {
+                event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+            }
+            event.consume();
+        });
+
+        cellLabel.setOnDragEntered(event -> {
+            if (event.getGestureSource() != cellLabel && event.getDragboard().hasString()) {
+                cellLabel.setStyle("-fx-background-color: white; -fx-text-fill: black; -fx-font-weight: bold;");
+            }
+            event.consume();
+        });
+
+        cellLabel.setOnDragExited(event -> {
+            cellLabel.setStyle("-fx-background-color: " + toRGBCode(getColorForCell(cellLabel.getText())) + "; -fx-text-fill: black; -fx-font-weight: bold;");
+            event.consume();
+        });
+
+        cellLabel.setOnDragDropped(event -> {
+            Dragboard db = event.getDragboard();
+            boolean success = false;
+            if (db.hasString()) {
+                String tile = db.getString();
+                if (cellLabel.getText().equals(tile)) {
+                    // Double-click on the same tile, return it to the player rack
+                    placedTiles.remove(tile);
+                    Label tileLabel = createTileLabel(tile, Color.LIGHTGREEN);
+                    enableDrag(tileLabel);
+                    playerRack.add(tileLabel, placedTiles.size() - 1, 0);
+                    cellLabel.setText("");
+                    success = true;
+                }
+                else {
+                    cellLabel.setText(tile);
+                    success = true;
+                }
+            }
+            event.setDropCompleted(success);
+            event.consume();
+        });
+
+        cellLabel.setOnMouseClicked(event -> {
+            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
+                String tile = cellLabel.getText();
+                if (!tile.isEmpty()) {
+                    // Double-click on a tile, return it to the player rack
+                    placedTiles.remove(tile);
+                    Label tileLabel = createTileLabel(tile, Color.LIGHTGREEN);
+                    enableDrag(tileLabel);
+                    playerRack.add(tileLabel, placedTiles.size(), 0);
+                    cellLabel.setText("");
+                }
+            }
+        });
+    }
+
+
+    private void enableDrag(Label tileLabel) {
+        tileLabel.setOnDragDetected(event -> {
+            Dragboard db = tileLabel.startDragAndDrop(TransferMode.MOVE);
+            ClipboardContent content = new ClipboardContent();
+            content.putString(tileLabel.getText());
+            db.setContent(content);
+            event.consume();
+        });
+
+        tileLabel.setOnDragDone(event -> {
+            if (event.getTransferMode() == TransferMode.MOVE) {
+                placedTiles.add(tileLabel.getText());
+                tileLabel.setText("");
+            }
+            event.consume();
+        });
+    }
+
     private Color getColorForCell(String cellValue) {
-        switch (cellValue) {
-            case "2L":
-                return Color.ORANGE;
-            case "3L":
-                return Color.DARKBLUE;
-            case "2W":
-                return Color.LIGHTPINK;
-            case "3W":
-                return Color.DARKRED;
-            case "*":
-                return Color.YELLOW;
-            default:
-                return Color.LIGHTGRAY;
-        }
+        return switch (cellValue) {
+            case "2W" -> Color.LIGHTBLUE;
+            case "3W" -> Color.BLUE;
+            case "2L" -> Color.LIGHTPINK;
+            case "3L" -> Color.RED;
+            case "*" -> Color.YELLOW;
+            default -> Color.WHITE;
+        };
     }
 
     private String toRGBCode(Color color) {
@@ -167,22 +247,4 @@ public class GamePage extends Application {
                 (int) (color.getGreen() * 255),
                 (int) (color.getBlue() * 255));
     }
-
-    private void placeTile(int row, int col, String tile, boolean isVertical) {
-        Label cellLabel = (Label) gameBoard.getChildren().stream()
-                .filter(node -> GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == col)
-                .findFirst().orElse(null);
-
-        if (cellLabel != null) {
-            cellLabel.setText(tile);
-            if (isVertical) {
-                cellLabel.setRotate(90); // Rotate the tile label to indicate vertical placement
-            } else {
-                cellLabel.setRotate(0); // Reset rotation for horizontal placement
-            }
-        }
-    }
-
-
-
 }

@@ -15,8 +15,8 @@ public class Main extends Application  {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Model m = new Model();// Model
-        ViewModel vm = new ViewModel(m);//View model
+        Model m = Model.getModel();// Model
+        ViewModel vm = new ViewModel();//View model
         View v = new View(vm);//View
 
         v.getLandingPage().start(new Stage());

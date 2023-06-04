@@ -9,6 +9,7 @@ import java.net.*;
 public class Client {
     String ip;
     int port;
+    String name;
     Socket socket;
     BufferedReader consoleReader;
     BufferedReader readFromServer;
@@ -16,9 +17,10 @@ public class Client {
 
     private GameState gameState;
 
-    public Client(String ip, int port) {
+    public Client(String ip, int port,String name) {
         this.ip = ip;
         this.port = port;
+        this.name = name;
     }
 
     public void start() {

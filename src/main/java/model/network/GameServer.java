@@ -16,10 +16,11 @@ public class GameServer {
     private static List<GameClientHandler> clients = new ArrayList<>();
     private HostPlayer hostPlayer;
     GameState gameState;
-    public GameServer(int port) {
+
+    public GameServer(int port,String name) {
         this.port = port;
         gameState = new GameState();
-        hostPlayer = new HostPlayer(gameState);
+        hostPlayer = new HostPlayer(gameState,name);
     }
 
 

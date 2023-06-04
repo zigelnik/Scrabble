@@ -21,17 +21,11 @@ public class HostPlayer extends Player {
     public QueryServer queryServer;
     public int port = 9998;
 
-    public HostPlayer(GameState gs) {
-       System.out.println("Host, enter your name:");
-        try {
-            consoleReader = new BufferedReader(new InputStreamReader(System.in));
-            this.setName(consoleReader.readLine());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public HostPlayer(GameState gs,String name) {
         gameState = gs;
         gameState.addPlayer(this);
         queryServer = new QueryServer(port,new BookScrabbleHandler());
+        this.setName(name);
 
     }
     public void initGame(){
@@ -43,7 +37,7 @@ public class HostPlayer extends Player {
             gameState.initHands();
         }catch(Exception e)
         {
-            System.out.println("problem inithands");
+            System.out.println("problem init-hands");
             e.printStackTrace();
         }
 

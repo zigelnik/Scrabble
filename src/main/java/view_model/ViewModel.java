@@ -7,22 +7,21 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class ViewModel extends Observable implements Observer {
-    static Model m;
+    static Model m = Model.getModel();
     IntegerProperty playerScore;
     StringProperty playerName;
 
 
-    public ViewModel(Model m) {
-        this.m = m;
+    public ViewModel() {
         playerScore = new SimpleIntegerProperty();
 
     }
-    public static void hostGame(int port)
+    public static void hostGame(int port,String name)
     {
-        m.hostGame(port);
+        m.hostGame(port,name);
     }
-    public static void joinGame(String ip, int port) {
-        m.joinGame(ip,port);
+    public static void joinGame(String ip, int port, String name) {
+        m.joinGame(ip,port,name);
     }
 
     @Override
@@ -32,4 +31,6 @@ public class ViewModel extends Observable implements Observer {
 
     public Model getModel() {return m;}
     public IntegerProperty getPlayerScore() {return playerScore;}
+
+
 }

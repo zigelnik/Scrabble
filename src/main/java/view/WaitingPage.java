@@ -43,7 +43,6 @@ public class WaitingPage extends Application {
         } else {
             waitingLabel = new Label("Waiting for Host to Start");
             startButton = new Button("Join Game");
-
         }
         waitingLabel.getStyleClass().add("waiting-label");
         root.setAlignment(Pos.CENTER);
@@ -55,9 +54,7 @@ public class WaitingPage extends Application {
 
     public void setWaitingDisplay() {
         startButton.setOnAction(e -> {
-            if(isHost){
-                gp.start(theStage);
-            }
+            if(isHost){gp.start(theStage);}
             System.out.println("WP button clicked");
         });
     }

@@ -67,6 +67,7 @@ public class LandingPage extends Application {
             name = nameField.getText();
         }
         else{
+            this.playerName = name;
             System.out.println("Host button clicked. Name: " + name);
             Label title = new Label("Scrabble Game");
             title.getStyleClass().add("title-label");
@@ -84,7 +85,7 @@ public class LandingPage extends Application {
                     this.hostPort = port;
 
                     Thread hostThread = new Thread(()-> {
-                        ViewModel.hostGame(Integer.parseInt(hostPort));
+                        ViewModel.hostGame(Integer.parseInt(hostPort),playerName);
                     });
                     hostThread.start();
 
@@ -126,7 +127,9 @@ public class LandingPage extends Application {
             showAlert("Error", "Don't forget to enter your name.");
             name = nameField.getText();
         }
+
         else{
+            this.playerName = name;
             System.out.println("Join button clicked. Name: " + name);
             Label title = new Label("Scrabble Game");
             title.getStyleClass().add("title-label");
@@ -149,7 +152,7 @@ public class LandingPage extends Application {
                     this.IP = ip;
 
                     Thread joinThread = new Thread(()-> {
-                        ViewModel.joinGame(IP, Integer.parseInt(port));
+                        ViewModel.joinGame(IP, Integer.parseInt(port),playerName);
                     });
                     joinThread.start();
 

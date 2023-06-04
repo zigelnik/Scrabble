@@ -1,12 +1,12 @@
 package view;
 
+import model.network.GameServer;
 import view_model.ViewModel;
 
 import java.util.Observable;
 import java.util.Observer;
 
 public class View implements Observer {
-
     LandingPage landingPage;
     WaitingPage waitingPage;
     GamePage gamePage;
