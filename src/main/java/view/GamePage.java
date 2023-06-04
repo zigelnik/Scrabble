@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -80,10 +81,17 @@ public class GamePage extends Application {
             // Handle pass button action
         });
 
+
         // Button: Challenge
         Button challengeButton = new Button("Challenge");
         challengeButton.setOnAction(event -> {
             // Handle challenge button action
+        });
+
+        // Button: Submit
+        Button subButton = new Button("Submit");
+        subButton.setOnAction(event -> {
+            // Handle pass button action
         });
 
         // Button: Quit
@@ -95,7 +103,7 @@ public class GamePage extends Application {
         // HBox for buttons
         HBox buttonContainer = new HBox(10);
         buttonContainer.setAlignment(Pos.BOTTOM_CENTER);
-        buttonContainer.getChildren().addAll(passButton, challengeButton, quitButton , verticalCheckBox);
+        buttonContainer.getChildren().addAll(passButton, challengeButton, quitButton,subButton , verticalCheckBox);
 
         // HBox for score label and checkbox
         HBox topContainer = new HBox(10);
@@ -111,15 +119,15 @@ public class GamePage extends Application {
         Scene scene = new Scene(root, 600, 650);
         scene.getStylesheets().add(getClass().getResource("/gameGui.css").toExternalForm());
         primaryStage.setScene(scene);
-        primaryStage.show();
-
-        // Create a separate mini screen for the player rack
-        Stage playerRackStage = new Stage();
-        playerRackStage.setTitle("Player Rack");
 
         playerRack = new GridPane();
         playerRack.setHgap(5);
         playerRack.setVgap(5);
+        playerRack.setAlignment(Pos.BOTTOM_CENTER);
+
+        root.getChildren().add(playerRack);
+
+        primaryStage.show();
 
         // Create the player rack tiles
         for (int i = 0; i < 7; i++) {
@@ -128,13 +136,6 @@ public class GamePage extends Application {
             playerRack.add(tileLabel, i, 0);
         }
 
-        // Set the player rack as the root of the playerRackStage
-        Scene playerRackScene = new Scene(playerRack, 400, 50);
-        playerRackStage.setScene(playerRackScene);
-        playerRackStage.setX(primaryStage.getX() + primaryStage.getWidth() + 10);
-        playerRackStage.setY(primaryStage.getY());
-        scene.getStylesheets().add(getClass().getResource("/gameGui.css").toExternalForm());
-        playerRackStage.show();
     }
 
     private Label createCellLabel(String cellValue, Color cellColor) {
@@ -151,6 +152,22 @@ public class GamePage extends Application {
         tileLabel.setAlignment(Pos.CENTER);
         tileLabel.setStyle("-fx-background-color: " + toRGBCode(tileColor) + "; -fx-text-fill: black -fx-font-weight: bold;");
         return tileLabel;
+    }
+
+
+    private void updatePlayerRack(Label cellLabel, String tile) {
+        // Find the tile label in the player rack
+        for (Node node : playerRack.getChildren()) {
+            if (node instanceof Label) {
+                Label tileLabel = (Label) node;
+                if (tileLabel.getText().isEmpty()) {
+                    // Found an empty slot in the player rack, place the tile
+                    tileLabel.setText(tile);
+                    enableDrag(tileLabel);
+                    break;
+                }
+            }
+        }
     }
 
     private void enableDropOnCell(Label cellLabel) {
@@ -180,14 +197,10 @@ public class GamePage extends Application {
                 String tile = db.getString();
                 if (cellLabel.getText().equals(tile)) {
                     // Double-click on the same tile, return it to the player rack
-                    placedTiles.remove(tile);
-                    Label tileLabel = createTileLabel(tile, Color.LIGHTGREEN);
-                    enableDrag(tileLabel);
-                    playerRack.add(tileLabel, placedTiles.size() - 1, 0);
                     cellLabel.setText("");
+                    updatePlayerRack(cellLabel, tile);
                     success = true;
-                }
-                else {
+                } else {
                     cellLabel.setText(tile);
                     success = true;
                 }
@@ -201,16 +214,12 @@ public class GamePage extends Application {
                 String tile = cellLabel.getText();
                 if (!tile.isEmpty()) {
                     // Double-click on a tile, return it to the player rack
-                    placedTiles.remove(tile);
-                    Label tileLabel = createTileLabel(tile, Color.LIGHTGREEN);
-                    enableDrag(tileLabel);
-                    playerRack.add(tileLabel, placedTiles.size(), 0);
                     cellLabel.setText("");
+                    updatePlayerRack(cellLabel, tile);
                 }
             }
         });
     }
-
 
     private void enableDrag(Label tileLabel) {
         tileLabel.setOnDragDetected(event -> {
@@ -229,6 +238,7 @@ public class GamePage extends Application {
             event.consume();
         });
     }
+
 
     private Color getColorForCell(String cellValue) {
         return switch (cellValue) {
