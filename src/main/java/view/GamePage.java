@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 
 public class GamePage extends Application {
 
+    private static Stage theStage;
     private GridPane gameBoard;
     private CheckBox verticalCheckbox;
     private Label tilesLabel;
@@ -58,8 +59,10 @@ public class GamePage extends Application {
             }
         }
     }
+
     @Override
     public void start(Stage primaryStage) {
+        theStage = primaryStage;
         primaryStage.setTitle("Scrabble Game");
 
         initBoard();
@@ -122,11 +125,15 @@ public class GamePage extends Application {
         VBox root = new VBox(10);
         root.setAlignment(Pos.CENTER);
         root.getChildren().addAll(gameBoard, labelsBox,buttonsBox);
+        initGameDisplay(root);
 
+    }
+
+    public void initGameDisplay(VBox root){
         Scene scene = new Scene(root, 600, 600);
-        primaryStage.setScene(scene);
+        theStage.setScene(scene);
         scene.getStylesheets().add(getClass().getResource("/gameGui.css").toExternalForm());
-        primaryStage.show();
+        theStage.show();
     }
 
     private Label createCellLabel(String cellValue, Color cellColor) {

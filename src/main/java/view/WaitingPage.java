@@ -12,6 +12,9 @@ import javafx.stage.Stage;
 
 public class WaitingPage extends Application {
 
+    private static GamePage gp = new GamePage();
+
+    private static Stage theStage;
     @FXML
     private Label waitingLabel;
 
@@ -28,6 +31,7 @@ public class WaitingPage extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        theStage = primaryStage;
         root = new VBox(10);
         Scene scene = new Scene(root, 400, 300);
         scene.getStylesheets().add(getClass().getResource("/gameGui.css").toExternalForm());
@@ -35,31 +39,29 @@ public class WaitingPage extends Application {
         if (isHost) {
             waitingLabel = new Label("Waiting for Players to Join");
             startButton = new Button("Start Game");
-            setHostDisplay();
+
         } else {
             waitingLabel = new Label("Waiting for Host to Start");
             startButton = new Button("Join Game");
-            setJoinDisplay();
+
         }
         waitingLabel.getStyleClass().add("waiting-label");
         root.setAlignment(Pos.CENTER);
         root.getChildren().addAll(waitingLabel,startButton);
+        startButton.setVisible(isHost ? true : false);
         primaryStage.show();
+        setWaitingDisplay();
     }
 
-    public void setHostDisplay() {
+    public void setWaitingDisplay() {
         startButton.setOnAction(e -> {
-            // Handle the start game functionality
-            System.out.println("Start button clicked - Host mode");
+            if(isHost){
+                gp.start(theStage);
+            }
+            System.out.println("WP button clicked");
         });
     }
 
-    public void setJoinDisplay() {
-        startButton.setOnAction(e -> {
-            // Handle the join game functionality
-            System.out.println("Join button clicked - Join mode");
-        });
-    }
 
     public void setHost(boolean isHost) {
         this.isHost = isHost;
