@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 
 public class GamePage extends Application {
 
+    private static Stage theStage;
     private GridPane gameBoard;
     private final ObservableList<String> placedTiles = FXCollections.observableArrayList();
     private GridPane playerRack;
@@ -44,8 +45,11 @@ public class GamePage extends Application {
         launch(args);
     }
 
+
+
     @Override
     public void start(Stage primaryStage) {
+        theStage = primaryStage;
         primaryStage.setTitle("Scrabble Game");
 
         // Game board
@@ -256,5 +260,9 @@ public class GamePage extends Application {
                 (int) (color.getRed() * 255),
                 (int) (color.getGreen() * 255),
                 (int) (color.getBlue() * 255));
+    }
+
+    public static Stage getTheStage() {
+        return theStage;
     }
 }

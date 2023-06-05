@@ -2,18 +2,19 @@ package view_model;
 
 import javafx.beans.property.*;
 import model.Model;
+import model.network.GameServer;
+import view.View;
 
 import java.util.Observable;
 import java.util.Observer;
 
 public class ViewModel extends Observable implements Observer {
     static Model m = Model.getModel();
-    IntegerProperty playerScore;
-    StringProperty playerName;
+
 
 
     public ViewModel() {
-        playerScore = new SimpleIntegerProperty();
+
 
     }
     public static void hostGame(int port,String name)
@@ -24,13 +25,21 @@ public class ViewModel extends Observable implements Observer {
         m.joinGame(ip,port,name);
     }
 
+    public static void initPlayersBoard(){
+        GameServer.broadcastToClients("/start");
+    }
+
     @Override
     public void update(Observable o, Object arg) {
 
     }
 
     public Model getModel() {return m;}
-    public IntegerProperty getPlayerScore() {return playerScore;}
+
+
+
+    private  static class ViewModelHolder{ public static final ViewModel vm = new ViewModel();}
+    public static ViewModel getViewModel() {return ViewModelHolder.vm;}
 
 
 }
