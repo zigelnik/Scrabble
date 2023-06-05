@@ -128,7 +128,7 @@ public class GamePage extends Application {
         playerRack.setHgap(5);
         playerRack.setVgap(5);
         playerRack.setAlignment(Pos.BOTTOM_CENTER);
-
+        root.getStylesheets().add("player-rack");
         root.getChildren().add(playerRack);
 
         primaryStage.show();
