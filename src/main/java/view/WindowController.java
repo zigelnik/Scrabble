@@ -21,7 +21,7 @@ public class WindowController extends Observable {
     public void host()
     {
         Thread hostThread = new Thread(() -> {
-            m.hostGame(9996);
+            m.hostGame(9995);
         });
         hostThread.start();
     }
@@ -29,7 +29,7 @@ public class WindowController extends Observable {
     public void join()
     {
         Thread joinThread = new Thread(()-> {
-            m.joinGame("localhost", 9996);
+            m.joinGame("localhost", 9995);
         });
         joinThread.start();
     }
