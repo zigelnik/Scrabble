@@ -78,6 +78,8 @@ public class GameServer {
         synchronized (clients) {
             for (GameClientHandler client : clients) {
                 client.sendMessage(message);
+                client.initPlayersBaord();
+
             }
         }
     }

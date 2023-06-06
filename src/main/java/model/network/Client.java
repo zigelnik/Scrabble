@@ -1,5 +1,6 @@
 package model.network;
 import model.concrete.GameState;
+import view.GamePage;
 
 import java.io.*;
 import java.net.*;
@@ -17,7 +18,8 @@ public class Client {
 
     private GameState gameState;
 
-    public Client(String ip, int port,String name) {
+
+    public Client(String ip, int port, String name) {
         this.ip = ip;
         this.port = port;
         this.name = name;

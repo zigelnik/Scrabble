@@ -1,5 +1,7 @@
 package model.concrete;
 
+import view.GamePage;
+
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ public class GameState implements Serializable {
      List<Player> playersList;
      public Board board;
      private boolean isGameOver;
+
 
     //CTOR
     public  GameState() {

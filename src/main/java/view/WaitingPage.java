@@ -9,8 +9,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import model.Model;
+import view_model.ViewModel;
 
 public class WaitingPage extends Application {
+
 
     private static GamePage gp = new GamePage();
 
@@ -54,8 +57,11 @@ public class WaitingPage extends Application {
 
     public void setWaitingDisplay() {
         startButton.setOnAction(e -> {
-            if(isHost){gp.start(theStage);}
-            System.out.println("WP button clicked");
+            if(isHost) {
+                gp.start(theStage);
+                ViewModel.initPlayersBoard();
+            }
+
         });
     }
 

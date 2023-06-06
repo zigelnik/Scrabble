@@ -1,7 +1,10 @@
 package model.network;
 
+import javafx.stage.Stage;
 import model.concrete.GameState;
 import model.concrete.Player;
+import view.GamePage;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -10,8 +13,7 @@ public class GameClientHandler extends Thread {
     static private BufferedReader readFromClient;
     private PrintWriter writeToClient;
     public Player player;
-
-
+    GamePage gp = new GamePage();
     String stringWord;
 
     public GameClientHandler(Socket socket, Player p) {
@@ -51,6 +53,7 @@ public class GameClientHandler extends Thread {
         }
     }
 
+
     public void sendMessage(String message) {
         writeToClient.println(message);
     }
@@ -68,6 +71,8 @@ public class GameClientHandler extends Thread {
     }
 
 
+
+
     public void updateClientsState(GameState gameState)
     {
         try {
@@ -80,6 +85,9 @@ public class GameClientHandler extends Thread {
         }
     }
 
+    public void initPlayersBaord(){
+        gp.start(new Stage());
+    }
 
 }
 
