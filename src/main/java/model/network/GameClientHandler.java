@@ -30,6 +30,7 @@ public class GameClientHandler extends Thread {
     public void run() {
         try {
 
+            System.out.println("New client connected: " +player.getPlayerName()+" | From: "+ clientSocket.getLocalAddress());
 
             String message;
             while ((message = readFromClient.readLine()) != null) {
@@ -82,9 +83,6 @@ public class GameClientHandler extends Thread {
         }
     }
 
-    public void initPlayersBaord(){
-        gp.start(new Stage());
-    }
 
 }
 

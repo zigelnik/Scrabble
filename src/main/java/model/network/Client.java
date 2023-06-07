@@ -46,7 +46,9 @@ public class Client {
                             Platform.runLater(()->
                                     gp.start(WaitingPage.theStage));
                         }
-                        System.out.println(message);
+                        else {
+                            System.out.println(message);
+                             }
                     }
 
             // --- should the client get a game state as object input stream and deal with it? ----

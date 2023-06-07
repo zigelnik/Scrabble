@@ -224,7 +224,7 @@ public class LandingPage extends Application {
 
             Pattern pattern = Pattern.compile(IP_PATTERN);
 
-            if(!pattern.matcher(ip).matches()) {
+            if(!pattern.matcher(ip).matches() && !ip.equals("localhost")) {
                 throw new IllegalArgumentException("Invalid IP address entered. Please enter a valid IP address.");
             }
 
