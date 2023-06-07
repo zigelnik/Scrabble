@@ -1,4 +1,4 @@
-package model.logic;
+package model.network;
 
 import java.io.InputStream;
 import java.io.OutputStream;

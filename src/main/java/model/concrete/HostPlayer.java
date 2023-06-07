@@ -46,7 +46,6 @@ public class HostPlayer extends Player {
         {
             for(Player player : gameState.playersList)
             {
-                player.acceptedQuery= "you,suck";
                 while(!player.isTurnOver)
                 {
                     player.isTurnOver =  legalMove(player);
@@ -57,24 +56,16 @@ public class HostPlayer extends Player {
                 // do we need to get the winner as object or change the isWinner to void?
                 Player winner = gameState.isWinner();
 
+                //
                 GameServer.broadcastToClients(player.acceptedQuery);
             }
         }
         stop=true;
     }
 
-    // optional: updating all clients with the updates game state
-        public void updateGame(String msg)
-        {
-            for(GameClientHandler gch: GameServer.getClients())
-            {
-                gch.updateClientsState(gameState);
-            }
-        }
 
     public boolean legalMove(Player player)
     {
-        boolean validQuery;
         String msg = null;
         int score=0;
 

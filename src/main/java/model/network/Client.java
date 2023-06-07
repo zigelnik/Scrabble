@@ -18,7 +18,7 @@ public class Client {
     BufferedReader consoleReader;
     BufferedReader readFromServer;
     PrintWriter writeToServer;
-    private  GamePage gp = GamePage.getGP();
+    private GamePage gp = GamePage.getGP();
     private GameState gameState;
 
 
@@ -38,35 +38,20 @@ public class Client {
             writeToServer = new PrintWriter(socket.getOutputStream(), true);
 
 
-            // receiving msg
+            // receiving msg (another thread?)
                     String message;
-                    while ((message = readFromServer.readLine()) != null) {
+                    while ((message = readFromServer.readLine()) != null)
+                    {
                         if(message.equals("/start"))
                         {
                             Platform.runLater(()->
                                     gp.start(WaitingPage.theStage));
                         }
-                        else {
+                        else
+                        {
                             System.out.println(message);
-                             }
-                    }
-
-            // --- should the client get a game state as object input stream and deal with it? ----
-//            Thread stateThread = new Thread(() -> {
-//                try {
-//                    System.out.println("reading objects in client");
-//                    ObjectInputStream inputStream= new ObjectInputStream(socket.getInputStream());
-//                    gameState = (GameState) inputStream.readObject();
-//
-//
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                } catch (ClassNotFoundException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            });
-//            stateThread.start();
-//               -------------------------------------------------------
+                        }
+                     }
 
 //            // sending msg
 //            String message;
@@ -78,7 +63,7 @@ public class Client {
             e.printStackTrace();
         }finally {
             try {
-                writeToServer.println(socket.getInetAddress()+"has left");
+                writeToServer.println(socket.getLocalAddress()+"has left");
                 socket.close();
 
             } catch (IOException e) {

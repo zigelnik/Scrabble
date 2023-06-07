@@ -1,7 +1,7 @@
 package model.Test;
 
 import model.network.BookScrabbleHandler;
-import model.logic.ClientHandler;
+import model.network.ClientHandler;
 import model.logic.DictionaryManager;
 import model.network.QueryServer;
 

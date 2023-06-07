@@ -81,13 +81,7 @@ public class GameServer {
             }
         }
     }
-    public static void sendStatetoClients(GameState gameState) {
-        synchronized (clients) {
-            for (GameClientHandler client : clients) {
-                client.updateClientsState(gameState);
-            }
-        }
-    }
+
     public static void removeClient(GameClientHandler gameClientHandler) {
         synchronized (clients) {
             clients.remove(gameClientHandler);

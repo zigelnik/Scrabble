@@ -13,7 +13,6 @@ public class GameClientHandler extends Thread {
     static private BufferedReader readFromClient;
     private PrintWriter writeToClient;
     public Player player;
-    GamePage gp = new GamePage();
     String stringWord;
 
     public GameClientHandler(Socket socket, Player p) {
@@ -30,7 +29,7 @@ public class GameClientHandler extends Thread {
     public void run() {
         try {
 
-            System.out.println("New client connected: " +player.getPlayerName()+" | From: "+ clientSocket.getLocalAddress());
+            System.out.println("New client connected: " +player.getPlayerName()+" | From: "+ clientSocket.getLocalSocketAddress());
 
             String message;
             while ((message = readFromClient.readLine()) != null) {
@@ -66,21 +65,6 @@ public class GameClientHandler extends Thread {
             throw new RuntimeException(e);
         }
         return stringWord;
-    }
-
-
-
-
-    public void updateClientsState(GameState gameState)
-    {
-        try {
-            ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
-            outputStream.writeObject(gameState);
-            outputStream.flush();
-            outputStream.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
 

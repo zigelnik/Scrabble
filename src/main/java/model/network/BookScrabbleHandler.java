@@ -1,6 +1,5 @@
 package model.network;
 
-import model.logic.ClientHandler;
 import model.logic.DictionaryManager;
 
 import java.io.*;
