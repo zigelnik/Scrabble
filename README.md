@@ -17,6 +17,7 @@ This is a JavaFX implementation of the Scrabble game using the Model-View-ViewMo
 ## Usage
 
 **Host Mode**
+
 In Host mode, the player starts a new game and waits for other players to join.
 Start the application and select the Host mode.
 Enter a username and a port number.
@@ -24,22 +25,23 @@ Click on the "Start Game" button to start the game.
 Wait for other players to connect to your server.
 
 **Guest Mode**
+
 In Guest mode, the player joins an existing game hosted by another player.
 Start the application and select the Guest mode.
 Enter a username, a server IP address, and a port number.
 Click on the "Join Game" button to join the game.
 
 ## Playing the Game
-Once the game has started and the players have joined, the game board will be displayed in the center of the window. Each player will have a row of tiles at the bottom of the window representing their hand.
-To make a move, the player can select a tile from their hand and then click on an empty cell on the board to place the tile on the board. The player can also select a cell on the board that has a tile and then click on the player's hand to swap the tile on the board with a tile from the player's hand.
+Once the game has started and the players have joined, the game board will be displayed at the center of the window. Each player will have a row of tiles at the bottom of the window representing their hand.
+To make a move, the player can select a tile from their hand and drag it on an empty cell on the board. 
 The game ends when a player has used all of their tiles or when there are no more valid moves left on the board. The player with the highest score at the end of the game wins.
 
 ## Project Structure
 The project is structured using the MVVM architecture and Observer-Observable design pattern. The purpose of this architecture is to separate the user interface from the underlying data model, making the code easier to read, maintain, and extend. The project is divided into three main packages:
 
-**Model**: Contains the data model classes for the game, including the Scrabble board, tiles, and players. The classes in this package are responsible for the game's logic and state.
+**Model**: Contains the server and client communication methods, data model classes for the game, including the Scrabble board, tiles, and players. The classes in this package are responsible for the game's logic and state.
 
-**View**: Contains the JavaFX view classes for the game, including the game board, player tiles, and game window. The classes in this package are responsible for displaying the game's user interface and handling user input.
+**View**: Contains the JavaFX view classes for the game, including the game board, player tiles, and game windows. The classes in this package are responsible for displaying the game's user interface and handling user input like name and ip/port.
 
-**ViewModel**: Contains the view model classes for the game, which handle the game logic and communication between the model and view. The classes in this package act as intermediaries between the model and view, responding to user input and updating the view accordingly.
+**ViewModel**: Contains the view model classes for the game, which handle the game logic and communication between the model and view. The classes in this package act as intermediaries between the model and view, responding to user input, binding it to model's varbiable and updating the view accordingly.
 
