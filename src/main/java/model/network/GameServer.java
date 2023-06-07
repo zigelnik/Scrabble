@@ -16,10 +16,11 @@ public class GameServer {
     private static List<GameClientHandler> clients = new ArrayList<>();
     private HostPlayer hostPlayer;
     GameState gameState;
-    public GameServer(int port) {
+
+    public GameServer(int port,String name) {
         this.port = port;
         gameState = new GameState();
-        hostPlayer = new HostPlayer(gameState);
+        hostPlayer = new HostPlayer(gameState,name);
     }
 
 
@@ -80,13 +81,7 @@ public class GameServer {
             }
         }
     }
-    public static void sendStatetoClients(GameState gameState) {
-        synchronized (clients) {
-            for (GameClientHandler client : clients) {
-                client.updateClientsState(gameState);
-            }
-        }
-    }
+
     public static void removeClient(GameClientHandler gameClientHandler) {
         synchronized (clients) {
             clients.remove(gameClientHandler);

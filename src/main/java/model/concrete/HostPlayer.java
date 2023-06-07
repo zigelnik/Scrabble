@@ -1,7 +1,8 @@
 package model.concrete;
 
-import model.logic.BookScrabbleHandler;
+
 import model.logic.DictionaryManager;
+import model.network.BookScrabbleHandler;
 import model.network.QueryServer;
 import model.network.GameClientHandler;
 import model.network.GameServer;
@@ -20,17 +21,11 @@ public class HostPlayer extends Player {
     public QueryServer queryServer;
     public int port = 9998;
 
-    public HostPlayer(GameState gs) {
-       System.out.println("Host, enter your name:");
-        try {
-            consoleReader = new BufferedReader(new InputStreamReader(System.in));
-            this.setName(consoleReader.readLine());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public HostPlayer(GameState gs,String name) {
         gameState = gs;
         gameState.addPlayer(this);
         queryServer = new QueryServer(port,new BookScrabbleHandler());
+        this.setName(name);
 
     }
     public void initGame(){
@@ -42,7 +37,7 @@ public class HostPlayer extends Player {
             gameState.initHands();
         }catch(Exception e)
         {
-            System.out.println("problem inithands");
+            System.out.println("problem init-hands");
             e.printStackTrace();
         }
 
@@ -51,7 +46,6 @@ public class HostPlayer extends Player {
         {
             for(Player player : gameState.playersList)
             {
-                player.acceptedQuery= "you,suck";
                 while(!player.isTurnOver)
                 {
                     player.isTurnOver =  legalMove(player);
@@ -62,24 +56,16 @@ public class HostPlayer extends Player {
                 // do we need to get the winner as object or change the isWinner to void?
                 Player winner = gameState.isWinner();
 
+                //
                 GameServer.broadcastToClients(player.acceptedQuery);
             }
         }
         stop=true;
     }
 
-    // optional: updating all clients with the updates game state
-        public void updateGame(String msg)
-        {
-            for(GameClientHandler gch: GameServer.getClients())
-            {
-                gch.updateClientsState(gameState);
-            }
-        }
 
     public boolean legalMove(Player player)
     {
-        boolean validQuery;
         String msg = null;
         int score=0;
 

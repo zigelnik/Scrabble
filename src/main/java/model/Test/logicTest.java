@@ -1,9 +1,10 @@
 package model.Test;
 
-import model.logic.BookScrabbleHandler;
-import model.logic.ClientHandler;
+import model.network.BookScrabbleHandler;
+import model.network.ClientHandler;
 import model.logic.DictionaryManager;
 import model.network.QueryServer;
+
 
 import java.io.FileWriter;
 import java.io.IOException;

@@ -1,7 +1,10 @@
 package model.network;
 
+import javafx.stage.Stage;
 import model.concrete.GameState;
 import model.concrete.Player;
+import view.GamePage;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -10,7 +13,6 @@ public class GameClientHandler extends Thread {
     static private BufferedReader readFromClient;
     private PrintWriter writeToClient;
     public Player player;
-
     String stringWord;
 
     public GameClientHandler(Socket socket, Player p) {
@@ -27,9 +29,7 @@ public class GameClientHandler extends Thread {
     public void run() {
         try {
 
-            writeToClient.println("enter your name: ");
-            player.setName(readFromClient.readLine());
-            System.out.println("New client connected: " +player.getPlayerName()+" | From: "+ clientSocket.getInetAddress());
+            System.out.println("New client connected: " +player.getPlayerName()+" | From: "+ clientSocket.getLocalSocketAddress());
 
             String message;
             while ((message = readFromClient.readLine()) != null) {
@@ -50,6 +50,7 @@ public class GameClientHandler extends Thread {
         }
     }
 
+
     public void sendMessage(String message) {
         writeToClient.println(message);
     }
@@ -64,19 +65,6 @@ public class GameClientHandler extends Thread {
             throw new RuntimeException(e);
         }
         return stringWord;
-    }
-
-
-    public void updateClientsState(GameState gameState)
-    {
-        try {
-            ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
-            outputStream.writeObject(gameState);
-            outputStream.flush();
-            outputStream.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
 
