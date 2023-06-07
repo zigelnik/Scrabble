@@ -39,8 +39,6 @@ public class Client {
 
 
             // receiving msg
-            Thread receiveThread = new Thread(() -> {
-                try {
                     String message;
                     while ((message = readFromServer.readLine()) != null) {
                         if(message.equals("/start"))
@@ -50,11 +48,6 @@ public class Client {
                         }
                         System.out.println(message);
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-            receiveThread.start();
 
             // --- should the client get a game state as object input stream and deal with it? ----
 //            Thread stateThread = new Thread(() -> {
@@ -73,11 +66,11 @@ public class Client {
 //            stateThread.start();
 //               -------------------------------------------------------
 
-            // sending msg
-            String message;
-            while ((message = consoleReader.readLine()) != null) {
-                writeToServer.println(message);
-            }
+//            // sending msg
+//            String message;
+//            while ((message = consoleReader.readLine()) != null) {
+//                writeToServer.println(message);
+//            }
 
         } catch (IOException e) {
             e.printStackTrace();
