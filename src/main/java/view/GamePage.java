@@ -14,6 +14,7 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import view_model.ViewModel;
 
 public class GamePage extends Application {
 
@@ -266,4 +267,8 @@ public class GamePage extends Application {
     public static Stage getTheStage() {
         return theStage;
     }
+
+
+    private  static class GPHolder{ public static final GamePage gp = new GamePage();}
+    public static GamePage getGP() {return GPHolder.gp;}
 }

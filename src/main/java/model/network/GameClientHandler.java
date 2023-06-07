@@ -30,9 +30,6 @@ public class GameClientHandler extends Thread {
     public void run() {
         try {
 
-            writeToClient.println("enter your name: ");
-            player.setName(readFromClient.readLine());
-            System.out.println("New client connected: " +player.getPlayerName()+" | From: "+ clientSocket.getInetAddress());
 
             String message;
             while ((message = readFromClient.readLine()) != null) {

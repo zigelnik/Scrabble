@@ -1,6 +1,9 @@
 package model.network;
+import javafx.application.Platform;
 import model.concrete.GameState;
 import view.GamePage;
+import view.Main;
+import view.WaitingPage;
 
 import java.io.*;
 import java.net.*;
@@ -15,7 +18,7 @@ public class Client {
     BufferedReader consoleReader;
     BufferedReader readFromServer;
     PrintWriter writeToServer;
-
+    private  GamePage gp = GamePage.getGP();
     private GameState gameState;
 
 
@@ -40,6 +43,11 @@ public class Client {
                 try {
                     String message;
                     while ((message = readFromServer.readLine()) != null) {
+                        if(message.equals("/start"))
+                        {
+                            Platform.runLater(()->
+                                    gp.start(WaitingPage.theStage));
+                        }
                         System.out.println(message);
                     }
                 } catch (IOException e) {

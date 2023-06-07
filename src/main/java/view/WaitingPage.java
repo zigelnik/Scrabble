@@ -14,10 +14,10 @@ import view_model.ViewModel;
 
 public class WaitingPage extends Application {
 
-
+ViewModel vm = ViewModel.getViewModel();
     private static GamePage gp = new GamePage();
 
-    private static Stage theStage;
+    public static Stage theStage;
     @FXML
     private Label waitingLabel;
 
@@ -59,7 +59,7 @@ public class WaitingPage extends Application {
         startButton.setOnAction(e -> {
             if(isHost) {
                 gp.start(theStage);
-                ViewModel.initPlayersBoard();
+                vm.initPlayersBoard();
             }
 
         });
