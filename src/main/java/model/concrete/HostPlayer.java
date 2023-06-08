@@ -54,9 +54,7 @@ public class HostPlayer extends Player {
                 {
                     player.isTurnOver =  legalMove(player);
                 }
-//                Platform.runLater(() -> {
-                    m.updateScore(player.getSumScore());
-//                });
+                m.updateScore(player.getSumScore());
                 player.isTurnOver = false; // returning so next round the player can play again his turn.
                 currPlayerInd = ((currPlayerInd+1) % gameState.playersList.size());
 
@@ -66,9 +64,9 @@ public class HostPlayer extends Player {
                 GameServer.broadcastToClients(player.acceptedQuery);
 
             }
-            break;
+
         }
-//        stop=true;
+        stop=true;
     }
 
 

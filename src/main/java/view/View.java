@@ -21,8 +21,6 @@ public class View implements Observer {
 
 
     public void setViewModel() {
-        //The lambda expression is used to convert the integer value to a string using Integer.toString().
-        //The second argument vm.score specifies that the binding should be recomputed whenever the value of vm.score changes.
         gamePage.scoreLabel.textProperty().bind(vm.score.asString());
 
     }
