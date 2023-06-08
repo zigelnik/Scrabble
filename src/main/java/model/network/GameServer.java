@@ -8,14 +8,18 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 // Server class
 public class GameServer {
     int port;
     private static final int MAX_CLIENTS = 3;
     private static List<GameClientHandler> clients = new ArrayList<>();
-    private HostPlayer hostPlayer;
+    public HostPlayer hostPlayer;
     GameState gameState;
+    ExecutorService executor = Executors.newFixedThreadPool(MAX_CLIENTS);
 
     public GameServer(int port,String name) {
         this.port = port;
@@ -55,22 +59,27 @@ public class GameServer {
             while (!hostPlayer.stop) {
                 Socket clientSocket = serverSocket.accept();
 
-                if (clients.size() < MAX_CLIENTS) {
+                // if too much clients connected (more than 3)
+                if (clients.size() == MAX_CLIENTS) {
+                    System.out.println("Too many players. Connection rejected.");
+                    clientSocket.close();
+                    continue;
+
+                }
+                // run each client in a different thread
+                executor.execute(()-> {
                     Player p = new Player();
                     GameClientHandler gch = new GameClientHandler(clientSocket, p);
                     clients.add(gch);
                     gch.start();
                     gameState.addPlayer(p);
 
-                }
-                else {
-                    System.out.println("too much clients");
-                    clientSocket.close();
-
-                }
+                });
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            executor.shutdown();
         }
     }
 

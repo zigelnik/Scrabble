@@ -26,6 +26,7 @@ public class ViewModel extends Observable implements Observer {
     }
 
     public static void initPlayersBoard(){
+
         GameServer.broadcastToClients("/start");
     }
 

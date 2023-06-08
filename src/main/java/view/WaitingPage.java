@@ -59,6 +59,7 @@ ViewModel vm = ViewModel.getViewModel();
         startButton.setOnAction(e -> {
             if(isHost) {
                 gp.start(theStage);
+                vm.getModel().getHostServer().hostPlayer.initGame();
                 vm.initPlayersBoard();
             }
 

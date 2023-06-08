@@ -44,14 +44,14 @@ public class HostPlayer extends Player {
         //  loadBooks();
         while(!gameState.getIsGameOver())
         {
-            for(Player player : gameState.playersList)
+            for(Player player : gameState.getPlayersList())
             {
                 while(!player.isTurnOver)
                 {
                     player.isTurnOver =  legalMove(player);
                 }
                 player.isTurnOver = false; // returning so next round the player can play again his turn.
-                currPlayerInd = ((currPlayerInd+1) % gameState.playersList.size());
+                currPlayerInd = ((currPlayerInd+1) % gameState.getPlayersList().size());
 
                 // do we need to get the winner as object or change the isWinner to void?
                 Player winner = gameState.isWinner();

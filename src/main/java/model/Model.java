@@ -17,7 +17,7 @@ public class Model extends Observable implements Facade {
     GameServer hostServer;
 
 
-    @Override
+        @Override
         public void hostGame(int port,String name) {
             hostServer = new GameServer(port,name);
             hostServer.start();
@@ -33,6 +33,7 @@ public class Model extends Observable implements Facade {
         public void disconnect() {
 
         }
+
 
     public GameServer getHostServer() {return hostServer;}
 

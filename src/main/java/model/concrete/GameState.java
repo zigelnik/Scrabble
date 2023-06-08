@@ -9,19 +9,18 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GameState implements Serializable {
-     public Tile.Bag bag;
-     List<Player> playersList;
-     public Board board;
+public class GameState {
+     private Tile.Bag bag;
+     private List<Player> playersList;
+     private Board board;
      private boolean isGameOver;
 
 
-    //CTOR
     public  GameState() {
-      board = Board.getBoard();
-       bag = Tile.Bag.getBag();
+        board = Board.getBoard();
+        bag = Tile.Bag.getBag();
         playersList = new ArrayList<>();
-      isGameOver = false;
+        isGameOver = false;
     }
 
     //Getters
