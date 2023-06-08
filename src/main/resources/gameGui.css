@@ -1,0 +1,94 @@
+
+.root {
+    -fx-base: #1f1f1f;
+    -fx-accent: white;
+    -fx-focus-color: -fx-accent;
+    -fx-background: derive(-fx-base, 20%);
+    -fx-control-inner-background: derive(-fx-base, 50%);
+
+    -fx-font-size: 10pt;
+    -fx-font-color: white;
+    -fx-font-family: Verdana;
+}
+/*****************************************************************************/
+/*CLI text field*/
+.text-input {
+    -fx-font-size: 10pt;
+    -fx-text-fill: -fx-accent;
+    -fx-highlight-fill: derive(-fx-control-inner-background, -20%);
+    -fx-highlight-text-fill: #c7001e;
+    -fx-prompt-text-fill: derive(-fx-control-inner-background, 100%);
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 3, 2;
+    -fx-cursor: text;
+    -fx-padding: 0.333333em 0.583em 0.333333em 0.583em; /* 4 7 4 7 */
+}
+/* Styles the text field when it is in focus */
+.text-input:focused {
+    -fx-font-size: 10pt;
+    -fx-highlight-fill: -fx-accent;
+    -fx-highlight-text-fill: -fx-base;
+    -fx-prompt-text-fill: transparent;
+}
+
+/* Entry Page */
+.title-label {
+    -fx-font-size: 24px;
+    -fx-text-fill: white;
+}
+
+
+
+.my-button {
+    -fx-background-color: #333;
+    -fx-text-fill: white;
+}
+
+
+
+/* Game Page */
+.board-grid {
+    -fx-background-color: #f4f4f4; /* Background color of the board */
+    -fx-padding: 10px; /* Padding around the board */
+}
+
+.board-grid .cell {
+    -fx-background-color: #ffffff; /* Background color of each cell */
+    -fx-border-color: #000000; /* Border color of each cell */
+    -fx-border-width: 1px; /* Border width of each cell */
+    -fx-pref-width: 40px; /* Preferred width of each cell */
+    -fx-pref-height: 40px; /* Preferred height of each cell */
+}
+
+.players-vbox {
+    -fx-background-color: #eaeaea; /* Background color of the players' box */
+    -fx-padding: 10px; /* Padding around the players' box */
+}
+
+.player-scores {
+    -fx-background-color: #666666;
+}
+
+.player-scores .label {
+    -fx-font-size: 16px;
+    -fx-text-fill: white;
+}
+
+.button {
+    -fx-background-color: #CCCCCC;
+    -fx-text-fill: black;
+}
+
+.button:hover {
+    -fx-background-color: #DDDDDD;
+}
+
+.waiting-label{
+    -fx-font-size: 24px;
+    -fx-text-fill: white;
+}
+
+.player-rack{
+    -fx-background-color: yellow;
+
+}
