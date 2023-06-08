@@ -18,7 +18,7 @@ public class LandingPage extends Application {
 
     private String hostPort;
     private String playerName;
-
+    ViewModel vm = ViewModel.getViewModel();
     private WaitingPage wp = new WaitingPage();
     private String IP;
 
@@ -85,7 +85,7 @@ public class LandingPage extends Application {
                     this.hostPort = port;
 
                     Thread hostThread = new Thread(()-> {
-                        ViewModel.hostGame(Integer.parseInt(hostPort),playerName);
+                        vm.hostGame(Integer.parseInt(hostPort),playerName);
                     });
                     hostThread.start();
 
@@ -152,7 +152,7 @@ public class LandingPage extends Application {
                     this.IP = ip;
 
                     Thread joinThread = new Thread(()-> {
-                        ViewModel.joinGame(IP, Integer.parseInt(port),playerName);
+                        vm.joinGame(IP, Integer.parseInt(port),playerName);
                     });
                     joinThread.start();
 

@@ -15,8 +15,8 @@ import view_model.ViewModel;
 public class WaitingPage extends Application {
 
 ViewModel vm = ViewModel.getViewModel();
-    private static GamePage gp = new GamePage();
-
+    private GamePage gp = GamePage.getGP();
+    private View v = View.getView();
     public static Stage theStage;
     @FXML
     private Label waitingLabel;
@@ -59,6 +59,7 @@ ViewModel vm = ViewModel.getViewModel();
         startButton.setOnAction(e -> {
             if(isHost) {
                 gp.start(theStage);
+                v.setViewModel();
                 vm.getModel().getHostServer().hostPlayer.initGame();
                 vm.initPlayersBoard();
             }

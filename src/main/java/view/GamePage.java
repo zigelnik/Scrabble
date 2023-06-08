@@ -22,7 +22,10 @@ public class GamePage extends Application {
     private GridPane gameBoard;
     private final ObservableList<String> placedTiles = FXCollections.observableArrayList();
     private GridPane playerRack;
-    private Label scoreLabel;
+    public Label scoreLabel;
+
+
+
 
     private static final String[][] BOARD_LAYOUT = {
             {"3W", " ", " ", "2L", " ", " ", " ", "3W", " ", " ", " ", "2L", " ", " ", "3W"},
@@ -71,9 +74,11 @@ public class GamePage extends Application {
         }
 
         // Score label
-        scoreLabel = new Label("Score: 0");
+        scoreLabel = new Label("0");
         scoreLabel.setStyle("-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;");
-        scoreLabel.setAlignment(Pos.BOTTOM_CENTER);
+        Label scoreTitle = new Label("Score: ");
+        scoreTitle.setStyle("-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;");
+        scoreTitle.setAlignment(Pos.BOTTOM_CENTER);
 
         // Vertical checkbox
         CheckBox verticalCheckBox = new CheckBox("Vertical");
@@ -113,7 +118,7 @@ public class GamePage extends Application {
         // HBox for score label and checkbox
         HBox topContainer = new HBox(10);
         topContainer.setAlignment(Pos.BOTTOM_CENTER);
-        topContainer.getChildren().addAll(scoreLabel);
+        topContainer.getChildren().addAll(scoreTitle,scoreLabel);
 
         // VBox for game board and buttons
         VBox root = new VBox(10);
@@ -264,10 +269,12 @@ public class GamePage extends Application {
                 (int) (color.getBlue() * 255));
     }
 
+    public Label getScoreLabel() {
+        return scoreLabel;
+    }
     public static Stage getTheStage() {
         return theStage;
     }
-
 
     private  static class GPHolder{ public static final GamePage gp = new GamePage();}
     public static GamePage getGP() {return GPHolder.gp;}

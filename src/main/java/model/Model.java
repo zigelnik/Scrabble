@@ -15,29 +15,40 @@ import model.network.QueryServer;
 public class Model extends Observable implements Facade {
 
     GameServer hostServer;
+    int playerScore;
 
 
-        @Override
-        public void hostGame(int port,String name) {
-            hostServer = new GameServer(port,name);
-            hostServer.start();
-        }
+    @Override
+    public void hostGame(int port,String name) {
+        hostServer = new GameServer(port,name);
+        hostServer.start();
+    }
 
-        @Override
-        public void joinGame(String ip, int port,String name) {
-            Client client = new Client(ip, port,name);
-            client.start();
-        }
-
-        @Override
-        public void disconnect() {
-
-        }
+    @Override
+    public void joinGame(String ip, int port,String name) {
+        Client client = new Client(ip, port,name);
+        client.start();
+    }
 
 
+
+    @Override
+    public void disconnect() {
+
+    }
+
+    // Updates
+    public void updateScore(int playerScore) {
+        this.playerScore = playerScore;
+        setChanged();
+        notifyObservers();
+    }
+
+    //Getters
+    public int getPlayerScore() {
+        return playerScore;
+    }
     public GameServer getHostServer() {return hostServer;}
-
-
     private  static class ModelHolder{ public static final Model m = new Model();}
     public static Model getModel() {return ModelHolder.m;}
 
