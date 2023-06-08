@@ -55,6 +55,7 @@ public class GamePage extends Application {
 
 
 
+
     @Override
     public void start(Stage primaryStage) {
         theStage = primaryStage;
@@ -274,6 +275,8 @@ public class GamePage extends Application {
             ClipboardContent content = new ClipboardContent();
             content.putString(tileLabel.getText());
             db.setContent(content);
+            // Set a snapshot of the tile as a drag view
+            db.setDragView(tileLabel.snapshot(null, null));
             event.consume();
         });
         tileLabel.setOnDragDone(event -> {
