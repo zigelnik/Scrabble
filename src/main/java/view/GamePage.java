@@ -79,9 +79,12 @@ public class GamePage extends Application {
         }
 
         // Score label
-        scoreLabel = new Label("Score: 0");
+        scoreLabel = new Label("0");
         scoreLabel.setStyle("-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;");
         scoreLabel.setAlignment(Pos.BOTTOM_CENTER);
+        Label scoreTitle = new Label("Score: ");
+        scoreTitle.setStyle("-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;");
+
 
         // Vertical checkbox
         CheckBox verticalCheckBox = new CheckBox("Vertical");
@@ -142,7 +145,7 @@ public class GamePage extends Application {
         // HBox for score label and checkbox
         HBox topContainer = new HBox(10);
         topContainer.setAlignment(Pos.BOTTOM_CENTER);
-        topContainer.getChildren().addAll(scoreLabel);
+        topContainer.getChildren().addAll(scoreTitle,scoreLabel);
 
         // VBox for game board and buttons
         VBox root = new VBox(10);

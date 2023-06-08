@@ -64,9 +64,10 @@ public class HostPlayer extends Player {
                 GameServer.broadcastToClients(player.acceptedQuery);
 
             }
-
+            //TODO:The break and the stop=true comment is preventing infinty loop!
+            break;
         }
-        stop=true;
+//        stop=true;
     }
 
 
