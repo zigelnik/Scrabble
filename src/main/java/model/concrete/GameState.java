@@ -1,5 +1,6 @@
 package model.concrete;
 
+import model.Model;
 import view.GamePage;
 
 import java.io.File;
@@ -14,7 +15,8 @@ public class GameState {
      private List<Player> playersList;
      private Board board;
      private boolean isGameOver;
-
+    private  static class GameStateHolder{ public static final GameState gm = new GameState();}
+    public static GameState getGM() {return GameStateHolder.gm;}
 
     public  GameState() {
         board = Board.getBoard();
