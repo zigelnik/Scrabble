@@ -9,7 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GameState implements Serializable {
+public class GameState{
      public Tile.Bag bag;
      List<Player> playersList;
      public Board board;

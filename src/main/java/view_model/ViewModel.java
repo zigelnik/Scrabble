@@ -9,37 +9,36 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class ViewModel extends Observable implements Observer {
-    static Model m = Model.getModel();
-
-
+    Model m = Model.getModel();
+    public IntegerProperty score;
 
     public ViewModel() {
-
+        this.score = new SimpleIntegerProperty(0);
 
     }
-    public static void hostGame(int port,String name)
+    public void hostGame(int port,String name)
     {
         m.hostGame(port,name);
     }
-    public static void joinGame(String ip, int port, String name) {
+    public  void joinGame(String ip, int port, String name) {
         m.joinGame(ip,port,name);
     }
-
-    public static void initPlayersBoard(){
+    public  void initPlayersBoard(){
         GameServer.broadcastToClients("/start");
     }
 
     @Override
     public void update(Observable o, Object arg) {
-
+        if( o == m){score.set(m.getPlayerScore());}
     }
 
+
+    //GETTERS
     public Model getModel() {return m;}
-
-
-
+    public int getScore() {
+        return score.get();
+    }
     private  static class ViewModelHolder{ public static final ViewModel vm = new ViewModel();}
     public static ViewModel getViewModel() {return ViewModelHolder.vm;}
-
 
 }

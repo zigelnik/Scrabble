@@ -1,6 +1,8 @@
 package model.concrete;
 
 
+import javafx.application.Platform;
+import model.Model;
 import model.logic.DictionaryManager;
 import model.network.BookScrabbleHandler;
 import model.network.QueryServer;
@@ -20,12 +22,14 @@ public class HostPlayer extends Player {
     public volatile boolean stop;
     public QueryServer queryServer;
     public int port = 9998;
+    Model m = Model.getModel();
 
     public HostPlayer(GameState gs,String name) {
         gameState = gs;
         gameState.addPlayer(this);
         queryServer = new QueryServer(port,new BookScrabbleHandler());
         this.setName(name);
+        this.consoleReader = new BufferedReader(new InputStreamReader(System.in));
 
     }
     public void initGame(){
@@ -50,15 +54,17 @@ public class HostPlayer extends Player {
                 {
                     player.isTurnOver =  legalMove(player);
                 }
+                m.updateScore(player.getSumScore());
                 player.isTurnOver = false; // returning so next round the player can play again his turn.
                 currPlayerInd = ((currPlayerInd+1) % gameState.playersList.size());
 
                 // do we need to get the winner as object or change the isWinner to void?
                 Player winner = gameState.isWinner();
 
-                //
                 GameServer.broadcastToClients(player.acceptedQuery);
+
             }
+
         }
         stop=true;
     }
@@ -69,7 +75,7 @@ public class HostPlayer extends Player {
         String msg = null;
         int score=0;
 
-                  // if the player is the host
+        // if the player is the host
         if(player.getClass().equals(this.getClass()))
         {
             System.out.println("Host, enter your query: ");
@@ -79,7 +85,6 @@ public class HostPlayer extends Player {
                 System.out.println("bad input");;
             }
         }
-
         else { // if the player is a regular player
             for (GameClientHandler gch : GameServer.getClients()) {
                 if (gch.player.equals(player)) {
@@ -89,7 +94,8 @@ public class HostPlayer extends Player {
             }
         }
 
-        score=  makeMove(msg,player);
+        if (msg != null) {score=  makeMove(msg,player);}
+        else{System.out.println("Walla msg is NULL!");}
         player.sumScore += score;
         return score != 0;
     }
@@ -114,10 +120,10 @@ public class HostPlayer extends Player {
             return tmpMoveScore;
         }
         // if the player don't have all the tiles for the word
-        else if(!isContain(w,p)){
-            System.out.println("Not all word tiles are existed");
-            return tmpMoveScore;
-        }
+//        else if(!isContain(w,p)){
+//            System.out.println("Not all word tiles are existed");
+//            return tmpMoveScore;
+//        }
 
         // after checking all exceptions, check if the word exist in the books
         validQuery = tmpDictionaryLegal(queryWord);

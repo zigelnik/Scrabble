@@ -14,7 +14,7 @@ public class GameServer {
     int port;
     private static final int MAX_CLIENTS = 3;
     private static List<GameClientHandler> clients = new ArrayList<>();
-    private HostPlayer hostPlayer;
+    public HostPlayer hostPlayer;
     GameState gameState;
 
     public GameServer(int port,String name) {
@@ -34,22 +34,6 @@ public class GameServer {
 
             System.out.println("Server started. Listening on port: "+port);
 
-            Thread hostThread = new Thread(() -> {
-                BufferedReader hostReader = new BufferedReader(new InputStreamReader(System.in));
-                while (true) {
-                    try {
-                        String message = hostReader.readLine();
-                        broadcastToClients("Server: " + message);
-                        if(message.equals("/start"))
-                        {
-                            hostPlayer.initGame();
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            hostThread.start();
 
             hostPlayer.stop=false;
             while (!hostPlayer.stop) {
