@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Scrabble.iml" filepath="$PROJECT_DIR$/.idea/modules/Scrabble.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Scrabble.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Scrabble.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Scrabble.test.iml" filepath="$PROJECT_DIR$/.idea/modules/Scrabble.test.iml" />
     </modules>
