@@ -15,11 +15,11 @@ public class GameServer {
     private static final int MAX_CLIENTS = 3;
     private static List<GameClientHandler> clients = new ArrayList<>();
     private HostPlayer hostPlayer;
-    GameState gameState;
+    public static GameState gameState;
 
     public GameServer(int port,String name) {
         this.port = port;
-        gameState = new GameState();
+        gameState = GameState.getGameState();
         hostPlayer = new HostPlayer(gameState,name);
     }
 

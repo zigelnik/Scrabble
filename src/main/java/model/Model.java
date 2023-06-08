@@ -1,24 +1,21 @@
 package model;
 
-import java.io.*;
-import java.net.Socket;
-import java.util.HashMap;
-import java.util.Observable;
 
-import model.concrete.Tile;
+import java.util.Observable;
+import model.concrete.GameState;
 import model.network.Client;
-import model.network.GameClientHandler;
 import model.network.GameServer;
-import model.network.QueryServer;
+
 
 
 public class Model extends Observable implements Facade {
-
     GameServer hostServer;
+    GameState gameState;
 
 
     @Override
         public void hostGame(int port,String name) {
+            gameState = GameState.getGameState();
             hostServer = new GameServer(port,name);
             hostServer.start();
         }
@@ -35,6 +32,10 @@ public class Model extends Observable implements Facade {
         }
 
     public GameServer getHostServer() {return hostServer;}
+
+    public GameState getGameState() {
+        return gameState;
+    }
 
 
     private  static class ModelHolder{ public static final Model m = new Model();}

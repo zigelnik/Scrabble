@@ -9,8 +9,7 @@ import java.util.Objects;
 
 public class Player {
 
-    // data members ////////
-    protected GameState gameState;
+    // data members //
     String playerName;
     int id;
     List<Tile> playerHand;
@@ -18,7 +17,7 @@ public class Player {
     int sumScore;
     boolean isTurnOver;
     String acceptedQuery;
-    ///////////////////////
+
 
 
     public Player(){
@@ -38,19 +37,13 @@ public class Player {
     {
         this.playerName = name;
     }
-
     public void setHandSize(int handSize) {
         this.handSize = handSize;
     }
     public void setPlayerHand(List<Tile> playerHand) {
         this.playerHand = playerHand;
     }
-
-
     // Getters
-    public GameState getGameState() {
-        return gameState;
-    }
     public int getHandSize()
     {
         return handSize;
@@ -60,16 +53,13 @@ public class Player {
     {
         return this.playerHand;
     }
-
     public int getId() {return id;}
-
     public int getSumScore() {
         return sumScore;
     }
     public String getPlayerName() {
         return playerName;
     }
-
     public boolean handIsFull()
     {
         return playerHand.size() == 7;
@@ -80,11 +70,11 @@ public class Player {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Player player = (Player) o;
-        return id == player.id && handSize == player.handSize && sumScore == player.sumScore && isTurnOver == player.isTurnOver && Objects.equals(gameState, player.gameState) && Objects.equals(playerName, player.playerName) && Objects.equals(playerHand, player.playerHand);
+        return id == player.id && handSize == player.handSize && sumScore == player.sumScore && isTurnOver == player.isTurnOver && Objects.equals(playerName, player.playerName) && Objects.equals(playerHand, player.playerHand) && Objects.equals(acceptedQuery, player.acceptedQuery);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(gameState, playerName, id, playerHand, handSize, sumScore, isTurnOver);
+        return Objects.hash(playerName, id, playerHand, handSize, sumScore, isTurnOver, acceptedQuery);
     }
 }

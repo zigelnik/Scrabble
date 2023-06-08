@@ -15,10 +15,12 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class HostPlayer extends Player {
-
     private BufferedReader consoleReader;
+    public static GameState gameState = GameState.getGameState();
+
     public volatile boolean stop;
     public QueryServer queryServer;
+
     public int port = 9998;
 
     public HostPlayer(GameState gs,String name) {
@@ -28,9 +30,14 @@ public class HostPlayer extends Player {
         this.setName(name);
 
     }
+
+
+    public static GameState getGameState() {
+        return gameState;
+    }
+
     public void initGame(){
 
-        int currPlayerInd = 1;
         gameState.setTurns(); // players turns by their index in playerList
 
         try {
@@ -51,7 +58,7 @@ public class HostPlayer extends Player {
                     player.isTurnOver =  legalMove(player);
                 }
                 player.isTurnOver = false; // returning so next round the player can play again his turn.
-                currPlayerInd = ((currPlayerInd+1) % gameState.playersList.size());
+                gameState.setCurrPlayerInd(gameState.getCurrPlayerInd() + 1  % gameState.playersList.size());
 
                 // do we need to get the winner as object or change the isWinner to void?
                 Player winner = gameState.isWinner();
@@ -89,8 +96,11 @@ public class HostPlayer extends Player {
             }
         }
 
-        score=  makeMove(msg,player);
-        player.sumScore += score;
+        if(msg != null) {
+            score = makeMove(msg, player);
+        }
+
+        player.setSumScore(player.getSumScore() + score);
         return score != 0;
     }
 

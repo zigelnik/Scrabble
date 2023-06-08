@@ -13,8 +13,8 @@ public class ViewModel extends Observable implements Observer {
 
 
 
-    public ViewModel() {
 
+    public ViewModel() {
 
     }
     public static void hostGame(int port,String name)

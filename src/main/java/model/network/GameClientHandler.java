@@ -12,6 +12,7 @@ public class GameClientHandler extends Thread {
     private Socket clientSocket;
     static private BufferedReader readFromClient;
     private PrintWriter writeToClient;
+
     public Player player;
     String stringWord;
 

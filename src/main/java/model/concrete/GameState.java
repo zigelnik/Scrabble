@@ -1,5 +1,7 @@
 package model.concrete;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import view.GamePage;
 
 import java.io.File;
@@ -9,22 +11,45 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GameState implements Serializable {
+public class GameState {
+
      public Tile.Bag bag;
-     List<Player> playersList;
-     public Board board;
+     ObservableList<Player> playersList;
+
+     public static Board board;
+
+     private int currPlayerInd;
      private boolean isGameOver;
 
 
     //CTOR
-    public  GameState() {
+      private GameState() {
       board = Board.getBoard();
-       bag = Tile.Bag.getBag();
-        playersList = new ArrayList<>();
+      bag = Tile.Bag.getBag();
+      playersList = FXCollections.observableArrayList();
       isGameOver = false;
+      currPlayerInd = 1;
     }
 
+    private static class GameStateHolder{
+        public static final GameState gameState = new GameState();
+    }
+    public static GameState getGameState(){
+        return GameStateHolder.gameState;
+    }
+
+
+
     //Getters
+
+    public void setCurrPlayerInd(int currPlayerInd) {
+        this.currPlayerInd = currPlayerInd;
+    }
+
+    public int getCurrPlayerInd() {
+        return currPlayerInd;
+    }
+
     public Board getBoard()
     {
         return this.board;
@@ -41,7 +66,7 @@ public class GameState implements Serializable {
 
 
     // Functions
-    public  void setTurns(){
+    public void setTurns(){
         //extracting randomly tile for each player, setting is id, returning to bag
         int id = 1;
 
@@ -52,8 +77,7 @@ public class GameState implements Serializable {
             bag.put(tempTile);
         }
         // sorting the list from big id to small id with sorting & reversing the order
-        playersList = playersList.stream().sorted(Comparator.comparingInt(Player::getId).reversed())
-                .collect(Collectors.toList());
+        playersList.sort(Comparator.comparingInt(Player::getId).reversed());
 
         for(Player p : playersList)
         {
@@ -64,9 +88,9 @@ public class GameState implements Serializable {
     }
 
     public void initHands(){
-        for(int i = 0; i < playersList.size(); i++){
-            for(int j=0;j<playersList.get(i).handSize;j++)
-                playersList.get(i).playerHand.add(bag.getRand());
+        for (Player player : playersList) {
+            for (int j = 0; j < player.handSize; j++)
+                player.playerHand.add(bag.getRand());
         }
     }
     public  void addPlayer(Player player)
@@ -74,7 +98,7 @@ public class GameState implements Serializable {
         playersList.add(player);
     }
 
-    public  Player isWinner(){
+    public Player isWinner(){
         int max = 0;
         Player tmpPlayer = null;
         //Winner: when the tiles bag is empty and the winner finished his pack
@@ -131,4 +155,6 @@ public class GameState implements Serializable {
         }
         return tileArr;
     }
+
+
 }

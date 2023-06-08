@@ -9,10 +9,10 @@ import java.util.List;
 
 public class GameStateTest {
 
-    private GameState gameState;
+    private static GameState gameState;
 
     public void setup() {
-        gameState = new GameState();
+        gameState = GameState.getGameState();
     }
 
     public void testGetBag() {

@@ -8,7 +8,7 @@ import model.concrete.Word;
 // HostPlayer extends PLayer so it tests his methods as well
 public class HostPlayerTest {
     public static void main(String [] args){
-        HostPlayer host = new HostPlayer(new GameState(),"TalOrTalJonathan");
+        HostPlayer host = new HostPlayer(GameState.getGameState(),"TalOrTalJonathan");
 
         //model.Test initHands() method
         for(int i = 0; i < 3; i++) {

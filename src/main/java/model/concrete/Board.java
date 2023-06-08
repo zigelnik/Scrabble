@@ -3,7 +3,6 @@ package model.concrete;
 import java.util.ArrayList;
 
 public class Board {
-
     private static final int STAR = 7;
     private static final int BOARD_SIZE = 15;
     private static Tile[][] boardTiles = new Tile[BOARD_SIZE][BOARD_SIZE];
@@ -281,7 +280,7 @@ public static Board getBoard(){
         tempSize = i + 1;
         tileArr = new ArrayList<>(tempSize);
 
-        // if the board in this coordinates isnt null, theres a tile there, add it to the arr
+        // if the board in these coordinates isn't null, there's a tile there, add it to the arr
         // if not, add the new word's tile to the arr
         for (i = 0; i < tempSize; i++) {
             if (boardTiles[tempRow + i][col] != null)

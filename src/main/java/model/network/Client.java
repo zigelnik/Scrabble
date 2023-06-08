@@ -63,7 +63,7 @@ public class Client {
             e.printStackTrace();
         }finally {
             try {
-                writeToServer.println(socket.getLocalAddress()+"has left");
+                writeToServer.println(socket.getLocalAddress() + "has left");
                 socket.close();
 
             } catch (IOException e) {

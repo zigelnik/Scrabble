@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -16,13 +17,19 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import view_model.ViewModel;
 
+import java.util.HashMap;
+import java.util.Objects;
+
 public class GamePage extends Application {
 
     private static Stage theStage;
     private GridPane gameBoard;
     private final ObservableList<String> placedTiles = FXCollections.observableArrayList();
+
+    private static HashMap<String , Point2D> map = new HashMap<>(); //map between letter and coordinate on gameBoard
     private GridPane playerRack;
     private Label scoreLabel;
+
 
     private static final String[][] BOARD_LAYOUT = {
             {"3W", " ", " ", "2L", " ", " ", " ", "3W", " ", " ", " ", "2L", " ", " ", "3W"},
@@ -97,6 +104,27 @@ public class GamePage extends Application {
         Button subButton = new Button("Submit");
         subButton.setOnAction(event -> {
             // Handle pass button action
+            //get first tile coordinates
+            int row = (int) Math.round(map.get(placedTiles.get(0)).getX());
+            int col = (int) Math.round(map.get(placedTiles.get(0)).getY());
+
+            //get the decision vertical or not
+            boolean vertical = verticalCheckBox.isSelected();
+
+            //creates the string which represent the query that we want to send to hostPlayer
+            StringBuilder sb = new StringBuilder();
+            sb.append(row).append(",").append(col).append(",");
+            for(String str : placedTiles){
+                sb.append(str);
+            }
+            sb.append(",").append(vertical);
+            String playerQuery = sb.toString();
+
+
+            System.out.println("Player Query is: " + playerQuery);
+
+            //reset the placedTiles list for the next turn
+            placedTiles.clear();
         });
 
         // Button: Quit
@@ -122,7 +150,7 @@ public class GamePage extends Application {
         root.getChildren().addAll(topContainer, gameBoard, buttonContainer);
 
         Scene scene = new Scene(root, 600, 650);
-        scene.getStylesheets().add(getClass().getResource("/gameGui.css").toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/gameGui.css")).toExternalForm());
         primaryStage.setScene(scene);
 
         playerRack = new GridPane();
@@ -135,10 +163,12 @@ public class GamePage extends Application {
         primaryStage.show();
 
         // Create the player rack tiles
+        char tileValue = 'A';
         for (int i = 0; i < 7; i++) {
-            Label tileLabel = createTileLabel("Tile " + (i + 1), Color.LIGHTGREEN);
+            Label tileLabel = createTileLabel(Character.toString(tileValue), Color.LIGHTGREEN);
             enableDrag(tileLabel);
             playerRack.add(tileLabel, i, 0);
+            tileValue++;
         }
 
     }
@@ -155,7 +185,7 @@ public class GamePage extends Application {
         Label tileLabel = new Label(tileValue);
         tileLabel.setPrefSize(40, 40);
         tileLabel.setAlignment(Pos.CENTER);
-        tileLabel.setStyle("-fx-background-color: " + toRGBCode(tileColor) + "; -fx-text-fill: black -fx-font-weight: bold;");
+        tileLabel.setStyle("-fx-background-color: gold; -fx-text-fill: black; -fx-font-weight: bold;");
         return tileLabel;
     }
 
@@ -176,6 +206,9 @@ public class GamePage extends Application {
     }
 
     private void enableDropOnCell(Label cellLabel) {
+        String originalCellValue = cellLabel.getText();
+        Color originalCellColor = getColorForCell(originalCellValue);
+
         cellLabel.setOnDragOver(event -> {
             if (event.getGestureSource() != cellLabel && event.getDragboard().hasString()) {
                 event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
@@ -191,7 +224,7 @@ public class GamePage extends Application {
         });
 
         cellLabel.setOnDragExited(event -> {
-            cellLabel.setStyle("-fx-background-color: " + toRGBCode(getColorForCell(cellLabel.getText())) + "; -fx-text-fill: black; -fx-font-weight: bold;");
+            cellLabel.setStyle("-fx-background-color: " + toRGBCode(originalCellColor) + "; -fx-text-fill: black; -fx-font-weight: bold;");
             event.consume();
         });
 
@@ -201,13 +234,20 @@ public class GamePage extends Application {
             if (db.hasString()) {
                 String tile = db.getString();
                 if (cellLabel.getText().equals(tile)) {
-                    // Double-click on the same tile, return it to the player rack
                     cellLabel.setText("");
                     updatePlayerRack(cellLabel, tile);
                     success = true;
                 } else {
                     cellLabel.setText(tile);
                     success = true;
+
+                    Point2D coordinates = new Point2D(GridPane.getRowIndex(cellLabel), GridPane.getColumnIndex(cellLabel));
+                    map.put(tile, coordinates);
+                }
+
+                if (isSpecialCell(cellLabel)) {
+                    // Restore the original color of the special cell
+                    cellLabel.setStyle("-fx-background-color: " + toRGBCode(originalCellColor) + "; -fx-text-fill: black; -fx-font-weight: bold;");
                 }
             }
             event.setDropCompleted(success);
@@ -218,14 +258,15 @@ public class GamePage extends Application {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
                 String tile = cellLabel.getText();
                 if (!tile.isEmpty()) {
-                    // Double-click on a tile, return it to the player rack
+                    placedTiles.remove(cellLabel.getText());
+                    map.remove(cellLabel.getText());
                     cellLabel.setText("");
                     updatePlayerRack(cellLabel, tile);
-                    placedTiles.remove(cellLabel.getText());
                 }
             }
         });
     }
+
 
     private void enableDrag(Label tileLabel) {
         tileLabel.setOnDragDetected(event -> {
@@ -235,7 +276,6 @@ public class GamePage extends Application {
             db.setContent(content);
             event.consume();
         });
-
         tileLabel.setOnDragDone(event -> {
             if (event.getTransferMode() == TransferMode.MOVE) {
                 placedTiles.add(tileLabel.getText());
@@ -245,7 +285,10 @@ public class GamePage extends Application {
         });
     }
 
-
+    private boolean isSpecialCell(Label cellLabel) {
+        String cellValue = cellLabel.getText();
+        return cellValue.equals("2W") || cellValue.equals("3W") || cellValue.equals("2L") || cellValue.equals("3L") || cellValue.equals("*");
+    }
     private Color getColorForCell(String cellValue) {
         return switch (cellValue) {
             case "2W" -> Color.LIGHTBLUE;
