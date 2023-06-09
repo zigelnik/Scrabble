@@ -1,10 +1,7 @@
 package model.concrete;
 
-import model.Model;
-import view.GamePage;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -46,7 +43,6 @@ public class GameState {
         //extracting randomly tile for each player, setting is id, returning to bag
         int id = 1;
 
-        System.out.println("inside set turns");
         for(Player p : playersList){
             Tile tempTile = bag.getRand();
             p.id = tempTile.score;

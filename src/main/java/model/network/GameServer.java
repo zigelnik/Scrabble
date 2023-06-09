@@ -18,13 +18,12 @@ public class GameServer {
     private static final int MAX_CLIENTS = 3;
     private static List<GameClientHandler> clients = new ArrayList<>();
     public HostPlayer hostPlayer;
-    GameState gameState;
+    GameState gameState = GameState.getGM();
     ExecutorService executor = Executors.newFixedThreadPool(MAX_CLIENTS);
 
     public GameServer(int port,String name) {
         this.port = port;
-        gameState = new GameState();
-        hostPlayer = new HostPlayer(gameState,name);
+        hostPlayer = new HostPlayer(name);
     }
 
 

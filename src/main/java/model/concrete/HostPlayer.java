@@ -1,7 +1,6 @@
 package model.concrete;
 
 
-import javafx.application.Platform;
 import model.Model;
 import model.logic.DictionaryManager;
 import model.network.BookScrabbleHandler;
@@ -23,9 +22,9 @@ public class HostPlayer extends Player {
     public QueryServer queryServer;
     public int port = 9998;
     Model m = Model.getModel();
+    GameState gameState = GameState.getGM();
 
-    public HostPlayer(GameState gs,String name) {
-        gameState = gs;
+    public HostPlayer(String name) {
         gameState.addPlayer(this);
         queryServer = new QueryServer(port,new BookScrabbleHandler());
         this.setName(name);
@@ -64,7 +63,6 @@ public class HostPlayer extends Player {
                 GameServer.broadcastToClients(player.acceptedQuery);
 
             }
-
         }
         stop=true;
     }
