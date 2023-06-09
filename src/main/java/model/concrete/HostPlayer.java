@@ -24,6 +24,7 @@ public class HostPlayer extends Player {
     public int port = 9998;
     Model m = Model.getModel();
 
+
     public HostPlayer(GameState gs,String name) {
         gameState = gs;
         gameState.addPlayer(this);
@@ -39,6 +40,7 @@ public class HostPlayer extends Player {
 
         try {
             gameState.initHands();
+
         }catch(Exception e)
         {
             System.out.println("problem init-hands");
@@ -54,7 +56,7 @@ public class HostPlayer extends Player {
                 {
                     player.isTurnOver =  legalMove(player);
                 }
-                m.updateScore(player.getSumScore());
+                m.updatePlayerVals(player.getSumScore(),player.convertTilesToStrings(playerHand)); // updating PlayerHand and Score
                 player.isTurnOver = false; // returning so next round the player can play again his turn.
                 currPlayerInd = ((currPlayerInd+1) % gameState.playersList.size());
 
@@ -64,10 +66,11 @@ public class HostPlayer extends Player {
                 GameServer.broadcastToClients(player.acceptedQuery);
 
             }
-            //TODO:The break and the stop=true comment is preventing infinty loop!
-            break;
+            //TODO: fix the main bug when using multiple clients!
+            //TODO:The break and the stop=true comment is preventing infinty loop when testing one player!
+
         }
-//        stop=true;
+        stop=true;
     }
 
 

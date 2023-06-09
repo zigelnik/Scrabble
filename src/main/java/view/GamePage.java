@@ -17,17 +17,15 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import view_model.ViewModel;
 
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
 
 public class GamePage extends Application {
 
     private static Stage theStage;
     private GridPane gameBoard;
-    private final ObservableList<String> placedTiles = FXCollections.observableArrayList();
-
+    public final ObservableList<String> placedTiles = FXCollections.observableArrayList();
     private static HashMap<String , Point2D> map = new HashMap<>(); //map between letter and coordinate on gameBoard
-    private GridPane playerRack;
+    public GridPane playerRack;
     public Label scoreLabel;
 
 
@@ -161,20 +159,25 @@ public class GamePage extends Application {
         playerRack.setHgap(5);
         playerRack.setVgap(5);
         playerRack.setAlignment(Pos.BOTTOM_CENTER);
-        root.getStylesheets().add("player-rack");
         root.getChildren().add(playerRack);
-
+        // creating tmp List that contains only X for playerRack not null, the initPack will override
+        List<Label> list = new ArrayList<>(Collections.nCopies(7, new Label("X")));
+        createRack(list);
         primaryStage.show();
 
-        // Create the player rack tiles
-        char tileValue = 'A';
-        for (int i = 0; i < 7; i++) {
-            Label tileLabel = createTileLabel(Character.toString(tileValue), Color.LIGHTGREEN);
+
+
+    }
+
+    public void createRack(List<Label> list){
+        //Create the player rack tiles
+        int i =0;
+        for (Label lb : list) {
+            Label tileLabel = createTileLabel(lb.getText(), Color.LIGHTSALMON);
             enableDrag(tileLabel);
             playerRack.add(tileLabel, i, 0);
-            tileValue++;
+            i++;
         }
-
     }
 
     private Label createCellLabel(String cellValue, Color cellColor) {

@@ -1,5 +1,6 @@
 package model.concrete;
 
+import model.Model;
 import view.GamePage;
 
 import java.io.File;
@@ -65,8 +66,12 @@ public class GameState{
 
     public void initHands(){
         for(int i = 0; i < playersList.size(); i++){
-            for(int j=0;j<playersList.get(i).handSize;j++)
-                playersList.get(i).playerHand.add(bag.getRand());
+            Player tmpPlayer = playersList.get(i);
+            for(int j=0;j<playersList.get(i).handSize;j++) {
+                tmpPlayer.playerHand.add(bag.getRand());
+            }
+            //Sending to update the Init pack for each player, using Player method to convert tiles to strings
+            Model.getModel().updatePlayerVals(0,tmpPlayer.convertTilesToStrings(tmpPlayer.playerHand));
         }
     }
     public  void addPlayer(Player player)
@@ -131,4 +136,6 @@ public class GameState{
         }
         return tileArr;
     }
+
+
 }

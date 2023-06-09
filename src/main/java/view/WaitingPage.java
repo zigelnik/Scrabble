@@ -58,10 +58,11 @@ ViewModel vm = ViewModel.getViewModel();
     public void setWaitingDisplay() {
         startButton.setOnAction(e -> {
             if(isHost) {
+                //TODO: do NOT change the methods call order!
                 gp.start(theStage);
-                v.setViewModel();
-                vm.getModel().getHostServer().hostPlayer.initGame();
                 vm.initPlayersBoard();
+                vm.getModel().getHostServer().hostPlayer.initGame();
+                v.setViewModel();
             }
 
         });

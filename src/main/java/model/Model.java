@@ -2,7 +2,9 @@ package model;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Observable;
 
 import model.concrete.Tile;
@@ -16,7 +18,7 @@ public class Model extends Observable implements Facade {
 
     GameServer hostServer;
     int playerScore;
-
+    List<String> playerHand = new ArrayList<>();
 
     @Override
     public void hostGame(int port,String name) {
@@ -37,14 +39,18 @@ public class Model extends Observable implements Facade {
 
     }
 
-    // Updates
-    public void updateScore(int playerScore) {
+    // Updates-for player Score and playerHand (usages: GameState->initHands | HostPlayer->initGame)
+    public void updatePlayerVals(int playerScore,List<String> playerHand) {
         this.playerScore = playerScore;
+        this.playerHand = playerHand;
         setChanged();
         notifyObservers();
     }
 
     //Getters
+    public List<String> getPlayerHand() {
+        return playerHand;
+    }
     public int getPlayerScore() {
         return playerScore;
     }

@@ -87,4 +87,12 @@ public class Player {
     public int hashCode() {
         return Objects.hash(gameState, playerName, id, playerHand, handSize, sumScore, isTurnOver);
     }
+
+    public List<String> convertTilesToStrings(List<Tile> tiles){
+        List<String> tmpList = new ArrayList<>();
+        for(Tile t : tiles){
+            tmpList.add(String.valueOf(t.getLetter()));
+        }
+        return tmpList;
+    }
 }
