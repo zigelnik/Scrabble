@@ -33,11 +33,8 @@ public class HostPlayer extends Player {
         this.consoleReader = new BufferedReader(new InputStreamReader(System.in));
 
     }
-    public void initGame(){
 
-        int currPlayerInd = 1;
-        gameState.setTurns(); // players turns by their index in playerList
-
+    public void initPlayersHand(){
         try {
             gameState.initHands();
 
@@ -47,6 +44,12 @@ public class HostPlayer extends Player {
             e.printStackTrace();
         }
 
+    }
+
+    public void initGame(){
+
+        int currPlayerInd = 1;
+        gameState.setTurns(); // players turns by their index in playerList
         //  loadBooks();
         while(!gameState.getIsGameOver())
         {
@@ -68,9 +71,9 @@ public class HostPlayer extends Player {
             }
             //TODO: fix the main bug when using multiple clients!
             //TODO:The break and the stop=true comment is preventing infinty loop when testing one player!
-
+            break;
         }
-        stop=true;
+//        stop=true;
     }
 
 
