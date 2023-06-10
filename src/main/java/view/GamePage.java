@@ -160,7 +160,7 @@ public class GamePage extends Application {
         playerRack.setVgap(5);
         playerRack.setAlignment(Pos.BOTTOM_CENTER);
         root.getChildren().add(playerRack);
-        // creating tmp List that contains only X for playerRack not null, the initPack will override
+        // creating initial List that contains only X for playerRack not null, the initPack will override
         List<Label> list = new ArrayList<>(Collections.nCopies(7, new Label("X")));
         createRack(list);
         primaryStage.show();

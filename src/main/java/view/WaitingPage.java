@@ -60,9 +60,9 @@ ViewModel vm = ViewModel.getViewModel();
             if(isHost) {
                 //TODO: do NOT change the methods call order!
                 gp.start(theStage);
-                vm.initPlayersBoard();
                 vm.getModel().getHostServer().hostPlayer.initGame();
                 v.setViewModel();
+                vm.initPlayersBoard();
             }
 
         });
