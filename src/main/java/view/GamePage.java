@@ -1,5 +1,6 @@
 package view;
 
+
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,6 +16,7 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import model.Model;
 import view_model.ViewModel;
 
 import java.util.*;
@@ -27,6 +29,9 @@ public class GamePage extends Application {
     private static HashMap<String , Point2D> map = new HashMap<>(); //map between letter and coordinate on gameBoard
     public GridPane playerRack;
     public Label scoreLabel;
+    public Label playerTmpQuery = new Label();
+    private Object lockObject = new Object();
+
 
 
     private static final String[][] BOARD_LAYOUT = {
@@ -46,6 +51,7 @@ public class GamePage extends Application {
             {" ", "2W", " ", " ", " ", "3L", " ", " ", " ", "3L", " ", " ", " ", "2W", " "},
             {"3W", " ", " ", "2L", " ", " ", " ", "3W", " ", " ", " ", "2L", " ", " ", "3W"},
     };
+
 
     public static void main(String[] args) {
         launch(args);
@@ -115,16 +121,20 @@ public class GamePage extends Application {
 
             //creates the string which represent the query that we want to send to hostPlayer
             StringBuilder sb = new StringBuilder();
-            sb.append(row).append(",").append(col).append(",");
             for(String str : placedTiles){
                 sb.append(str);
             }
+            sb.append(",").append(row).append(",").append(col);
             sb.append(",").append(vertical);
             String playerQuery = sb.toString();
 
 
             System.out.println("Player Query is: " + playerQuery);
-
+            synchronized (lockObject) {
+                playerTmpQuery.setText(playerQuery);
+                Model.getModel().updateQuery(playerQuery);
+                lockObject.notify(); // Notifies the waiting thread to resume
+            }
             //reset the placedTiles list for the next turn
             placedTiles.clear();
         });
@@ -323,4 +333,7 @@ public class GamePage extends Application {
 
     private  static class GPHolder{ public static final GamePage gp = new GamePage();}
     public static GamePage getGP() {return GPHolder.gp;}
+    public Object getLockObject() {
+        return lockObject;
+    }
 }

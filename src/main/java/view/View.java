@@ -27,6 +27,7 @@ public class View implements Observer {
 
 
     public void setViewModel() {
+        vm.playerQuery.bind(gamePage.playerTmpQuery.textProperty());
         gamePage.scoreLabel.textProperty().bind(vm.score.asString());
         //binding for the playerHand
         gamePage.playerRack.getChildren().clear(); // clearing the nodes from playerRack

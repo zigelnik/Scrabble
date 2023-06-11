@@ -15,6 +15,8 @@ public class GameState{
      List<Player> playersList;
      public Board board;
      private boolean isGameOver;
+    private  static class GameStateHolder{ public static final GameState gm = new GameState();}
+    public static GameState getGM() {return GameStateHolder.gm;}
 
 
     //CTOR
@@ -113,6 +115,7 @@ public class GameState{
 
     // converting string to Tiles[] for creating new Word
     public Word convertStrToWord(String strQuery){
+        if(strQuery.equals("")){System.out.println("msg is null!!");return null;}
         //EXAMPLE: "CAR,5,6,False"
         String[] res = strQuery.split(",");
         String word = res[0];

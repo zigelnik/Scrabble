@@ -19,6 +19,9 @@ public class Model extends Observable implements Facade {
     GameServer hostServer;
     int playerScore;
     List<String> playerHand = new ArrayList<>();
+    String playerQuery = new String();
+
+
 
     @Override
     public void hostGame(int port,String name) {
@@ -47,7 +50,16 @@ public class Model extends Observable implements Facade {
         notifyObservers();
     }
 
+    public void updateQuery(String msg){
+        this.playerQuery = msg;
+        setChanged();
+        notifyObservers();
+    }
+
     //Getters
+    public String getPlayerQuery() {
+        return playerQuery;
+    }
     public List<String> getPlayerHand() {
         return playerHand;
     }
