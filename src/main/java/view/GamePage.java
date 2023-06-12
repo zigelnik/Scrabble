@@ -132,7 +132,7 @@ public class GamePage extends Application {
             System.out.println("Player Query is: " + playerQuery);
             synchronized (lockObject) {
                 playerTmpQuery.setText(playerQuery);
-                Model.getModel().updateQuery(playerQuery);
+                Model.getModel().updateQuery(playerQuery);  // udpating when something changes
                 lockObject.notify(); // Notifies the waiting thread to resume
             }
             //reset the placedTiles list for the next turn

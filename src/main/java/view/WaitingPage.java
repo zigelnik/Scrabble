@@ -68,6 +68,8 @@ public class WaitingPage extends Application {
                 v.setViewModel();
                 vm.initPlayersBoard();
                 Thread t = new Thread(() -> {
+                    //Goal: waiting with the initGame until a player put tiles on board(otherwise msg is null)
+                    // TODO: seperating from initGame the msg from board
                     synchronized (gp.getLockObject()) {
                         try {
                             gp.getLockObject().wait(); // Releases the lock and waits until notified
