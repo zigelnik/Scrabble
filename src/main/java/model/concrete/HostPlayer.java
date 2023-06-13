@@ -23,8 +23,9 @@ public class HostPlayer extends Player {
     public volatile boolean stop;
     public QueryServer queryServer;
     public int port = 9998;
-    Model m = Model.getModel();
-    Object lock = new Object();
+    Model model = Model.getModel();
+    final Object lock = new Object();
+    GamePage gp = GamePage.getGP();
 
 
     public HostPlayer(String name) {
@@ -60,7 +61,11 @@ public class HostPlayer extends Player {
                 {
                     player.isTurnOver =  legalMove(player);
                 }
-                m.updatePlayerVals(player.getSumScore(),player.convertTilesToStrings(playerHand)); // updating PlayerHand and Score
+                Platform.runLater(()->{
+                    model.updatePlayerVals(player.getSumScore(),player.convertTilesToStrings(playerHand)); // updating PlayerHand and Score
+
+                });
+
                 player.isTurnOver = false; // returning so next round the player can play again his turn.
                 currPlayerInd = ((currPlayerInd+1) % gameState.playersList.size());
 
@@ -101,13 +106,13 @@ public class HostPlayer extends Player {
                 }
             }
         }
-        synchronized (GamePage.getGP().getLockObject()) {
+        synchronized (gp.getLockObject()) {
             try {
-                GamePage.getGP().getLockObject().wait(); // Releases the lock and waits until notified
+                gp.getLockObject().wait(); // Releases the lock and waits until notified
             } catch (InterruptedException ex) {
                 throw new RuntimeException(ex);
             }
-            msg = Model.getModel().getPlayerQuery();
+            msg = model.getPlayerQuery();
             System.out.println("msg from legalMove is: " + msg);
         }
 
@@ -126,6 +131,7 @@ public class HostPlayer extends Player {
         boolean validQuery;
         Word w = null;
         synchronized (lock) {
+            p.getPlayerHand().forEach(tile -> System.out.println(tile.getLetter()));
             w = gameState.convertStrToWord(msg,p);
             lock.notify();
         }
@@ -154,6 +160,7 @@ public class HostPlayer extends Player {
         // after all checks,decline the words size from pack and init pack back to 7.
         if(tmpMoveScore != 0){
             p.setHandSize(p.getHandSize() - w.getTiles().length);
+
             synchronized (lock) {
                 try {
                     lock.wait(); // Releases the lock and waits until notified

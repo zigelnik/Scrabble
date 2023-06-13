@@ -30,7 +30,7 @@ public class GamePage extends Application {
     public GridPane playerRack;
     public Label scoreLabel;
     public Label playerTmpQuery = new Label();
-    private Object lockObject = new Object();
+    private final Object lockObject = new Object();
 
 
 
