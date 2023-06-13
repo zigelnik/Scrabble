@@ -24,6 +24,7 @@ public class HostPlayer extends Player {
     public QueryServer queryServer;
     public int port = 9998;
     Model m = Model.getModel();
+    Object lock = new Object();
 
 
     public HostPlayer(String name) {
@@ -116,15 +117,18 @@ public class HostPlayer extends Player {
         return score != 0;
     }
 
-    public int makeMove(String msg , Player p){
+    public int makeMove(String msg , Player p)  {
         // if makeMove fails this integer will stay 0.
         int tmpMoveScore = 0;
         String[] args = msg.split(","); // splitting the query by 4 commas <word,ROW,COL,alignment>
         String books = gameState.getTextFiles();
         String queryWord = "Q,"+books+args[0];
-        Word w = gameState.convertStrToWord(msg,p);
         boolean validQuery;
-
+        Word w = null;
+        synchronized (lock) {
+            w = gameState.convertStrToWord(msg,p);
+            lock.notify();
+        }
         // if tiles are over
         if(p.getHandSize() == 0){
             System.out.println("Tiles are over");
@@ -150,9 +154,16 @@ public class HostPlayer extends Player {
         // after all checks,decline the words size from pack and init pack back to 7.
         if(tmpMoveScore != 0){
             p.setHandSize(p.getHandSize() - w.getTiles().length);
-            initHandAfterMove(w , p);
-            p.acceptedQuery = msg;
+            synchronized (lock) {
+                try {
+                    lock.wait(); // Releases the lock and waits until notified
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                initHandAfterMove(w , p);
+            }
         }
+        p.acceptedQuery = msg;
         p.setSumScore(p.getSumScore()+ tmpMoveScore);
         //if tmpMoveScore is 0 then one of the checks is failed
         return tmpMoveScore;
