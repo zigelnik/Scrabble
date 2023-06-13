@@ -19,7 +19,7 @@ public class Client {
     BufferedReader readFromServer;
     PrintWriter writeToServer;
     private GamePage gp = GamePage.getGP();
-    private GameState gameState;
+    private WaitingPage wp = new WaitingPage();
 
 
     public Client(String ip, int port, String name) {
@@ -44,8 +44,10 @@ public class Client {
                     {
                         if(message.equals("/start"))
                         {
-                            Platform.runLater(()->
-                                    gp.start(WaitingPage.theStage));
+                            Platform.runLater(()->{
+                                gp.start(WaitingPage.theStage);
+                                wp.setClientBoard();
+                        });
                         }
                         else
                         {

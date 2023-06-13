@@ -64,25 +64,19 @@ public class WaitingPage extends Application {
             if(isHost) {
                 //TODO: do NOT change the methods call order!!
                 gp.start(theStage);
-                vm.getModel().getHostServer().hostPlayer.initPlayersHand();
-                v.setViewModel();
+                setClientBoard();
                 vm.initPlayersBoard();
                 Thread t = new Thread(() -> {
-                    //Goal: waiting with the initGame until a player put tiles on board(otherwise msg is null)
-                    // TODO: seperating from initGame the msg from board
-                    synchronized (gp.getLockObject()) {
-                        try {
-                            gp.getLockObject().wait(); // Releases the lock and waits until notified
-                        } catch (InterruptedException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                        vm.getModel().getHostServer().hostPlayer.initGame();
-                    }
+                    vm.getModel().getHostServer().hostPlayer.initGame();
                 });
                 t.start();
             }
-
         });
+    }
+
+    public void setClientBoard(){
+        vm.getModel().getHostServer().hostPlayer.initPlayersHand();
+        v.setViewModel();
     }
 
 

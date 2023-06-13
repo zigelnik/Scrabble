@@ -42,12 +42,17 @@ public class ViewModel extends Observable implements Observer {
             Platform.runLater(() -> {
                 score.set(m.getPlayerScore());
             });
-            playerHand.set(FXCollections.observableList(m.getPlayerHand())); // converting the m.getPlayerHand() to observableList (Only way to apply the set)
-            playerQuery.unbind();  // property is not bound to any other property
+            playerHand.set(FXCollections.observableList(m.getPlayerHand()));
+            View.getView().setPlayerHand();
+            // converting the m.getPlayerHand() to observableList (Only way to make apply the set)
+            playerQuery.unbind();
             playerQuery.set(m.getPlayerQuery());
 
         }
     }
+
+
+
 
     //GETTERS
         public Model getModel () {

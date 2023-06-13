@@ -8,6 +8,7 @@ import model.network.BookScrabbleHandler;
 import model.network.QueryServer;
 import model.network.GameClientHandler;
 import model.network.GameServer;
+import view.GamePage;
 
 import java.io.*;
 import java.net.Socket;
@@ -22,12 +23,13 @@ public class HostPlayer extends Player {
     public volatile boolean stop;
     public QueryServer queryServer;
     public int port = 9998;
-    Model m = Model.getModel();
+    Model model = Model.getModel();
+    final Object lock = new Object();
+    GamePage gp = GamePage.getGP();
 
 
-    public HostPlayer(GameState gs,String name) {
-        gameState = gs;
-        GameState.getGM().addPlayer(this);
+    public HostPlayer(String name) {
+        gameState.addPlayer(this);
         queryServer = new QueryServer(port,new BookScrabbleHandler());
         this.setName(name);
         this.consoleReader = new BufferedReader(new InputStreamReader(System.in));
@@ -36,7 +38,7 @@ public class HostPlayer extends Player {
 
     public void initPlayersHand(){
         try {
-            GameState.getGM().initHands();
+            gameState.initHands();
 
         }catch(Exception e)
         {
@@ -51,15 +53,18 @@ public class HostPlayer extends Player {
         int currPlayerInd = 1;
         gameState.setTurns(); // players turns by their index in playerList
         //  loadBooks();
-        while(!GameState.getGM().getIsGameOver())
+        while(!gameState.getIsGameOver())
         {
-            for(Player player : GameState.getGM().playersList)
+            for(Player player : gameState.playersList)
             {
                 while(!player.isTurnOver)
                 {
                     player.isTurnOver =  legalMove(player);
                 }
-                m.updatePlayerVals(player.getSumScore(),player.convertTilesToStrings(playerHand)); // updating PlayerHand and Score
+                Platform.runLater(()->{
+                    model.updatePlayerVals(player.getSumScore(),player.convertTilesToStrings(playerHand)); // updating PlayerHand and Score
+                });
+
                 player.isTurnOver = false; // returning so next round the player can play again his turn.
                 currPlayerInd = ((currPlayerInd+1) % gameState.playersList.size());
 
@@ -82,26 +87,33 @@ public class HostPlayer extends Player {
         String msg = null;
         int score=0;
 
-                    // if the player is the host
-                    if (player.getClass().equals(this.getClass())) {
-                        System.out.println("Host, enter your query and press Submit: ");
+        // if the player is the host
+        if (player.getClass().equals(this.getClass())) {
+            System.out.println("Host, enter your query and press Submit: ");
 //                        try {
 //                            msg = consoleReader.readLine();
 //                        } catch (IOException e) {
 //                            System.out.println("bad input");
 //                            ;
 //                        }
-                    } else { // if the player is a regular player
-                        for (GameClientHandler gch : GameServer.getClients()) {
-                            if (gch.player.equals(player)) {
+        } else { // if the player is a regular player
+            for (GameClientHandler gch : GameServer.getClients()) {
+                if (gch.player.equals(player)) {
 //                    msg = gch.getMessageQuery();
-                                System.out.println("Enter your query and press Submit: ");
+                    System.out.println("Enter your query and press Submit: ");
 
-                            }
-                        }
-                    }
-        msg = Model.getModel().getPlayerQuery();
-        System.out.println("msg from legalMove is: " + msg);
+                }
+            }
+        }
+        synchronized (gp.getLockObject()) {
+            try {
+                gp.getLockObject().wait(); // Releases the lock and waits until notified
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
+            msg = model.getPlayerQuery();
+            System.out.println("msg from legalMove is: " + msg);
+        }
 
         if (msg != null) {score=  makeMove(msg,player);}
         else{System.out.println("Walla msg is NULL!");}
@@ -109,15 +121,19 @@ public class HostPlayer extends Player {
         return score != 0;
     }
 
-    public int makeMove(String msg , Player p){
+    public int makeMove(String msg , Player p)  {
         // if makeMove fails this integer will stay 0.
         int tmpMoveScore = 0;
         String[] args = msg.split(","); // splitting the query by 4 commas <word,ROW,COL,alignment>
         String books = gameState.getTextFiles();
         String queryWord = "Q,"+books+args[0];
-        Word w = gameState.convertStrToWord(msg);
         boolean validQuery;
-
+        Word w = null;
+        synchronized (lock) {
+            p.getPlayerHand().forEach(tile -> System.out.println(tile.getLetter()));
+            w = gameState.convertStrToWord(msg,p);
+            lock.notify();
+        }
         // if tiles are over
         if(p.getHandSize() == 0){
             System.out.println("Tiles are over");
@@ -143,9 +159,17 @@ public class HostPlayer extends Player {
         // after all checks,decline the words size from pack and init pack back to 7.
         if(tmpMoveScore != 0){
             p.setHandSize(p.getHandSize() - w.getTiles().length);
-            initHandAfterMove(w , p);
-            p.acceptedQuery = msg;
+
+            synchronized (lock) {
+                try {
+                    lock.wait(); // Releases the lock and waits until notified
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                initHandAfterMove(w , p);
+            }
         }
+        p.acceptedQuery = msg;
         p.setSumScore(p.getSumScore()+ tmpMoveScore);
         //if tmpMoveScore is 0 then one of the checks is failed
         return tmpMoveScore;

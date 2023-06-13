@@ -114,7 +114,7 @@ public class GameState{
     }
 
     // converting string to Tiles[] for creating new Word
-    public Word convertStrToWord(String strQuery){
+    public Word convertStrToWord(String strQuery,Player p){
         if(strQuery.equals("")){System.out.println("msg is null!!");return null;}
         //EXAMPLE: "CAR,5,6,False"
         String[] res = strQuery.split(",");
@@ -124,18 +124,26 @@ public class GameState{
         boolean vert = Boolean.parseBoolean(res[3]);
 
         //after parsing the strings , creating new Word
-        Tile[] wordTile = getTileArr(word.toUpperCase());
+        Tile[] wordTile = getTileArr(word.toUpperCase(),p);
         Word tmpQuery = new Word(wordTile, row, col, vert);
         System.out.println("after convert str to word");
         return tmpQuery;
     }
 
-    public  Tile[] getTileArr(String str) {
+    public  Tile[] getTileArr(String str, Player p) {
         Tile[] tileArr =new Tile[str.length()];
         int i=0;
-        for(char ch: str.toCharArray()) {
-            tileArr[i]= bag.getTile(ch);
-            i++;
+        for(char ch : str.toCharArray())
+        {
+            for(Tile t: p.getPlayerHand())
+            {
+                if(t.getLetter() == ch)
+                {
+                    tileArr[i] = t;
+                    i++;
+                    break;
+                }
+            }
         }
         return tileArr;
     }
