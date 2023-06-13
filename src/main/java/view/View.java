@@ -30,8 +30,6 @@ public class View implements Observer {
         gamePage.scoreLabel.textProperty().bind(vm.score.asString());
         //binding for the playerHand
         setPlayerHand();
-
-
     }
 
     public void setPlayerHand(){
@@ -40,8 +38,8 @@ public class View implements Observer {
         for (String strTile : vm.playerHand) {
             Label label = new Label(strTile);
             String tmpStr = vm.playerHand.get(ind);
-            StringProperty strProperty = new SimpleStringProperty(tmpStr); // converting String to StringProperty
-            label.textProperty().bindBidirectional(strProperty); // binding between label to StringProperty
+            StringProperty strProperty = new SimpleStringProperty(tmpStr); //converting String to StringProperty
+            label.textProperty().bindBidirectional(strProperty); //binding between label to StringProperty
             rackLabels.add(label);
             ind++;
         }

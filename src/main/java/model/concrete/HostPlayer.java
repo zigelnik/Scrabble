@@ -123,7 +123,7 @@ public class HostPlayer extends Player {
         String[] args = msg.split(","); // splitting the query by 4 commas <word,ROW,COL,alignment>
         String books = gameState.getTextFiles();
         String queryWord = "Q,"+books+args[0];
-        Word w = gameState.convertStrToWord(msg);
+        Word w = gameState.convertStrToWord(msg,p);
         boolean validQuery;
 
         // if tiles are over

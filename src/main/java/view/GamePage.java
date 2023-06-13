@@ -112,6 +112,15 @@ public class GamePage extends Application {
         Button subButton = new Button("Submit");
         subButton.setOnAction(event -> {
             // Handle pass button action
+            Comparator<String> tileComparator = Comparator.comparingInt(tile -> {
+                Point2D location = map.get(tile);
+                if (location != null) {
+                    return (int) (location.getX() + location.getY());
+                }
+                return 0;
+            });
+            placedTiles.sort(tileComparator);
+
             //get first tile coordinates
             int row = (int) Math.round(map.get(placedTiles.get(0)).getX());
             int col = (int) Math.round(map.get(placedTiles.get(0)).getY());
@@ -132,7 +141,7 @@ public class GamePage extends Application {
             System.out.println("Player Query is: " + playerQuery);
             synchronized (lockObject) {
                 playerTmpQuery.setText(playerQuery);
-                Model.getModel().updateQuery(playerQuery);
+                Model.getModel().updateQuery(playerQuery);  // udpating when something changes
                 lockObject.notify(); // Notifies the waiting thread to resume
             }
             //reset the placedTiles list for the next turn
