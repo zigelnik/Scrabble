@@ -2,6 +2,7 @@ package model.network;
 import model.concrete.GameState;
 import model.concrete.HostPlayer;
 import model.concrete.Player;
+import view.GamePage;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -22,6 +23,8 @@ public class GameServer {
         gameState = GameState.getGM();
         hostPlayer = new HostPlayer(name);
     }
+
+
 
 
     public static List<GameClientHandler> getClients() {

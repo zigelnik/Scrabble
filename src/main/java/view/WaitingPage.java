@@ -64,21 +64,19 @@ public class WaitingPage extends Application {
             if(isHost) {
                 //TODO: do NOT change the methods call order!!
                 gp.start(theStage);
-                vm.getModel().getHostServer().hostPlayer.initPlayersHand();
-                v.setViewModel();
+                setClientBoard();
                 vm.initPlayersBoard();
                 Thread t = new Thread(() -> {
                     vm.getModel().getHostServer().hostPlayer.initGame();
                 });
                 t.start();
             }
-            else{
-                vm.getModel().getHostServer().hostPlayer.initPlayersHand();
-                v.setViewModel();
-            }
-
-
         });
+    }
+
+    public void setClientBoard(){
+        vm.getModel().getHostServer().hostPlayer.initPlayersHand();
+        v.setViewModel();
     }
 
 

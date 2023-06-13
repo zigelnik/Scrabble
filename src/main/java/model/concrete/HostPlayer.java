@@ -63,7 +63,6 @@ public class HostPlayer extends Player {
                 }
                 Platform.runLater(()->{
                     model.updatePlayerVals(player.getSumScore(),player.convertTilesToStrings(playerHand)); // updating PlayerHand and Score
-
                 });
 
                 player.isTurnOver = false; // returning so next round the player can play again his turn.

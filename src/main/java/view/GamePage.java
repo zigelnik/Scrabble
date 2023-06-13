@@ -183,9 +183,6 @@ public class GamePage extends Application {
         List<Label> list = new ArrayList<>(Collections.nCopies(7, new Label("X")));
         createRack(list);
         primaryStage.show();
-
-
-
     }
 
     public void createRack(List<Label> list){
