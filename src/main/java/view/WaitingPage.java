@@ -1,6 +1,7 @@
 package view;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -14,7 +15,7 @@ import view_model.ViewModel;
 
 public class WaitingPage extends Application {
 
-ViewModel vm = ViewModel.getViewModel();
+    ViewModel vm = ViewModel.getViewModel();
     private GamePage gp = GamePage.getGP();
     private View v = View.getView();
     public static Stage theStage;
@@ -28,9 +29,12 @@ ViewModel vm = ViewModel.getViewModel();
 
     private boolean isHost = false;
 
+
     public static void main(String[] args) {
         launch();
     }
+
+
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -58,10 +62,24 @@ ViewModel vm = ViewModel.getViewModel();
     public void setWaitingDisplay() {
         startButton.setOnAction(e -> {
             if(isHost) {
+                //TODO: do NOT change the methods call order!!
                 gp.start(theStage);
+                vm.getModel().getHostServer().hostPlayer.initPlayersHand();
                 v.setViewModel();
-                vm.getModel().getHostServer().hostPlayer.initGame();
                 vm.initPlayersBoard();
+                Thread t = new Thread(() -> {
+                    //Goal: waiting with the initGame until a player put tiles on board(otherwise msg is null)
+                    // TODO: seperating from initGame the msg from board
+                    synchronized (gp.getLockObject()) {
+                        try {
+                            gp.getLockObject().wait(); // Releases the lock and waits until notified
+                        } catch (InterruptedException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                        vm.getModel().getHostServer().hostPlayer.initGame();
+                    }
+                });
+                t.start();
             }
 
         });
@@ -71,4 +89,5 @@ ViewModel vm = ViewModel.getViewModel();
     public void setHost(boolean isHost) {
         this.isHost = isHost;
     }
+
 }

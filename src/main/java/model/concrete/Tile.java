@@ -55,7 +55,7 @@ public class Tile {
         public Tile getRand()
         {
             Random rand = new Random();
-            int i=0,j=0, rand_int = rand.nextInt(26);
+            int i=0,j=0, rand_int = rand.nextInt(25);
 
         while (!isTileExist(rand_int+i))
         {

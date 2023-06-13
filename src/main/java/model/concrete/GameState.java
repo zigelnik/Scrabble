@@ -1,5 +1,6 @@
 package model.concrete;
 
+import model.Model;
 import view.GamePage;
 
 import java.io.File;
@@ -14,6 +15,8 @@ public class GameState{
      List<Player> playersList;
      public Board board;
      private boolean isGameOver;
+    private  static class GameStateHolder{ public static final GameState gm = new GameState();}
+    public static GameState getGM() {return GameStateHolder.gm;}
 
 
     //CTOR
@@ -65,8 +68,12 @@ public class GameState{
 
     public void initHands(){
         for(int i = 0; i < playersList.size(); i++){
-            for(int j=0;j<playersList.get(i).handSize;j++)
-                playersList.get(i).playerHand.add(bag.getRand());
+            Player tmpPlayer = playersList.get(i);
+            for(int j=0;j<playersList.get(i).handSize;j++) {
+                tmpPlayer.playerHand.add(bag.getRand());
+            }
+            //Sending to update the Init pack for each player, using Player method to convert tiles to strings
+            Model.getModel().updatePlayerVals(0,tmpPlayer.convertTilesToStrings(tmpPlayer.playerHand));
         }
     }
     public  void addPlayer(Player player)
@@ -108,6 +115,7 @@ public class GameState{
 
     // converting string to Tiles[] for creating new Word
     public Word convertStrToWord(String strQuery){
+        if(strQuery.equals("")){System.out.println("msg is null!!");return null;}
         //EXAMPLE: "CAR,5,6,False"
         String[] res = strQuery.split(",");
         String word = res[0];
@@ -131,4 +139,6 @@ public class GameState{
         }
         return tileArr;
     }
+
+
 }

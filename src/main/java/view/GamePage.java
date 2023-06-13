@@ -1,5 +1,6 @@
 package view;
 
+
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,20 +16,22 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import model.Model;
 import view_model.ViewModel;
 
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
 
 public class GamePage extends Application {
 
     private static Stage theStage;
     private GridPane gameBoard;
-    private final ObservableList<String> placedTiles = FXCollections.observableArrayList();
-
+    public final ObservableList<String> placedTiles = FXCollections.observableArrayList();
     private static HashMap<String , Point2D> map = new HashMap<>(); //map between letter and coordinate on gameBoard
-    private GridPane playerRack;
+    public GridPane playerRack;
     public Label scoreLabel;
+    public Label playerTmpQuery = new Label();
+    private Object lockObject = new Object();
+
 
 
     private static final String[][] BOARD_LAYOUT = {
@@ -48,6 +51,7 @@ public class GamePage extends Application {
             {" ", "2W", " ", " ", " ", "3L", " ", " ", " ", "3L", " ", " ", " ", "2W", " "},
             {"3W", " ", " ", "2L", " ", " ", " ", "3W", " ", " ", " ", "2L", " ", " ", "3W"},
     };
+
 
     public static void main(String[] args) {
         launch(args);
@@ -79,9 +83,12 @@ public class GamePage extends Application {
         }
 
         // Score label
-        scoreLabel = new Label("Score: 0");
+        scoreLabel = new Label("0");
         scoreLabel.setStyle("-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;");
         scoreLabel.setAlignment(Pos.BOTTOM_CENTER);
+        Label scoreTitle = new Label("Score: ");
+        scoreTitle.setStyle("-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;");
+
 
         // Vertical checkbox
         CheckBox verticalCheckBox = new CheckBox("Vertical");
@@ -114,16 +121,20 @@ public class GamePage extends Application {
 
             //creates the string which represent the query that we want to send to hostPlayer
             StringBuilder sb = new StringBuilder();
-            sb.append(row).append(",").append(col).append(",");
             for(String str : placedTiles){
                 sb.append(str);
             }
+            sb.append(",").append(row).append(",").append(col);
             sb.append(",").append(vertical);
             String playerQuery = sb.toString();
 
 
             System.out.println("Player Query is: " + playerQuery);
-
+            synchronized (lockObject) {
+                playerTmpQuery.setText(playerQuery);
+                Model.getModel().updateQuery(playerQuery);  // udpating when something changes
+                lockObject.notify(); // Notifies the waiting thread to resume
+            }
             //reset the placedTiles list for the next turn
             placedTiles.clear();
         });
@@ -142,7 +153,7 @@ public class GamePage extends Application {
         // HBox for score label and checkbox
         HBox topContainer = new HBox(10);
         topContainer.setAlignment(Pos.BOTTOM_CENTER);
-        topContainer.getChildren().addAll(scoreLabel);
+        topContainer.getChildren().addAll(scoreTitle,scoreLabel);
 
         // VBox for game board and buttons
         VBox root = new VBox(10);
@@ -158,20 +169,25 @@ public class GamePage extends Application {
         playerRack.setHgap(5);
         playerRack.setVgap(5);
         playerRack.setAlignment(Pos.BOTTOM_CENTER);
-        root.getStylesheets().add("player-rack");
         root.getChildren().add(playerRack);
-
+        // creating initial List that contains only X for playerRack not null, the initPack will override
+        List<Label> list = new ArrayList<>(Collections.nCopies(7, new Label("X")));
+        createRack(list);
         primaryStage.show();
 
-        // Create the player rack tiles
-        char tileValue = 'A';
-        for (int i = 0; i < 7; i++) {
-            Label tileLabel = createTileLabel(Character.toString(tileValue), Color.LIGHTGREEN);
+
+
+    }
+
+    public void createRack(List<Label> list){
+        //Create the player rack tiles
+        int i =0;
+        for (Label lb : list) {
+            Label tileLabel = createTileLabel(lb.getText(), Color.LIGHTSALMON);
             enableDrag(tileLabel);
             playerRack.add(tileLabel, i, 0);
-            tileValue++;
+            i++;
         }
-
     }
 
     private Label createCellLabel(String cellValue, Color cellColor) {
@@ -317,4 +333,7 @@ public class GamePage extends Application {
 
     private  static class GPHolder{ public static final GamePage gp = new GamePage();}
     public static GamePage getGP() {return GPHolder.gp;}
+    public Object getLockObject() {
+        return lockObject;
+    }
 }

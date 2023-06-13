@@ -24,37 +24,42 @@ public class HostPlayer extends Player {
     public int port = 9998;
     Model m = Model.getModel();
 
+
     public HostPlayer(GameState gs,String name) {
         gameState = gs;
-        gameState.addPlayer(this);
+        GameState.getGM().addPlayer(this);
         queryServer = new QueryServer(port,new BookScrabbleHandler());
         this.setName(name);
         this.consoleReader = new BufferedReader(new InputStreamReader(System.in));
 
     }
-    public void initGame(){
 
-        int currPlayerInd = 1;
-        gameState.setTurns(); // players turns by their index in playerList
-
+    public void initPlayersHand(){
         try {
-            gameState.initHands();
+            GameState.getGM().initHands();
+
         }catch(Exception e)
         {
             System.out.println("problem init-hands");
             e.printStackTrace();
         }
 
+    }
+
+    public void initGame(){
+
+        int currPlayerInd = 1;
+        gameState.setTurns(); // players turns by their index in playerList
         //  loadBooks();
-        while(!gameState.getIsGameOver())
+        while(!GameState.getGM().getIsGameOver())
         {
-            for(Player player : gameState.playersList)
+            for(Player player : GameState.getGM().playersList)
             {
                 while(!player.isTurnOver)
                 {
                     player.isTurnOver =  legalMove(player);
                 }
-                m.updateScore(player.getSumScore());
+                m.updatePlayerVals(player.getSumScore(),player.convertTilesToStrings(playerHand)); // updating PlayerHand and Score
                 player.isTurnOver = false; // returning so next round the player can play again his turn.
                 currPlayerInd = ((currPlayerInd+1) % gameState.playersList.size());
 
@@ -64,7 +69,9 @@ public class HostPlayer extends Player {
                 GameServer.broadcastToClients(player.acceptedQuery);
 
             }
-
+            //TODO: fix the main bug when using multiple clients!
+            //TODO:The break and the stop=true comment is preventing infinty loop when testing one player!
+            break;
         }
         stop=true;
     }
@@ -75,24 +82,26 @@ public class HostPlayer extends Player {
         String msg = null;
         int score=0;
 
-        // if the player is the host
-        if(player.getClass().equals(this.getClass()))
-        {
-            System.out.println("Host, enter your query: ");
-            try {
-                msg = consoleReader.readLine();
-            } catch (IOException e) {
-                System.out.println("bad input");;
-            }
-        }
-        else { // if the player is a regular player
-            for (GameClientHandler gch : GameServer.getClients()) {
-                if (gch.player.equals(player)) {
-                    msg = gch.getMessageQuery();
+                    // if the player is the host
+                    if (player.getClass().equals(this.getClass())) {
+                        System.out.println("Host, enter your query and press Submit: ");
+//                        try {
+//                            msg = consoleReader.readLine();
+//                        } catch (IOException e) {
+//                            System.out.println("bad input");
+//                            ;
+//                        }
+                    } else { // if the player is a regular player
+                        for (GameClientHandler gch : GameServer.getClients()) {
+                            if (gch.player.equals(player)) {
+//                    msg = gch.getMessageQuery();
+                                System.out.println("Enter your query and press Submit: ");
 
-                }
-            }
-        }
+                            }
+                        }
+                    }
+        msg = Model.getModel().getPlayerQuery();
+        System.out.println("msg from legalMove is: " + msg);
 
         if (msg != null) {score=  makeMove(msg,player);}
         else{System.out.println("Walla msg is NULL!");}
