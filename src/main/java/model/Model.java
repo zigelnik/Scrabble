@@ -19,7 +19,8 @@ public class Model extends Observable implements Facade {
     GameServer hostServer;
     int playerScore;
     List<String> playerHand = new ArrayList<>();
-    String playerQuery = new String();
+    String playerQuery = "";
+    int playerTurn;
 
 
 
@@ -30,7 +31,7 @@ public class Model extends Observable implements Facade {
     }
 
     @Override
-    public void joinGame(String ip, int port,String name) {
+    public void joinGame(String ip, int port , String name) {
         Client client = new Client(ip, port,name);
         client.start();
     }
@@ -43,8 +44,9 @@ public class Model extends Observable implements Facade {
     }
 
     // Updates-for player Score and playerHand (usages: GameState->initHands | HostPlayer->initGame)
-    public void updatePlayerVals(int playerScore,List<String> playerHand) {
+    public void updatePlayerVals(int playerScore,int playerTurn , List<String> playerHand) {
         this.playerScore = playerScore;
+        this.playerTurn = playerTurn;
         this.playerHand = playerHand;
         setChanged();
         notifyObservers();
@@ -70,4 +72,7 @@ public class Model extends Observable implements Facade {
     private  static class ModelHolder{ public static final Model m = new Model();}
     public static Model getModel() {return ModelHolder.m;}
 
+    public int getPlayerTurn() {
+        return playerTurn;
+    }
 }

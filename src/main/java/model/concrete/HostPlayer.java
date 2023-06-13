@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 public class HostPlayer extends Player {
 
     private BufferedReader consoleReader;
+
     public volatile boolean stop;
     public QueryServer queryServer;
     public int port = 9998;
@@ -59,7 +60,7 @@ public class HostPlayer extends Player {
                 {
                     player.isTurnOver =  legalMove(player);
                 }
-                m.updatePlayerVals(player.getSumScore(),player.convertTilesToStrings(playerHand)); // updating PlayerHand and Score
+                m.updatePlayerVals(player.getSumScore(),currPlayerInd,player.convertTilesToStrings(playerHand)); // updating PlayerHand and Score
                 player.isTurnOver = false; // returning so next round the player can play again his turn.
                 currPlayerInd = ((currPlayerInd+1) % gameState.playersList.size());
 
@@ -70,7 +71,7 @@ public class HostPlayer extends Player {
 
             }
             //TODO: fix the main bug when using multiple clients!
-            //TODO:The break and the stop=true comment is preventing infinty loop when testing one player!
+            //TODO:The break and the stop=true comment is preventing infinity loop when testing one player!
             break;
         }
         stop=true;

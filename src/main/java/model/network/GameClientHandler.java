@@ -12,6 +12,7 @@ public class GameClientHandler extends Thread {
     private Socket clientSocket;
     static private BufferedReader readFromClient;
     private PrintWriter writeToClient;
+
     public Player player;
     String stringWord;
 
@@ -29,7 +30,7 @@ public class GameClientHandler extends Thread {
     public void run() {
         try {
 
-            System.out.println("New client connected: " +player.getPlayerName()+" | From: "+ clientSocket.getLocalSocketAddress());
+            System.out.println("New client connected: " + player.getPlayerName() +" | From: "+ clientSocket.getLocalSocketAddress());
 
             String message;
             while ((message = readFromClient.readLine()) != null) {

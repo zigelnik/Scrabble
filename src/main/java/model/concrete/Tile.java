@@ -93,6 +93,15 @@ public class Tile {
                 }
             return null;
         }
+        public Tile getTileConvert(char ltr)
+        {
+            for (int i = 0; i< tiles.length; i++)
+                if(ltr == tiles[i].getLetter() && isTileExist(i))
+                {
+                    return tiles[i];
+                }
+            return null;
+        }
 
         // run through to find the letter then check if the maximum amount is there
         public void put(Tile tile)

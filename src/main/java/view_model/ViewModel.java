@@ -17,11 +17,13 @@ public class ViewModel extends Observable implements Observer {
     public IntegerProperty score;
     public StringProperty playerQuery;
     public ListProperty<String> playerHand;
+    public IntegerProperty playerTurn;
 
     public ViewModel() {
         this.score = new SimpleIntegerProperty(0);
         this.playerHand = new SimpleListProperty<>();
         this.playerQuery = new SimpleStringProperty("");
+        this.playerTurn = new SimpleIntegerProperty(0);
     }
 
     public void hostGame(int port, String name) {
@@ -34,6 +36,7 @@ public class ViewModel extends Observable implements Observer {
 
     public void initPlayersBoard() {
         GameServer.broadcastToClients("/start");
+        GameServer.broadcastToClients("/initYourRack");
     }
 
     @Override
@@ -41,6 +44,7 @@ public class ViewModel extends Observable implements Observer {
         if (o == m) {
             Platform.runLater(() -> {
                 score.set(m.getPlayerScore());
+                playerTurn.set(m.getPlayerTurn());
             });
             playerHand.set(FXCollections.observableList(m.getPlayerHand())); // converting the m.getPlayerHand() to observableList (Only way to apply the set)
             playerQuery.unbind();  // property is not bound to any other property

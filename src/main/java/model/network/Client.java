@@ -1,16 +1,21 @@
 package model.network;
 import javafx.application.Platform;
+import javafx.scene.control.Label;
 import model.concrete.GameState;
+import model.concrete.Player;
+import model.concrete.Tile;
 import view.GamePage;
 import view.Main;
 import view.WaitingPage;
 
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 // Client class
-public class Client {
+public class Client extends Player {
     String ip;
     int port;
     String name;
@@ -18,8 +23,7 @@ public class Client {
     BufferedReader consoleReader;
     BufferedReader readFromServer;
     PrintWriter writeToServer;
-    private GamePage gp = GamePage.getGP();
-    private GameState gameState;
+    private final GamePage gp = GamePage.getGP();
 
 
     public Client(String ip, int port, String name) {
@@ -46,18 +50,23 @@ public class Client {
                         {
                             Platform.runLater(()->
                                     gp.start(WaitingPage.theStage));
+
                         }
-                        else
+                        else if(message.equals("/initYourRack"))
                         {
-                            System.out.println(message);
+                            Platform.runLater(()->{
+                                //update to all the Clients their GUI playerRack
+                                List<String> playerRack = new ArrayList<>();
+                                for(Tile tmp: getPlayerHand()){
+                                    char c = tmp.letter;
+                                    playerRack.add(Character.toString(c));
+                                }
+                                gp.initPlayerRack(playerRack);
+                            });
                         }
                      }
 
-//            // sending msg
-//            String message;
-//            while ((message = consoleReader.readLine()) != null) {
-//                writeToServer.println(message);
-//            }
+
 
         } catch (IOException e) {
             e.printStackTrace();

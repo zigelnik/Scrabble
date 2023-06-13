@@ -19,18 +19,19 @@ import javafx.stage.Stage;
 import model.Model;
 import view_model.ViewModel;
 
+
 import java.util.*;
 
 public class GamePage extends Application {
 
     private static Stage theStage;
-    private GridPane gameBoard;
     public final ObservableList<String> placedTiles = FXCollections.observableArrayList();
-    private static HashMap<String , Point2D> map = new HashMap<>(); //map between letter and coordinate on gameBoard
+    private static final HashMap<String , Point2D> map = new HashMap<>(); //map between letter and coordinate on gameBoard
     public GridPane playerRack;
+    private GridPane gameBoard;
     public Label scoreLabel;
     public Label playerTmpQuery = new Label();
-    private Object lockObject = new Object();
+    private final Object lockObject = new Object();
 
 
 
@@ -58,29 +59,32 @@ public class GamePage extends Application {
     }
 
 
+public void createBoard(){
+    // Game board
+    gameBoard = new GridPane();
+    gameBoard.setHgap(5);
+    gameBoard.setVgap(5);
 
+    // Create the game board based on the layout
+    for (int row = 0; row < BOARD_LAYOUT.length; row++) {
+        for (int col = 0; col < BOARD_LAYOUT[row].length; col++) {
+            String cellValue = BOARD_LAYOUT[row][col];
+            Color cellColor = getColorForCell(cellValue);
+
+            Label cellLabel = createCellLabel(cellValue, cellColor);
+            enableDropOnCell(cellLabel);
+            gameBoard.add(cellLabel, col, row);
+        }
+    }
+}
 
     @Override
     public void start(Stage primaryStage) {
         theStage = primaryStage;
         primaryStage.setTitle("Scrabble Game");
 
-        // Game board
-        gameBoard = new GridPane();
-        gameBoard.setHgap(5);
-        gameBoard.setVgap(5);
-
-        // Create the game board based on the layout
-        for (int row = 0; row < BOARD_LAYOUT.length; row++) {
-            for (int col = 0; col < BOARD_LAYOUT[row].length; col++) {
-                String cellValue = BOARD_LAYOUT[row][col];
-                Color cellColor = getColorForCell(cellValue);
-
-                Label cellLabel = createCellLabel(cellValue, cellColor);
-                enableDropOnCell(cellLabel);
-                gameBoard.add(cellLabel, col, row);
-            }
-        }
+        //game Board
+        createBoard();
 
         // Score label
         scoreLabel = new Label("0");
@@ -98,7 +102,7 @@ public class GamePage extends Application {
         // Button: Pass
         Button passButton = new Button("Pass");
         passButton.setOnAction(event -> {
-            // Handle pass button action
+            ViewModel.getViewModel().playerTurn.set( ViewModel.getViewModel().playerTurn.get()+1);
         });
 
 
@@ -112,6 +116,15 @@ public class GamePage extends Application {
         Button subButton = new Button("Submit");
         subButton.setOnAction(event -> {
             // Handle pass button action
+                    Comparator<String> tileComparator = Comparator.comparingInt(tile -> {
+                        Point2D location = map.get(tile);
+                        if (location != null) {
+                            return (int) (location.getX() + location.getY());
+                        }
+                        return 0;
+                    });
+                    placedTiles.sort(tileComparator);
+
             //get first tile coordinates
             int row = (int) Math.round(map.get(placedTiles.get(0)).getX());
             int col = (int) Math.round(map.get(placedTiles.get(0)).getY());
@@ -171,12 +184,9 @@ public class GamePage extends Application {
         playerRack.setAlignment(Pos.BOTTOM_CENTER);
         root.getChildren().add(playerRack);
         // creating initial List that contains only X for playerRack not null, the initPack will override
-        List<Label> list = new ArrayList<>(Collections.nCopies(7, new Label("X")));
+        List<Label> list = new ArrayList<>(Collections.nCopies(7, new Label("")));
         createRack(list);
         primaryStage.show();
-
-
-
     }
 
     public void createRack(List<Label> list){
@@ -190,7 +200,7 @@ public class GamePage extends Application {
         }
     }
 
-    private Label createCellLabel(String cellValue, Color cellColor) {
+    public Label createCellLabel(String cellValue, Color cellColor) {
         Label cellLabel = new Label(cellValue);
         cellLabel.setPrefSize(40, 40);
         cellLabel.setAlignment(Pos.CENTER);
@@ -198,7 +208,7 @@ public class GamePage extends Application {
         return cellLabel;
     }
 
-    private Label createTileLabel(String tileValue, Color tileColor) {
+    public Label createTileLabel(String tileValue, Color tileColor) {
         Label tileLabel = new Label(tileValue);
         tileLabel.setPrefSize(40, 40);
         tileLabel.setAlignment(Pos.CENTER);
@@ -207,7 +217,7 @@ public class GamePage extends Application {
     }
 
 
-    private void updatePlayerRack(Label cellLabel, String tile) {
+    public void updatePlayerRack(String tile) {
         // Find the tile label in the player rack
         for (Node node : playerRack.getChildren()) {
             if (node instanceof Label) {
@@ -220,6 +230,12 @@ public class GamePage extends Application {
                 }
             }
         }
+    }
+
+    public void initPlayerRack(List<String> playerRack){
+       for(int i = 0; i < 7; i++){
+           updatePlayerRack(playerRack.get(i));
+       }
     }
 
     private void enableDropOnCell(Label cellLabel) {
@@ -252,7 +268,7 @@ public class GamePage extends Application {
                 String tile = db.getString();
                 if (cellLabel.getText().equals(tile)) {
                     cellLabel.setText("");
-                    updatePlayerRack(cellLabel, tile);
+                    updatePlayerRack(tile);
                     success = true;
                 } else {
                     cellLabel.setText(tile);
@@ -278,7 +294,7 @@ public class GamePage extends Application {
                     placedTiles.remove(cellLabel.getText());
                     map.remove(cellLabel.getText());
                     cellLabel.setText("");
-                    updatePlayerRack(cellLabel, tile);
+                    updatePlayerRack(tile);
                 }
             }
         });
@@ -326,6 +342,13 @@ public class GamePage extends Application {
                 (int) (color.getBlue() * 255));
     }
 
+    public void changeCell(String cellValue, int row, int col) {
+        if(gameBoard == null) createBoard();
+        Label cellLabel = createCellLabel(cellValue, getColorForCell(cellValue));
+        enableDropOnCell(cellLabel);
+        gameBoard.add(cellLabel, col, row);
+    }
+
     public static Stage getTheStage() {
         return theStage;
     }
@@ -335,5 +358,8 @@ public class GamePage extends Application {
     public static GamePage getGP() {return GPHolder.gp;}
     public Object getLockObject() {
         return lockObject;
+    }
+    public GridPane getGameBoard() {
+        return gameBoard;
     }
 }

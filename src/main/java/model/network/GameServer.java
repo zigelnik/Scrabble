@@ -31,7 +31,6 @@ public class GameServer {
     public  void start() {
         try {
             ServerSocket serverSocket = new ServerSocket(port);
-
             System.out.println("Server started. Listening on port: "+port);
 
 

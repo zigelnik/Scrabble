@@ -67,13 +67,12 @@ public class GameState{
     }
 
     public void initHands(){
-        for(int i = 0; i < playersList.size(); i++){
-            Player tmpPlayer = playersList.get(i);
-            for(int j=0;j<playersList.get(i).handSize;j++) {
+        for (Player tmpPlayer : playersList) {
+            for (int j = 0; j < tmpPlayer.handSize; j++) {
                 tmpPlayer.playerHand.add(bag.getRand());
             }
             //Sending to update the Init pack for each player, using Player method to convert tiles to strings
-            Model.getModel().updatePlayerVals(0,tmpPlayer.convertTilesToStrings(tmpPlayer.playerHand));
+            Model.getModel().updatePlayerVals(0, 0,tmpPlayer.convertTilesToStrings(tmpPlayer.playerHand));
         }
     }
     public  void addPlayer(Player player)
@@ -134,7 +133,7 @@ public class GameState{
         Tile[] tileArr =new Tile[str.length()];
         int i=0;
         for(char ch: str.toCharArray()) {
-            tileArr[i]= bag.getTile(ch);
+            tileArr[i]= bag.getTileConvert(ch);
             i++;
         }
         return tileArr;
