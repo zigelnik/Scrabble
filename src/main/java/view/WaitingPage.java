@@ -68,18 +68,10 @@ public class WaitingPage extends Application {
                 v.setViewModel();
                 vm.initPlayersBoard();
                 Thread t = new Thread(() -> {
-                    synchronized (gp.getLockObject()) {
-                        try {
-                            gp.getLockObject().wait(); // Releases the lock and waits until notified
-                        } catch (InterruptedException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                        vm.getModel().getHostServer().hostPlayer.initGame();
-                    }
+                    vm.getModel().getHostServer().hostPlayer.initGame();
                 });
                 t.start();
             }
-
         });
     }
 

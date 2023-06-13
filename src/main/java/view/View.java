@@ -1,5 +1,6 @@
 package view;
 
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -24,13 +25,16 @@ public class View implements Observer {
         GamePage.getGP();
     }
 
-
-
     public void setViewModel() {
         vm.playerQuery.bind(gamePage.playerTmpQuery.textProperty());
         gamePage.scoreLabel.textProperty().bind(vm.score.asString());
         //binding for the playerHand
-        gamePage.playerRack.getChildren().clear(); // clearing the nodes from playerRack
+        setPlayerHand();
+
+
+    }
+
+    public void setPlayerHand(){
         int ind = 0;
         List<Label> rackLabels = new ArrayList<>(); // tmprackLabels for the method createRack
         for (String strTile : vm.playerHand) {
@@ -39,16 +43,12 @@ public class View implements Observer {
             StringProperty strProperty = new SimpleStringProperty(tmpStr); // converting String to StringProperty
             label.textProperty().bindBidirectional(strProperty); // binding between label to StringProperty
             rackLabels.add(label);
-//            gamePage.playerRack.getChildren().add(label);
             ind++;
         }
-        gamePage.createRack(rackLabels);
-
-
-
-
+        Platform.runLater(()->{
+            gamePage.createRack(rackLabels);
+        });
     }
-
 
     @Override
     public void update(Observable o, Object arg) {

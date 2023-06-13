@@ -8,6 +8,7 @@ import model.network.BookScrabbleHandler;
 import model.network.QueryServer;
 import model.network.GameClientHandler;
 import model.network.GameServer;
+import view.GamePage;
 
 import java.io.*;
 import java.net.Socket;
@@ -82,26 +83,33 @@ public class HostPlayer extends Player {
         String msg = null;
         int score=0;
 
-                    // if the player is the host
-                    if (player.getClass().equals(this.getClass())) {
-                        System.out.println("Host, enter your query and press Submit: ");
+        // if the player is the host
+        if (player.getClass().equals(this.getClass())) {
+            System.out.println("Host, enter your query and press Submit: ");
 //                        try {
 //                            msg = consoleReader.readLine();
 //                        } catch (IOException e) {
 //                            System.out.println("bad input");
 //                            ;
 //                        }
-                    } else { // if the player is a regular player
-                        for (GameClientHandler gch : GameServer.getClients()) {
-                            if (gch.player.equals(player)) {
+        } else { // if the player is a regular player
+            for (GameClientHandler gch : GameServer.getClients()) {
+                if (gch.player.equals(player)) {
 //                    msg = gch.getMessageQuery();
-                                System.out.println("Enter your query and press Submit: ");
+                    System.out.println("Enter your query and press Submit: ");
 
-                            }
-                        }
-                    }
-        msg = Model.getModel().getPlayerQuery();
-        System.out.println("msg from legalMove is: " + msg);
+                }
+            }
+        }
+        synchronized (GamePage.getGP().getLockObject()) {
+            try {
+                GamePage.getGP().getLockObject().wait(); // Releases the lock and waits until notified
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
+            msg = Model.getModel().getPlayerQuery();
+            System.out.println("msg from legalMove is: " + msg);
+        }
 
         if (msg != null) {score=  makeMove(msg,player);}
         else{System.out.println("Walla msg is NULL!");}
