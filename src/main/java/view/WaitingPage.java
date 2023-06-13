@@ -72,6 +72,12 @@ public class WaitingPage extends Application {
                 });
                 t.start();
             }
+            else{
+                vm.getModel().getHostServer().hostPlayer.initPlayersHand();
+                v.setViewModel();
+            }
+
+
         });
     }
 

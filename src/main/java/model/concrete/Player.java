@@ -10,7 +10,7 @@ import java.util.Objects;
 public class Player {
 
     // data members ////////
-    protected GameState gameState;
+    protected GameState gameState = GameState.getGM();
     String playerName;
     int id;
     List<Tile> playerHand;

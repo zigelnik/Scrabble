@@ -26,9 +26,8 @@ public class HostPlayer extends Player {
     Model m = Model.getModel();
 
 
-    public HostPlayer(GameState gs,String name) {
-        gameState = gs;
-        GameState.getGM().addPlayer(this);
+    public HostPlayer(String name) {
+        gameState.addPlayer(this);
         queryServer = new QueryServer(port,new BookScrabbleHandler());
         this.setName(name);
         this.consoleReader = new BufferedReader(new InputStreamReader(System.in));
@@ -37,7 +36,7 @@ public class HostPlayer extends Player {
 
     public void initPlayersHand(){
         try {
-            GameState.getGM().initHands();
+            gameState.initHands();
 
         }catch(Exception e)
         {
@@ -52,9 +51,9 @@ public class HostPlayer extends Player {
         int currPlayerInd = 1;
         gameState.setTurns(); // players turns by their index in playerList
         //  loadBooks();
-        while(!GameState.getGM().getIsGameOver())
+        while(!gameState.getIsGameOver())
         {
-            for(Player player : GameState.getGM().playersList)
+            for(Player player : gameState.playersList)
             {
                 while(!player.isTurnOver)
                 {

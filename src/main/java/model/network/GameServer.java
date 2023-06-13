@@ -20,7 +20,7 @@ public class GameServer {
     public GameServer(int port,String name) {
         this.port = port;
         gameState = GameState.getGM();
-        hostPlayer = new HostPlayer(gameState,name);
+        hostPlayer = new HostPlayer(name);
     }
 
 
