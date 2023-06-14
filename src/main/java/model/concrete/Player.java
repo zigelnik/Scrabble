@@ -10,7 +10,6 @@ import java.util.Objects;
 public class Player {
 
     // data members ////////
-    protected GameState gameState = GameState.getGM();
     String playerName;
     int id;
     List<Tile> playerHand;
@@ -48,9 +47,7 @@ public class Player {
 
 
     // Getters
-    public GameState getGameState() {
-        return gameState;
-    }
+
     public int getHandSize()
     {
         return handSize;
@@ -80,12 +77,12 @@ public class Player {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Player player = (Player) o;
-        return id == player.id && handSize == player.handSize && sumScore == player.sumScore && isTurnOver == player.isTurnOver && Objects.equals(gameState, player.gameState) && Objects.equals(playerName, player.playerName) && Objects.equals(playerHand, player.playerHand);
+        return id == player.id && handSize == player.handSize && sumScore == player.sumScore && isTurnOver == player.isTurnOver && Objects.equals(playerName, player.playerName) && Objects.equals(playerHand, player.playerHand) && Objects.equals(acceptedQuery, player.acceptedQuery);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(gameState, playerName, id, playerHand, handSize, sumScore, isTurnOver);
+        return Objects.hash(playerName, id, playerHand, handSize, sumScore, isTurnOver, acceptedQuery);
     }
 
     public List<String> convertTilesToStrings(List<Tile> tiles){

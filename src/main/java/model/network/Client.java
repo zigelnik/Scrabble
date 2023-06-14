@@ -39,21 +39,22 @@ public class Client {
 
 
             // receiving msg (another thread?)
-                    String message;
-                    while ((message = readFromServer.readLine()) != null)
-                    {
-                        if(message.equals("/start"))
-                        {
-                            Platform.runLater(()->{
-                                gp.start(WaitingPage.theStage);
-                                wp.setClientBoard();
-                        });
-                        }
-                        else
-                        {
-                            System.out.println(message);
-                        }
-                     }
+            String message;
+            while ((message = readFromServer.readLine()) != null)
+            {
+                if(message.equals("/start"))
+                {
+                    Platform.runLater(()->{
+                        gp.start(WaitingPage.theStage);
+                    });
+                }
+                else if (message.equals("/initPacks"))
+                {
+                    Platform.runLater(()->{
+                        gp.initPlayerRack("A,B,C,D,E,F,G");
+                    });
+                }
+            }
 
 //            // sending msg
 //            String message;

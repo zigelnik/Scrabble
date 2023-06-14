@@ -14,13 +14,18 @@ import java.util.Observer;
 
 public class ViewModel extends Observable implements Observer {
     Model m = Model.getModel();
+
     public IntegerProperty score;
     public StringProperty playerQuery;
     public ListProperty<String> playerHand;
     public IntegerProperty playerTurn;
 
+    public IntegerProperty playerIndex;
+
+
     public ViewModel() {
         this.score = new SimpleIntegerProperty(0);
+        this.playerTurn = new SimpleIntegerProperty(0);
         this.playerHand = new SimpleListProperty<>();
         this.playerQuery = new SimpleStringProperty("");
         this.playerTurn = new SimpleIntegerProperty(0);
@@ -36,7 +41,7 @@ public class ViewModel extends Observable implements Observer {
 
     public void initPlayersBoard() {
         GameServer.broadcastToClients("/start");
-        GameServer.broadcastToClients("/initYourRack");
+        GameServer.broadcastToClients("/initPacks");
     }
 
     @Override

@@ -34,7 +34,7 @@ public class View implements Observer {
 
     public void setPlayerHand(){
         int ind = 0;
-        List<Label> rackLabels = new ArrayList<>(); // tmprackLabels for the method createRack
+        List<Label> rackLabels = new ArrayList<>(); // tmp-rackLabels for the method createRack
         for (String strTile : vm.playerHand) {
             Label label = new Label(strTile);
             String tmpStr = vm.playerHand.get(ind);
@@ -53,7 +53,7 @@ public class View implements Observer {
 
     }
 
-    //GETTES
+    //GETTERS
     public LandingPage getLandingPage() {return landingPage;}
     public GamePage getGamePage() {return gamePage;}
     private  static class ViewHolder{ public static final View v = new View();}

@@ -26,6 +26,7 @@ public class HostPlayer extends Player {
     Model model = Model.getModel();
     final Object lock = new Object();
     GamePage gp = GamePage.getGP();
+    private GameState gameState = GameState.getGM();
 
 
     public HostPlayer(String name) {
@@ -49,7 +50,6 @@ public class HostPlayer extends Player {
     }
 
     public void initGame(){
-
         int currPlayerInd = 1;
         gameState.setTurns(); // players turns by their index in playerList
         //  loadBooks();
@@ -62,7 +62,7 @@ public class HostPlayer extends Player {
                     player.isTurnOver =  legalMove(player);
                 }
                 Platform.runLater(()->{
-                    model.updatePlayerVals(player.getSumScore(),player.convertTilesToStrings(playerHand)); // updating PlayerHand and Score
+                    model.updatePlayerVals(player.getSumScore(),gameState.getPlayerIndex(),player.convertTilesToStrings(playerHand)); // updating PlayerHand and Score
                 });
 
                 player.isTurnOver = false; // returning so next round the player can play again his turn.
@@ -234,6 +234,10 @@ public class HostPlayer extends Player {
             }
         }
         return true;
+    }
+
+    public GameState getGameState() {
+        return gameState;
     }
 }
 

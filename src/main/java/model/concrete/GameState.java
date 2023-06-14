@@ -13,21 +13,32 @@ import java.util.stream.Collectors;
 public class GameState{
      public Tile.Bag bag;
      List<Player> playersList;
+
+     private int playerIndex;
+
      public Board board;
      private boolean isGameOver;
-    private  static class GameStateHolder{ public static final GameState gm = new GameState();}
-    public static GameState getGM() {return GameStateHolder.gm;}
+     private  static class GameStateHolder{ public static final GameState gm = new GameState();}
+     public static GameState getGM() {return GameStateHolder.gm;}
 
 
     //CTOR
     public  GameState() {
       board = Board.getBoard();
        bag = Tile.Bag.getBag();
-        playersList = new ArrayList<>();
+       playersList = new ArrayList<>();
       isGameOver = false;
     }
 
     //Getters
+    public int getPlayerIndex() {
+        return playerIndex;
+    }
+
+    public boolean isGameOver() {
+        return isGameOver;
+    }
+
     public Board getBoard()
     {
         return this.board;
@@ -67,13 +78,12 @@ public class GameState{
     }
 
     public void initHands(){
-        for(int i = 0; i < playersList.size(); i++){
-            Player tmpPlayer = playersList.get(i);
-            for(int j=0;j<playersList.get(i).handSize;j++) {
+        for (Player tmpPlayer : playersList) {
+            for (int j = 0; j < tmpPlayer.handSize; j++) {
                 tmpPlayer.playerHand.add(bag.getRand());
             }
             //Sending to update the Init pack for each player, using Player method to convert tiles to strings
-            Model.getModel().updatePlayerVals(0,tmpPlayer.convertTilesToStrings(tmpPlayer.playerHand));
+            Model.getModel().updatePlayerVals(0, 1, tmpPlayer.convertTilesToStrings(tmpPlayer.playerHand));
         }
     }
     public  void addPlayer(Player player)

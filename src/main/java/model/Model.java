@@ -44,7 +44,7 @@ public class Model extends Observable implements Facade {
     }
 
     // Updates-for player Score and playerHand (usages: GameState->initHands | HostPlayer->initGame)
-    public void updatePlayerVals(int playerScore,int playerTurn , List<String> playerHand) {
+    public void updatePlayerVals(int playerScore, int playerTurn , List<String> playerHand) {
         this.playerScore = playerScore;
         this.playerTurn = playerTurn;
         this.playerHand = playerHand;

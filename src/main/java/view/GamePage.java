@@ -9,6 +9,7 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -112,6 +113,18 @@ public class GamePage extends Application {
         Button subButton = new Button("Submit");
         subButton.setOnAction(event -> {
             // Handle pass button action
+            // Check if placedTiles is empty
+            if (placedTiles.isEmpty()) {
+                // Alert the player that no tiles are placed
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("No Tiles Placed");
+                alert.setHeaderText(null);
+                alert.setContentText("You haven't placed any tiles on the board.\nTry to place tiles or pass your turn ! ");
+                alert.showAndWait();
+                return; // Return without further processing
+            }
+
+            //sort the tiles by their location on board
             Comparator<String> tileComparator = Comparator.comparingInt(tile -> {
                 Point2D location = map.get(tile);
                 if (location != null) {
@@ -141,11 +154,20 @@ public class GamePage extends Application {
             System.out.println("Player Query is: " + playerQuery);
             synchronized (lockObject) {
                 playerTmpQuery.setText(playerQuery);
-                Model.getModel().updateQuery(playerQuery);  // udpating when something changes
+                Model.getModel().updateQuery(playerQuery);  // updating when something changes
                 lockObject.notify(); // Notifies the waiting thread to resume
             }
+
+            //TODO:Get the response from HostPlayer if move is valid
+            //if the move is not valid we need to remove the tiles from board and get it back to player hand
+            //moveBackPlacedTiles();
+
+
+
+
             //reset the placedTiles list for the next turn
             placedTiles.clear();
+            map.clear();
         });
 
         // Button: Quit
@@ -180,7 +202,7 @@ public class GamePage extends Application {
         playerRack.setAlignment(Pos.BOTTOM_CENTER);
         root.getChildren().add(playerRack);
         // creating initial List that contains only X for playerRack not null, the initPack will override
-        List<Label> list = new ArrayList<>(Collections.nCopies(7, new Label("X")));
+        List<Label> list = new ArrayList<>(Collections.nCopies(7, new Label("")));
         createRack(list);
         primaryStage.show();
     }
@@ -213,21 +235,6 @@ public class GamePage extends Application {
     }
 
 
-    private void updatePlayerRack(Label cellLabel, String tile) {
-        // Find the tile label in the player rack
-        for (Node node : playerRack.getChildren()) {
-            if (node instanceof Label) {
-                Label tileLabel = (Label) node;
-                if (tileLabel.getText().isEmpty()) {
-                    // Found an empty slot in the player rack, place the tile
-                    tileLabel.setText(tile);
-                    enableDrag(tileLabel);
-                    break;
-                }
-            }
-        }
-    }
-
     private void enableDropOnCell(Label cellLabel) {
         String originalCellValue = cellLabel.getText();
         Color originalCellColor = getColorForCell(originalCellValue);
@@ -258,7 +265,7 @@ public class GamePage extends Application {
                 String tile = db.getString();
                 if (cellLabel.getText().equals(tile)) {
                     cellLabel.setText("");
-                    updatePlayerRack(cellLabel, tile);
+                    updatePlayerRack(tile);
                     success = true;
                 } else {
                     cellLabel.setText(tile);
@@ -284,7 +291,7 @@ public class GamePage extends Application {
                     placedTiles.remove(cellLabel.getText());
                     map.remove(cellLabel.getText());
                     cellLabel.setText("");
-                    updatePlayerRack(cellLabel, tile);
+                    updatePlayerRack(tile);
                 }
             }
         });
@@ -309,6 +316,26 @@ public class GamePage extends Application {
             event.consume();
         });
     }
+    private void updatePlayerRack(String tile) {
+        // Find the tile label in the player rack
+        for (Node node : playerRack.getChildren()) {
+            if (node instanceof Label tileLabel) {
+                if (tileLabel.getText().isEmpty()) {
+                    // Found an empty slot in the player rack, place the tile
+                    tileLabel.setText(tile);
+                    enableDrag(tileLabel);
+                    break;
+                }
+            }
+        }
+    }
+
+    public void initPlayerRack(String rack){
+        String [] arr = rack.split(",");
+        for(int i = 0; i < 7; i++){
+            updatePlayerRack(arr[i]);
+        }
+    }
 
     private boolean isSpecialCell(Label cellLabel) {
         String cellValue = cellLabel.getText();
@@ -332,10 +359,42 @@ public class GamePage extends Application {
                 (int) (color.getBlue() * 255));
     }
 
+    public void changeCell(String cellValue, int row, int col) {
+        Label cellLabel = createCellLabel(cellValue, getColorForCell(cellValue));
+        enableDropOnCell(cellLabel);
+        gameBoard.add(cellLabel, col, row);
+    }
+
     public static Stage getTheStage() {
         return theStage;
     }
+    public void moveBackPlacedTiles() {
+        for (String tile : placedTiles) {
+            Point2D coordinates = map.get(tile);
+            if (coordinates != null) {
+                int row = (int) coordinates.getX();
+                int col = (int) coordinates.getY();
+                Node cell = getNodeByRowColumnIndex(row, col, gameBoard);
+                if (cell instanceof Label) {
+                    ((Label) cell).setText("");
+                }
+            }
+        }
+    }
 
+    public Node getNodeByRowColumnIndex(final int row, final int column, GridPane gridPane) {
+        Node result = null;
+        ObservableList<Node> children = gridPane.getChildren();
+
+        for (Node node : children) {
+            if (GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == column) {
+                result = node;
+                break;
+            }
+        }
+
+        return result;
+    }
 
     private  static class GPHolder{ public static final GamePage gp = new GamePage();}
     public static GamePage getGP() {return GPHolder.gp;}
