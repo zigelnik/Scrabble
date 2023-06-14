@@ -36,6 +36,9 @@ Once the game has started and the players have joined, the game board will be di
 To make a move, the player can select a tile from their hand and drag it on an empty cell on the board. 
 The game ends when a player has used all of their tiles or when there are no more valid moves left on the board. The player with the highest score at the end of the game wins.
 
+## Cloning the Project
+
+
 ## Project Structure
 The project is structured using the MVVM architecture and Observer-Observable design pattern. The purpose of this architecture is to separate the user interface from the underlying data model, making the code easier to read, maintain, and extend. The project is divided into three main packages:
 
