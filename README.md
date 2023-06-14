@@ -36,7 +36,8 @@ Once the game has started and the players have joined, the game board will be di
 To make a move, the player can select a tile from their hand and drag it on an empty cell on the board. 
 The game ends when a player has used all of their tiles or when there are no more valid moves left on the board. The player with the highest score at the end of the game wins.
 
-## Cloning the Project
+## Getting Started
+1. Clone this repository: git clone https://github.com/zigelnik/Scrabble.git
 
 
 ## Project Structure
