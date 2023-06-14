@@ -1,14 +1,20 @@
 package model.concrete;
 
 import model.Model;
+import model.network.GameClientHandler;
+import model.network.GameServer;
 import view.GamePage;
+import view.View;
 
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static model.network.GameServer.clients;
 
 public class GameState{
      public Tile.Bag bag;
@@ -69,9 +75,25 @@ public class GameState{
     public void initHands(){
         for(int i = 0; i < playersList.size(); i++){
             Player tmpPlayer = playersList.get(i);
+
             for(int j=0;j<playersList.get(i).handSize;j++) {
                 tmpPlayer.playerHand.add(bag.getRand());
             }
+
+            String result = String.join(",", tmpPlayer.convertTilesToStrings(tmpPlayer.playerHand));
+
+            for(GameClientHandler client: clients)
+            {
+                if(client.player.equals(tmpPlayer))
+                {
+                  //  client.sendMessage("/query");
+                    client.sendMessage(result);
+                }
+            }
+//            if(tmpPlayer.equals(tmpPlayer.getClass().equals(HostPlayer.class)))
+//            {
+//                View.getView().setPlayerHand(con);
+//            }
             //Sending to update the Init pack for each player, using Player method to convert tiles to strings
             Model.getModel().updatePlayerVals(0,tmpPlayer.convertTilesToStrings(tmpPlayer.playerHand));
         }

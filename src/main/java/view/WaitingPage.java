@@ -13,11 +13,13 @@ import javafx.stage.Stage;
 import model.Model;
 import view_model.ViewModel;
 
+import java.util.Objects;
+
 public class WaitingPage extends Application {
 
-    ViewModel vm = ViewModel.getViewModel();
-    private GamePage gp = GamePage.getGP();
-    private View v = View.getView();
+   public ViewModel vm = ViewModel.getViewModel();
+    public GamePage gp = GamePage.getGP();
+    public View v = View.getView();
     public static Stage theStage;
     @FXML
     private Label waitingLabel;
@@ -30,19 +32,14 @@ public class WaitingPage extends Application {
     private boolean isHost = false;
 
 
-    public static void main(String[] args) {
-        launch();
-    }
-
-
-
     @Override
     public void start(Stage primaryStage) throws Exception {
         theStage = primaryStage;
         root = new VBox(10);
         Scene scene = new Scene(root, 400, 300);
-        scene.getStylesheets().add(getClass().getResource("/gameGui.css").toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/gameGui.css")).toExternalForm());
         primaryStage.setScene(scene);
+
         if (isHost) {
             waitingLabel = new Label("Waiting for Players to Join");
             startButton = new Button("Start Game");
@@ -54,29 +51,34 @@ public class WaitingPage extends Application {
         waitingLabel.getStyleClass().add("waiting-label");
         root.setAlignment(Pos.CENTER);
         root.getChildren().addAll(waitingLabel,startButton);
-        startButton.setVisible(isHost ? true : false);
+        startButton.setVisible(isHost);
         primaryStage.show();
         setWaitingDisplay();
     }
 
     public void setWaitingDisplay() {
-        startButton.setOnAction(e -> {
-            if(isHost) {
+        if(isHost)
+        {
+            startButton.setOnAction(e -> {
                 //TODO: do NOT change the methods call order!!
                 gp.start(theStage);
-                setClientBoard();
+                vm.m.getHostServer().hostPlayer.initPlayersHand();
+                View.getView().setViewModel();
                 vm.initPlayersBoard();
                 Thread t = new Thread(() -> {
-                    vm.getModel().getHostServer().hostPlayer.initGame();
+                    vm.m.getHostServer().hostPlayer.initGame();
                 });
                 t.start();
-            }
-        });
+            });
+        }
+//        else
+//        {
+//            View.getView().setViewModel();
+//        }
     }
 
     public void setClientBoard(){
-        vm.getModel().getHostServer().hostPlayer.initPlayersHand();
-        v.setViewModel();
+
     }
 
 
@@ -84,4 +86,6 @@ public class WaitingPage extends Application {
         this.isHost = isHost;
     }
 
+    private  static class WPHolder{ public static final WaitingPage wp = new WaitingPage();}
+    public static WaitingPage getWP() {return WPHolder.wp;}
 }

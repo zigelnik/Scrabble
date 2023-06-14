@@ -1,16 +1,17 @@
 package model.network;
 import javafx.application.Platform;
-import model.concrete.GameState;
+import model.concrete.Player;
 import view.GamePage;
-import view.Main;
+import view.View;
 import view.WaitingPage;
+import view_model.ViewModel;
 
 import java.io.*;
 import java.net.*;
 
 
 // Client class
-public class Client {
+public class Client extends Player {
     String ip;
     int port;
     String name;
@@ -20,7 +21,8 @@ public class Client {
     PrintWriter writeToServer;
     private GamePage gp = GamePage.getGP();
     private WaitingPage wp = new WaitingPage();
-
+    public ViewModel vm = ViewModel.getViewModel();
+    public View v = View.getView();
 
     public Client(String ip, int port, String name) {
         this.ip = ip;
@@ -46,11 +48,15 @@ public class Client {
                         {
                             Platform.runLater(()->{
                                 gp.start(WaitingPage.theStage);
-                                wp.setClientBoard();
+
+                               View.getView().setViewModel();
+
+                                //       wp.setClientBoard();
                         });
                         }
                         else
                         {
+
                             System.out.println(message);
                         }
                      }

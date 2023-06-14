@@ -14,7 +14,7 @@ import java.util.List;
 public class GameServer {
     int port;
     private static final int MAX_CLIENTS = 3;
-    private static List<GameClientHandler> clients = new ArrayList<>();
+    public static List<GameClientHandler> clients = new ArrayList<>();
     public HostPlayer hostPlayer;
     GameState gameState;
 

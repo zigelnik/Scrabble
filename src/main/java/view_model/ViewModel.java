@@ -13,7 +13,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class ViewModel extends Observable implements Observer {
-    Model m = Model.getModel();
+    public Model m = Model.getModel();
     public IntegerProperty score;
     public StringProperty playerQuery;
     public ListProperty<String> playerHand;

@@ -38,9 +38,10 @@ public class HostPlayer extends Player {
 
     public void initPlayersHand(){
         try {
+            gameState.setTurns(); // players turns by their index in playerList
             gameState.initHands();
-
-        }catch(Exception e)
+        }
+        catch(Exception e)
         {
             System.out.println("problem init-hands");
             e.printStackTrace();
@@ -51,8 +52,7 @@ public class HostPlayer extends Player {
     public void initGame(){
 
         int currPlayerInd = 1;
-        gameState.setTurns(); // players turns by their index in playerList
-        //  loadBooks();
+
         while(!gameState.getIsGameOver())
         {
             for(Player player : gameState.playersList)

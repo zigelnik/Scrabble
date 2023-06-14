@@ -1,12 +1,9 @@
 package view;
 
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Label;
-import model.Model;
-import model.network.GameServer;
 import view_model.ViewModel;
 
 import java.util.ArrayList;
@@ -15,15 +12,10 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class View implements Observer {
-    LandingPage landingPage;
+    LandingPage landingPage = new LandingPage();
     GamePage gamePage = GamePage.getGP();
     ViewModel vm = ViewModel.getViewModel();
 
-
-    public View() {
-        this.landingPage  = new LandingPage();
-        GamePage.getGP();
-    }
 
     public void setViewModel() {
         vm.playerQuery.bind(gamePage.playerTmpQuery.textProperty());// Binding the ViewModel to View
@@ -55,10 +47,9 @@ public class View implements Observer {
 
     //GETTES
     public LandingPage getLandingPage() {return landingPage;}
-    public GamePage getGamePage() {return gamePage;}
+
+
     private  static class ViewHolder{ public static final View v = new View();}
     public static View getView() {return ViewHolder.v;}
-
-
 
 }

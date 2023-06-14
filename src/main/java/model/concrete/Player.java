@@ -95,4 +95,17 @@ public class Player {
         }
         return tmpList;
     }
+
+    public List<Tile> StringToTiles(String str)
+    {
+        List<Tile> tiles = new ArrayList<>();
+        for(char ch: str.toCharArray())
+        {
+            if(ch != ',')
+            {
+                tiles.add(Tile.Bag.getBag().getTile(ch));
+            }
+        }
+        return  tiles;
+    }
 }

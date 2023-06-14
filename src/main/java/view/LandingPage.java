@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import view_model.ViewModel;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class LandingPage extends Application {
@@ -19,7 +20,7 @@ public class LandingPage extends Application {
     private String hostPort;
     private String playerName;
     ViewModel vm = ViewModel.getViewModel();
-    private WaitingPage wp = new WaitingPage();
+    private WaitingPage wp = WaitingPage.getWP();
     private String IP;
 
     private static Stage theStage;
@@ -35,9 +36,6 @@ public class LandingPage extends Application {
 
     public VBox root;
 
-    public static void main(String[] args) {
-        launch();
-    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -45,7 +43,7 @@ public class LandingPage extends Application {
             loadFXML();
             theStage = primaryStage;
             Scene scene = new Scene(root, 400, 300);
-            scene.getStylesheets().add(getClass().getResource("/gameGui.css").toExternalForm());
+            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/gameGui.css")).toExternalForm());
             primaryStage.setScene(scene);
             primaryStage.show();
         }catch(Exception e){
@@ -64,7 +62,6 @@ public class LandingPage extends Application {
         String name = nameField.getText();
         if(name.isEmpty()) {
             showAlert("Error", "Don't forget to enter your name.");
-            name = nameField.getText();
         }
         else{
             this.playerName = name;
@@ -81,7 +78,6 @@ public class LandingPage extends Application {
             startButton.setOnAction(event -> {
                 String port = portField.getText();
                 if(isPortValid(port)){
-                    System.out.println("Host button clicked." + " Port: " + port);
                     this.hostPort = port;
 
                     Thread hostThread = new Thread(()-> {
@@ -94,7 +90,7 @@ public class LandingPage extends Application {
                         wp.setHost(true);
                         wp.start(getPrimaryStage());
                     } catch (Exception e) {
-                        throw new RuntimeException(e);
+                       e.printStackTrace();
                     }
                 }
 
@@ -107,8 +103,7 @@ public class LandingPage extends Application {
 
             // Create a new scene with the game settings layout
             Scene initPortWindow = new Scene(gameSettingsLayout, 400, 300);
-            initPortWindow.getStylesheets().add(getClass().getResource("/gameGui.css").toExternalForm());
-
+            initPortWindow.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/gameGui.css")).toExternalForm());
 
             // Set the scene on the existing stage, effectively replacing the current content with the game settings page
             getPrimaryStage().setScene(initPortWindow);
@@ -125,7 +120,6 @@ public class LandingPage extends Application {
         String name = nameField.getText();
         if(name.isEmpty()) {
             showAlert("Error", "Don't forget to enter your name.");
-            name = nameField.getText();
         }
 
         else{
@@ -148,7 +142,7 @@ public class LandingPage extends Application {
                 String ip = ipField.getText();
 
                 if(isiPValid(ip)&&isPortValid(port)){
-                    System.out.println("Host button clicked." + " Port: " + port +  " IP: " + ip);
+                    System.out.println("Join button clicked." + " Port: " + port +  " IP: " + ip);
                     this.IP = ip;
 
                     Thread joinThread = new Thread(()-> {
@@ -161,7 +155,7 @@ public class LandingPage extends Application {
                         wp.setHost(false);
                         wp.start(getPrimaryStage());
                     } catch (Exception e) {
-                        throw new RuntimeException(e);
+                        e.printStackTrace();
                     }
                 }
 
@@ -180,12 +174,6 @@ public class LandingPage extends Application {
             // Set the scene on the existing stage, effectively replacing the current content with the game settings page
             getPrimaryStage().setScene(initPortAndIpWindow);
 
-//            WaitingPage wp = new WaitingPage();
-//            try {
-//                wp.start(getPrimaryStage());
-//            } catch (Exception e) {
-//                throw new RuntimeException(e);
-//            }
         }
 
     }

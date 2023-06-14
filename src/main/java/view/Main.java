@@ -16,10 +16,10 @@ public class Main extends Application  {
     @Override
     public void start(Stage primaryStage) throws Exception {
         Model m = Model.getModel();// Model
-        ViewModel vm = ViewModel.getViewModel();//View model
+        ViewModel vm = ViewModel.getViewModel(); //View model
         m.addObserver(vm);
-        View v = new View();//View
-        v.getLandingPage().start(new Stage());
+        View v = View.getView(); //View
+        v.getLandingPage().start(primaryStage);
         vm.addObserver(v);
 
     }

@@ -9,7 +9,7 @@ import java.io.*;
 import java.net.Socket;
 
 public class GameClientHandler extends Thread {
-    private Socket clientSocket;
+    public Socket clientSocket;
     static private BufferedReader readFromClient;
     private PrintWriter writeToClient;
     public Player player;
