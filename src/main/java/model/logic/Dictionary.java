@@ -1,21 +1,23 @@
 package model.logic;
 
-import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
+import java.util.HashSet;
+import java.util.Scanner;
+import java.util.Set;
 
 
 public class Dictionary {
 
     private final int WORDS_EXIST_SIZE = 400;
     private final int WORDS_DONT_EXIST_SIZE = 100;
-    private final int BF_SIZE = 256;
+    private final int BF_SIZE = 128036;
     private final String HASH_FUNC1 = "MD5";
     private final String HASH_FUNC2 = "SHA1";
     private final CacheManager wordsExist;
     private final CacheManager wordsDONTExist;
     private final BloomFilter bf;
-    private String[] fileWords;
+    private Set<String> wordsSet = new HashSet<>();
     private final String[] files;
 
     public Dictionary(String... args) {
@@ -26,39 +28,37 @@ public class Dictionary {
         bf = new BloomFilter(BF_SIZE, HASH_FUNC1, HASH_FUNC2);
 
 
-        for (String file : files) {
-            fileWords = getWordsFromFile(file);
 
-            for (String words : fileWords)
-                bf.add(words);
-        }
+        for (String file : files)
+            updateWordSet(file);
+
+        for (String word : wordsSet)
+            bf.add(word);
+
+        System.out.println("set size:"+wordsSet.size());
+
     }
 
-    private String[] getWordsFromFile(String file) {
+    private void updateWordSet(String file) {
 
-        StringBuilder builder = new StringBuilder();
-        String[] newWords;
 
-        try (BufferedReader buffer = new BufferedReader(
+        try (Scanner scanner = new Scanner(
                 new FileReader("src\\main\\resources\\search_folder\\" +file))) {
 
-            String str;
+            scanner.useDelimiter("[^a-zA-Z]+");
 
-            // holding true upto that the while loop runs
-            while ((str = buffer.readLine()) != null)
-            {
-                if(str.equals("")) continue;
-                builder.append(str).append("\n");
-
+            while (scanner.hasNext()) {
+                String word = scanner.next().toUpperCase();
+                if(word.length()==1 && !word.equals("A")) {continue;}
+                wordsSet.add(word);
             }
 
-        } catch (IOException e) {
+            scanner.close();
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        newWords = builder.toString().split("\\W+");
 
 
-        return newWords;
     }
 
     public boolean query(String word) {
@@ -89,4 +89,3 @@ public class Dictionary {
         return flag;
     }
 }
-

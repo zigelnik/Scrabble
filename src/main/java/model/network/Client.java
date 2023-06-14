@@ -1,21 +1,16 @@
 package model.network;
 import javafx.application.Platform;
-import javafx.scene.control.Label;
 import model.concrete.GameState;
-import model.concrete.Player;
-import model.concrete.Tile;
 import view.GamePage;
 import view.Main;
 import view.WaitingPage;
 
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.List;
 
 
 // Client class
-public class Client extends Player {
+public class Client {
     String ip;
     int port;
     String name;
@@ -23,7 +18,8 @@ public class Client extends Player {
     BufferedReader consoleReader;
     BufferedReader readFromServer;
     PrintWriter writeToServer;
-    private final GamePage gp = GamePage.getGP();
+    private GamePage gp = GamePage.getGP();
+    private WaitingPage wp = new WaitingPage();
 
 
     public Client(String ip, int port, String name) {
@@ -48,25 +44,22 @@ public class Client extends Player {
                     {
                         if(message.equals("/start"))
                         {
-                            Platform.runLater(()->
-                                    gp.start(WaitingPage.theStage));
-
-                        }
-                        else if(message.equals("/initYourRack"))
-                        {
                             Platform.runLater(()->{
-                                //update to all the Clients their GUI playerRack
-                                List<String> playerRack = new ArrayList<>();
-                                for(Tile tmp: getPlayerHand()){
-                                    char c = tmp.letter;
-                                    playerRack.add(Character.toString(c));
-                                }
-                                gp.initPlayerRack(playerRack);
-                            });
+                                gp.start(WaitingPage.theStage);
+                                wp.setClientBoard();
+                        });
+                        }
+                        else
+                        {
+                            System.out.println(message);
                         }
                      }
 
-
+//            // sending msg
+//            String message;
+//            while ((message = consoleReader.readLine()) != null) {
+//                writeToServer.println(message);
+//            }
 
         } catch (IOException e) {
             e.printStackTrace();
