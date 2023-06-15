@@ -8,6 +8,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 // Server class
@@ -15,7 +16,7 @@ public class GameServer {
     int port;
     public volatile boolean stop = false;
     private static final int MAX_CLIENTS = 3;
-    public static List<GameClientHandler> clients = new ArrayList<>();
+    public static List<GameClientHandler> clients = Collections.synchronizedList(new ArrayList<>());
     public GameServer(int port) {
         this.port = port;
 

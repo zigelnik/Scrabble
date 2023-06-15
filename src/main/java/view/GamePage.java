@@ -25,11 +25,10 @@ import java.util.*;
 public class GamePage extends Application {
 
     private static Stage theStage;
-    private GridPane gameBoard;
     public final ObservableList<String> placedTiles = FXCollections.observableArrayList();
-    private static HashMap<String , Point2D> map = new HashMap<>(); //map between letter and coordinate on gameBoard
+    private static Map<String , Point2D> map = Collections.synchronizedMap(new HashMap<>()); //map between letter and coordinate on gameBoard
     public GridPane playerRack;
-    public Label scoreLabel;
+    public Label  scoreLabel = new Label("0");
     public Label playerTmpQuery = new Label();
     private final Object lockObject = new Object();
 
@@ -54,10 +53,8 @@ public class GamePage extends Application {
     };
 
 
-    public static void main(String[] args) {
-        launch(args);
-    }
-
+    List<Label> list = Collections.synchronizedList(new ArrayList<>(Collections.nCopies(7, new Label(""))));
+    GridPane gameBoard = new GridPane();
 
 
 
@@ -67,7 +64,6 @@ public class GamePage extends Application {
         primaryStage.setTitle("Scrabble Game");
 
         // Game board
-        gameBoard = new GridPane();
         gameBoard.setHgap(5);
         gameBoard.setVgap(5);
 
@@ -84,7 +80,7 @@ public class GamePage extends Application {
         }
 
         // Score label
-        scoreLabel = new Label("0");
+
         scoreLabel.setStyle("-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;");
         scoreLabel.setAlignment(Pos.BOTTOM_CENTER);
         Label scoreTitle = new Label("Score: ");
@@ -202,7 +198,7 @@ public class GamePage extends Application {
         playerRack.setAlignment(Pos.BOTTOM_CENTER);
         root.getChildren().add(playerRack);
         // creating initial List that contains only X for playerRack not null, the initPack will override
-        List<Label> list = new ArrayList<>(Collections.nCopies(7, new Label("")));
+
         createRack(list);
         primaryStage.show();
     }

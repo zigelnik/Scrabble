@@ -20,7 +20,7 @@ import static model.network.GameServer.clients;
 
 public class GameState{
      public Tile.Bag bag;
-    public List<Player> playersList =  new ArrayList<>();
+    public List<Player> playersList =  Collections.synchronizedList(new ArrayList<>());
 
      public Board board;
      private boolean isGameOver;

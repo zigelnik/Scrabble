@@ -12,7 +12,6 @@ public class View implements Observer {
     LandingPage landingPage = new LandingPage();
     GamePage gamePage = GamePage.getGP();
     ViewModel vm = ViewModel.getViewModel();
-    List<List<Label>> listList = Collections.synchronizedList(new ArrayList<>());
 
     public void setViewModel() {
         vm.playerQuery.bind(gamePage.playerTmpQuery.textProperty());// Binding the ViewModel to View
@@ -21,9 +20,9 @@ public class View implements Observer {
         setPlayerHand();
     }
 
-    public void setPlayerHand(){
+    synchronized public void setPlayerHand(){
         int ind = 0;
-        List<Label> rackLabels = new ArrayList<>(); // tmprackLabels for the method createRack
+        List<Label> rackLabels =Collections.synchronizedList(new ArrayList<>()); // tmprackLabels for the method createRack
 
         for (String strTile : vm.playerHand) {
             Label label = new Label(strTile);
@@ -34,11 +33,9 @@ public class View implements Observer {
             ind++;
         }
 
-        listList.add(rackLabels);
 
         Platform.runLater(()->{
-            listList.forEach((x)->gamePage.createRack(x));
-         //   gamePage.createRack(rackLabels);
+           gamePage.createRack(rackLabels);
         });
     }
 

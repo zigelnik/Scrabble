@@ -2,6 +2,7 @@ package model.concrete;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -10,7 +11,7 @@ public class Player {
     // data members ////////
     String playerName;
     int id;
-    List<Tile> playerHand;
+    List<Tile> playerHand = Collections.synchronizedList(new ArrayList<>());
     int handSize; // physical size of tiles
     int sumScore;
     boolean isTurnOver;
@@ -20,7 +21,6 @@ public class Player {
 
     public Player(){
         this.id = 0;
-        this.playerHand = new ArrayList<>();
         this.handSize = 7;
         this.sumScore = 0;
         isTurnOver = false;
