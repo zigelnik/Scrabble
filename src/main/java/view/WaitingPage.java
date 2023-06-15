@@ -62,11 +62,11 @@ public class WaitingPage extends Application {
             startButton.setOnAction(e -> {
                 //TODO: do NOT change the methods call order!!
                 gp.start(theStage);
-                vm.m.getHostServer().hostPlayer.initPlayersHand();
+                vm.m.host.gameState.initPlayers();
                 View.getView().setViewModel();
                 vm.initPlayersBoard();
                 Thread t = new Thread(() -> {
-                    vm.m.getHostServer().hostPlayer.initGame();
+                    vm.m.host.gameState.initGame();
                 });
                 t.start();
             });

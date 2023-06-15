@@ -1,40 +1,42 @@
 package model;
 
-import java.io.*;
-import java.net.Socket;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Observable;
+import java.util.*;
 
-import model.concrete.Tile;
 import model.network.Client;
-import model.network.GameClientHandler;
 import model.network.GameServer;
-import model.network.QueryServer;
 
 
 public class Model extends Observable implements Facade {
 
-    GameServer hostServer;
-    int playerScore;
-    List<String> playerHand = new ArrayList<>();
-    String playerQuery = new String();
+    public Host host;
+    public Client client;
+    private String playerQuery;
+    public int playerId;
+    Map<Integer,List<String>> playersHandMap = Collections.synchronizedMap(new HashMap<>());
+    Map<Integer,Integer> playersScoreMap = Collections.synchronizedMap(new HashMap<>());
 
+    public Map<Integer, List<String>> getPlayersHandMap() {
+        return playersHandMap;
+    }
 
+    public Map<Integer, Integer> getPlayersScoreMap() {
+        return playersScoreMap;
+    }
 
     @Override
-    public void hostGame(int port,String name) {
-        hostServer = new GameServer(port,name);
-        hostServer.start();
+    public void hostGame(int port, String name)
+    {
+        host = new Host(name);
+        host.gameState.addPlayer(host);
+        host.gameServer = new GameServer(port);
+        host.gameServer.start();
     }
 
     @Override
     public void joinGame(String ip, int port,String name) {
-        Client client = new Client(ip, port,name);
+        client = new Client(ip, port,name);
         client.start();
     }
-
 
 
     @Override
@@ -43,9 +45,11 @@ public class Model extends Observable implements Facade {
     }
 
     // Updates-for player Score and playerHand (usages: GameState->initHands | HostPlayer->initGame)
-    public void updatePlayerVals(int playerScore,List<String> playerHand) {
-        this.playerScore = playerScore;
-        this.playerHand = playerHand;
+    public void updatePlayerValues(int playerScore, List<String> playerHand, int id) {
+        playerId = id;
+        playersHandMap.put(playerId,playerHand);
+        playersScoreMap.put(playerId,playerScore);
+
         setChanged();
         notifyObservers();
     }
@@ -60,13 +64,7 @@ public class Model extends Observable implements Facade {
     public String getPlayerQuery() {
         return playerQuery;
     }
-    public List<String> getPlayerHand() {
-        return playerHand;
-    }
-    public int getPlayerScore() {
-        return playerScore;
-    }
-    public GameServer getHostServer() {return hostServer;}
+
     private  static class ModelHolder{ public static final Model m = new Model();}
     public static Model getModel() {return ModelHolder.m;}
 

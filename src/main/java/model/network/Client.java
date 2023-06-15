@@ -1,5 +1,6 @@
 package model.network;
 import javafx.application.Platform;
+import model.Model;
 import model.concrete.Player;
 import view.GamePage;
 import view.View;
@@ -11,7 +12,7 @@ import java.net.*;
 
 
 // Client class
-public class Client extends Player {
+public class Client  {
     String ip;
     int port;
     String name;
@@ -23,6 +24,7 @@ public class Client extends Player {
     private WaitingPage wp = new WaitingPage();
     public ViewModel vm = ViewModel.getViewModel();
     public View v = View.getView();
+    public Player p  = new Player();
 
     public Client(String ip, int port, String name) {
         this.ip = ip;
@@ -39,33 +41,45 @@ public class Client extends Player {
             readFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             writeToServer = new PrintWriter(socket.getOutputStream(), true);
 
-
-            // receiving msg (another thread?)
-                    String message;
-                    while ((message = readFromServer.readLine()) != null)
+       new Thread(()->
+       {
+           String message;
+            try
+            {
+                while ((message = readFromServer.readLine()) != null)
+                {
+                    if (message.equals("/query"))
                     {
-                        if(message.equals("/start"))
+                        message = readFromServer.readLine();
+                        p.setPlayerHand(p.StringToTiles(message));
+
+                        System.out.println(message);
+                    }
+
+                     if (message.equals("/start"))
+                    {
+                        Platform.runLater(() ->
                         {
-                            Platform.runLater(()->{
-                                gp.start(WaitingPage.theStage);
+                            gp.start(WaitingPage.theStage);
+                           Model.getModel().updatePlayerValues(p.getSumScore(), p.convertTilesToStrings(p.getPlayerHand()), p.getId());
 
-                               View.getView().setViewModel();
-
-                                //       wp.setClientBoard();
                         });
-                        }
-                        else
-                        {
 
-                            System.out.println(message);
-                        }
-                     }
+                    }
+                }
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }).start();
+            // receiving msg (another thread?)
 
-//            // sending msg
-//            String message;
-//            while ((message = consoleReader.readLine()) != null) {
-//                writeToServer.println(message);
-//            }
+            // sending msg
+            String message;
+            while ((message = consoleReader.readLine()) != null) {
+                writeToServer.println(message);
+            }
 
         } catch (IOException e) {
             e.printStackTrace();

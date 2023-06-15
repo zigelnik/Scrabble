@@ -6,16 +6,13 @@ import javafx.beans.property.StringProperty;
 import javafx.scene.control.Label;
 import view_model.ViewModel;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 
 public class View implements Observer {
     LandingPage landingPage = new LandingPage();
     GamePage gamePage = GamePage.getGP();
     ViewModel vm = ViewModel.getViewModel();
-
+    List<List<Label>> listList = Collections.synchronizedList(new ArrayList<>());
 
     public void setViewModel() {
         vm.playerQuery.bind(gamePage.playerTmpQuery.textProperty());// Binding the ViewModel to View
@@ -27,6 +24,7 @@ public class View implements Observer {
     public void setPlayerHand(){
         int ind = 0;
         List<Label> rackLabels = new ArrayList<>(); // tmprackLabels for the method createRack
+
         for (String strTile : vm.playerHand) {
             Label label = new Label(strTile);
             String tmpStr = vm.playerHand.get(ind);
@@ -35,8 +33,12 @@ public class View implements Observer {
             rackLabels.add(label);
             ind++;
         }
+
+        listList.add(rackLabels);
+
         Platform.runLater(()->{
-            gamePage.createRack(rackLabels);
+            listList.forEach((x)->gamePage.createRack(x));
+         //   gamePage.createRack(rackLabels);
         });
     }
 
