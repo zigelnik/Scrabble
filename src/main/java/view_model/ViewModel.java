@@ -8,15 +8,14 @@ import model.Model;
 import model.network.GameServer;
 import view.View;
 
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 
 public class ViewModel extends Observable implements Observer {
     public Model m = Model.getModel();
     public IntegerProperty score;
     public StringProperty playerQuery;
     public ListProperty<String> playerHand;
+    private List<List<String>> allPlayerHands = Collections.synchronizedList(new ArrayList<>());
 
     public ViewModel() {
         this.score = new SimpleIntegerProperty(0);
@@ -43,12 +42,17 @@ public class ViewModel extends Observable implements Observer {
                 score.set(m.getPlayersScoreMap().get(m.playerId));
             });
             playerHand.set(FXCollections.observableList(m.getPlayersHandMap().get(m.playerId)));
-            View.getView().setPlayerHand();
+            View.getView().setViewModel();
+            allPlayerHands.add(m.getPlayersHandMap().get(m.playerId));
             // converting the m.getPlayerHand() to observableList (Only way to make apply the set)
             playerQuery.unbind();
             playerQuery.set(m.getPlayerQuery());
 
         }
+    }
+
+    public List<List<String>> getPlayerHands() {
+        return allPlayerHands;
     }
 
 

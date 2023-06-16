@@ -63,7 +63,8 @@ public class WaitingPage extends Application {
                 //TODO: do NOT change the methods call order!!
                 gp.start(theStage);
                 vm.m.host.gameState.initPlayers();
-                View.getView().setViewModel();
+                View.getView().setPlayerHand();
+//                View.getView().setViewModel();
                 vm.initPlayersBoard();
                 Thread t = new Thread(() -> {
                     vm.m.host.gameState.initGame();
