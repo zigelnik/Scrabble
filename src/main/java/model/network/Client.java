@@ -1,6 +1,7 @@
 package model.network;
 import javafx.application.Platform;
 import model.concrete.GameState;
+import model.concrete.Player;
 import view.GamePage;
 import view.Main;
 import view.WaitingPage;
@@ -10,7 +11,7 @@ import java.net.*;
 
 
 // Client class
-public class Client {
+public class Client extends Player {
     String ip;
     int port;
     String name;
@@ -46,20 +47,17 @@ public class Client {
                         {
                             Platform.runLater(()->{
                                 gp.start(WaitingPage.theStage);
-                                wp.setClientBoard();
+
                         });
+                        }
+                        if(message.equals("/query")){
+
                         }
                         else
                         {
                             System.out.println(message);
                         }
                      }
-
-//            // sending msg
-//            String message;
-//            while ((message = consoleReader.readLine()) != null) {
-//                writeToServer.println(message);
-//            }
 
         } catch (IOException e) {
             e.printStackTrace();

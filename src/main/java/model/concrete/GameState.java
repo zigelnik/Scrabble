@@ -1,6 +1,7 @@
 package model.concrete;
 
 import model.Model;
+import model.network.GameClientHandler;
 import view.GamePage;
 
 import java.io.File;
@@ -73,7 +74,14 @@ public class GameState{
                 tmpPlayer.playerHand.add(bag.getRand());
             }
             //Sending to update the Init pack for each player, using Player method to convert tiles to strings
-            Model.getModel().updatePlayerVals(0,tmpPlayer.convertTilesToStrings(tmpPlayer.playerHand));
+            if(tmpPlayer.getClass().equals(HostPlayer.class)){
+                Model.getModel().updatePlayerVals(0,tmpPlayer.convertTilesToStrings(tmpPlayer.playerHand));
+            }
+            else{
+//                for (GameClientHandler client : clients) {
+//                    client.sendMessage(message);
+//                }
+            }
         }
     }
     public  void addPlayer(Player player)
