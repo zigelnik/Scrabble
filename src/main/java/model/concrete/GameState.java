@@ -78,9 +78,15 @@ public class GameState{
                 Model.getModel().updatePlayerVals(0,tmpPlayer.convertTilesToStrings(tmpPlayer.playerHand));
             }
             else{
-//                for (GameClientHandler client : clients) {
-//                    client.sendMessage(message);
-//                }
+                String result = String.join(",", tmpPlayer.convertTilesToStrings(tmpPlayer.playerHand));
+
+                for(GameClientHandler client: clients)
+                {
+                    if(client.player.equals(tmpPlayer))
+                    {
+                      client.sendMessage("/query\n"+result);
+                    }
+                }
             }
         }
     }
