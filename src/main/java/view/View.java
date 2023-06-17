@@ -10,36 +10,33 @@ import java.util.*;
 
 public class View implements Observer {
     LandingPage landingPage = new LandingPage();
+    GamePage gamePage = GamePage.getGP();
     ViewModel vm = ViewModel.getViewModel();
 
     public void setViewModel() {
-        vm.playerQuery.bind(GamePage.getGP().playerTmpQuery.textProperty());// Binding the ViewModel to View
-        GamePage.getGP().scoreLabel.textProperty().bind(vm.score.asString()); // Binding the View to ViewModel
+        vm.playerQuery.bind(gamePage.playerTmpQuery.textProperty());// Binding the ViewModel to View
+        gamePage.scoreLabel.textProperty().bind(vm.score.asString()); // Binding the View to ViewModel
         //binding for the playerHand
-
-
+        setPlayerHand();
     }
 
     synchronized public void setPlayerHand(){
-        // Assuming you have a list of playerHands for each player
-        List<List<String>> playerHands = vm.getPlayerHands(); // Get the playerHands for all players
-        // Iterate over each player's playerHand and create the rackLabels
-        for (List<String> playerHand : playerHands) {
-            List<Label> rackLabels = new ArrayList<>();
-            int ind = 0;
-            for (String strTile : playerHand) {
-                Label label = new Label(strTile);
-                String tmpStr = playerHand.get(ind);
-                StringProperty strProperty = new SimpleStringProperty(tmpStr); // Converting String to StringProperty
-                label.textProperty().bindBidirectional(strProperty); // Binding between label and StringProperty
-                rackLabels.add(label);
-                ind++;
-            }
-            // Execute the createRack() method on the JavaFX application thread for each player
-            Platform.runLater(() -> {
-                GamePage.getGP().createRack(rackLabels);
-            });
+        int ind = 0;
+        List<Label> rackLabels =Collections.synchronizedList(new ArrayList<>()); // tmprackLabels for the method createRack
+
+        for (String strTile : vm.playerHand) {
+            Label label = new Label(strTile);
+            String tmpStr = vm.playerHand.get(ind);
+            StringProperty strProperty = new SimpleStringProperty(tmpStr); //converting String to StringProperty
+            label.textProperty().bindBidirectional(strProperty); //binding between label to StringProperty
+            rackLabels.add(label);
+            ind++;
         }
+
+
+        Platform.runLater(()->{
+           gamePage.createRack(rackLabels);
+        });
     }
 
     @Override
