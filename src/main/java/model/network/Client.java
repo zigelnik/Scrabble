@@ -9,6 +9,7 @@ import view_model.ViewModel;
 
 import java.io.*;
 import java.net.*;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 // Client class
@@ -25,6 +26,7 @@ public class Client  {
     public ViewModel vm = ViewModel.getViewModel();
     public View v = View.getView();
     public Player p  = new Player();
+    ReentrantLock lock = new ReentrantLock();
 
     public Client(String ip, int port, String name) {
         this.ip = ip;
@@ -52,24 +54,35 @@ public class Client  {
                     {
                         message = readFromServer.readLine();
                         p.setPlayerHand(p.StringToTiles(message));
-                        Model.getModel().updatePlayerValues(p.getSumScore(), p.convertTilesToStrings(p.getPlayerHand()),p.getId());
+                        lock.lock();
+                        Platform.runLater(()->{
+                            Model.getModel().updatePlayerValues(p.getSumScore(), p.convertTilesToStrings(p.getPlayerHand()),p.getId());
+
+                        });
+                        lock.unlock();
+
                         System.out.println(message);
                     }
 
                      else if (message.equals("/start"))
                     {
-                        Platform.runLater(() ->
-                        {
-                            gp.start(WaitingPage.theStage);
-                            Model.getModel().updatePlayerValues(p.getSumScore(), p.convertTilesToStrings(p.getPlayerHand()),p.getId());
-                        });
-
+                            lock.lock();
+                            Platform.runLater(() ->
+                            {
+                                gp.start(WaitingPage.theStage);
+                                Model.getModel().updatePlayerValues(p.getSumScore(), p.convertTilesToStrings(p.getPlayerHand()),p.getId());
+                            });
+                            lock.unlock();
                     }
                      else if(message.equals("/update")){
                         message = readFromServer.readLine();
                         p.setPlayerHand(p.StringToTiles(message));
                         p.setSumScore(Integer.parseInt(readFromServer.readLine()));
-                        Model.getModel().updatePlayerValues(p.getSumScore(), p.convertTilesToStrings(p.getPlayerHand()),p.getId());
+                        lock.lock();
+                        Platform.runLater(()->{
+                            Model.getModel().updatePlayerValues(p.getSumScore(), p.convertTilesToStrings(p.getPlayerHand()),p.getId());
+                        });
+                        lock.unlock();
                     }
                 }
             }

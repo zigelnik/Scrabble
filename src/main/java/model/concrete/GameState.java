@@ -22,7 +22,7 @@ import static model.network.GameServer.clients;
 public class GameState{
      public Tile.Bag bag;
     public List<Player> playersList =  Collections.synchronizedList(new ArrayList<>());
-
+    Map<Integer,List<Tile>> playersHandMap = Collections.synchronizedMap(new HashMap<>());
      public Board board;
      private boolean isGameOver;
     private  static class GameStateHolder{ public static final GameState gm = new GameState();}
@@ -84,6 +84,7 @@ public class GameState{
             for(int j=0;j<playersList.get(i).handSize;j++) {
                 tmpPlayer.playerHand.add(bag.getRand());
             }
+            playersHandMap.put(tmpPlayer.getId(),tmpPlayer.playerHand);
             String result = String.join(",", tmpPlayer.convertTilesToStrings(tmpPlayer.playerHand));
 
             for(GameClientHandler client: clients)
@@ -158,7 +159,7 @@ public class GameState{
         int i=0;
         for(char ch : str.toCharArray())
         {
-            for(Tile t: p.getPlayerHand())
+            for(Tile t: playersHandMap.get(p.getId()))
             {
                 if(t.getLetter() == ch)
                 {
