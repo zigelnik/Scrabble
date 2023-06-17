@@ -52,19 +52,24 @@ public class Client  {
                     {
                         message = readFromServer.readLine();
                         p.setPlayerHand(p.StringToTiles(message));
-
+                        Model.getModel().updatePlayerValues(p.getSumScore(), p.convertTilesToStrings(p.getPlayerHand()),p.getId());
                         System.out.println(message);
                     }
 
-                     if (message.equals("/start"))
+                     else if (message.equals("/start"))
                     {
                         Platform.runLater(() ->
                         {
                             gp.start(WaitingPage.theStage);
-                           Model.getModel().updatePlayerValues(p.getSumScore(), p.convertTilesToStrings(p.getPlayerHand()), p.getId());
-
+                            Model.getModel().updatePlayerValues(p.getSumScore(), p.convertTilesToStrings(p.getPlayerHand()),p.getId());
                         });
 
+                    }
+                     else if(message.equals("/update")){
+                        message = readFromServer.readLine();
+                        p.setPlayerHand(p.StringToTiles(message));
+                        p.setSumScore(Integer.parseInt(readFromServer.readLine()));
+                        Model.getModel().updatePlayerValues(p.getSumScore(), p.convertTilesToStrings(p.getPlayerHand()),p.getId());
                     }
                 }
             }

@@ -1,6 +1,7 @@
 package model.concrete;
 
 import javafx.application.Platform;
+import model.Host;
 import model.Model;
 import model.logic.DictionaryManager;
 import model.network.BookScrabbleHandler;
@@ -83,7 +84,6 @@ public class GameState{
             for(int j=0;j<playersList.get(i).handSize;j++) {
                 tmpPlayer.playerHand.add(bag.getRand());
             }
-
             String result = String.join(",", tmpPlayer.convertTilesToStrings(tmpPlayer.playerHand));
 
             for(GameClientHandler client: clients)
@@ -93,12 +93,10 @@ public class GameState{
                   client.sendMessage("/query\n"+result);
                 }
             }
-//            if(tmpPlayer.equals(tmpPlayer.getClass().equals(HostPlayer.class)))
-//            {
-//                View.getView().setPlayerHand(con);
-//            }
             //Sending to update the Init pack for each player, using Player method to convert tiles to strings
-            Model.getModel().updatePlayerValues(0,tmpPlayer.convertTilesToStrings(tmpPlayer.playerHand),tmpPlayer.id);
+            if(tmpPlayer.getClass().equals(Host.class)){
+                Model.getModel().updatePlayerValues(0,tmpPlayer.convertTilesToStrings(tmpPlayer.playerHand),tmpPlayer.id);
+            }
         }
     }
     public  void addPlayer(Player player)
@@ -193,10 +191,19 @@ public class GameState{
                 {
                     player.isTurnOver =  legalMove(player);
                 }
-
-                Platform.runLater(() -> {
+                if(player.getClass().equals(Host.class)){
                     model.updatePlayerValues(player.getSumScore(), player.convertTilesToStrings(player.playerHand),player.id); // updating PlayerHand and Score
-                });
+                }
+                else{
+                    String result = String.join(",", player.convertTilesToStrings(player.playerHand));
+                    for(GameClientHandler client: clients)
+                    {
+                        if(client.player.equals(player))
+                        {
+                            client.sendMessage("/update\n" + result + "\n" + player.sumScore);
+                        }
+                    }
+                }
 
                 player.isTurnOver = false; // returning so next round the player can play again his turn.
                 currPlayerInd = ((currPlayerInd+1) % playersList.size());
@@ -221,7 +228,7 @@ public class GameState{
         int score=0;
 
         // if the player is the host
-        if (player.getClass().equals(this.getClass())) {
+        if (player.getClass().equals(Host.class)) {
             System.out.println("Host, enter your query and press Submit: ");
 //                        try {
 //                            msg = consoleReader.readLine();
@@ -260,13 +267,10 @@ public class GameState{
         String[] args = msg.split(","); // splitting the query by 4 commas <word,ROW,COL,alignment>
         String books = getTextFiles();
         String queryWord = "Q,"+books+args[0];
-        boolean validQuery;
+        boolean validQuery = true;
         Word w = null;
-        synchronized (lock) {
-            p.getPlayerHand().forEach(tile -> System.out.println(tile.getLetter()));
-            w = convertStrToWord(msg,p);
-            lock.notify();
-        }
+        p.getPlayerHand().forEach(tile -> System.out.println(tile.getLetter()));
+        w = convertStrToWord(msg,p);
         // if tiles are over
         if(p.getHandSize() == 0){
             System.out.println("Tiles are over");
@@ -284,7 +288,7 @@ public class GameState{
 //        }
 
         // after checking all exceptions, check if the word exist in the books
-        validQuery = tmpDictionaryLegal(queryWord);
+//        validQuery = tmpDictionaryLegal(queryWord);
 
         if(validQuery) // if validQuery returned true -> the word exists, now we try placing the word on the board
             tmpMoveScore += getBoard().tryPlaceWord(w);
@@ -292,18 +296,10 @@ public class GameState{
         // after all checks,decline the words size from pack and init pack back to 7.
         if(tmpMoveScore != 0){
             p.setHandSize(p.getHandSize() - w.getTiles().length);
-
-            synchronized (lock) {
-                try {
-                    lock.wait(); // Releases the lock and waits until notified
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                initHandAfterMove(w , p);
-            }
         }
         p.acceptedQuery = msg;
         p.setSumScore(p.getSumScore()+ tmpMoveScore);
+        initHandAfterMove(w , p);
         //if tmpMoveScore is 0 then one of the checks is failed
         return tmpMoveScore;
     }

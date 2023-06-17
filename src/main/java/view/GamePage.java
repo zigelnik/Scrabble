@@ -205,8 +205,6 @@ public class GamePage extends Application {
 
      public void createRack(List<Label> list){
 
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-
         //Create the player rack tiles
         int i =0;
         for (Label lb : list) {

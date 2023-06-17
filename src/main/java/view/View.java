@@ -32,8 +32,6 @@ public class View implements Observer {
             rackLabels.add(label);
             ind++;
         }
-
-
         Platform.runLater(()->{
            gamePage.createRack(rackLabels);
         });
