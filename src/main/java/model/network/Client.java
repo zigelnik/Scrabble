@@ -37,7 +37,8 @@ public class Client  {
     public void start() {
         try {
             socket = new Socket(ip, port);
-            System.out.println("Connected to server.");
+
+            System.out.println(name+" has connected to the server.");
 
             consoleReader = new BufferedReader(new InputStreamReader(System.in));
             readFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -60,7 +61,6 @@ public class Client  {
                         });
                         lock.unlock();
 
-                        System.out.println(message);
                     }
 
                      else if (message.equals("/start"))

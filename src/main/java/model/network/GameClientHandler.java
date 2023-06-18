@@ -31,7 +31,7 @@ public class GameClientHandler extends Thread {
     public void run() {
         try {
 
-          //  System.out.println("New client connected: " +client.name+" | From: "+ client.socket.getLocalSocketAddress());
+            System.out.println("New client connected from: "+ socket.getLocalSocketAddress());
 
             String message;
             while ((message = readFromClient.readLine()) != null) {

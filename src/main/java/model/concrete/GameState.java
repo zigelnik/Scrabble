@@ -244,6 +244,8 @@ public class GameState{
                 }
                 msg = model.getPlayerQuery();
                 System.out.println("msg from Host is: " + msg);
+                score=  makeMove(msg,player);
+
             }
         }
         else { // if the player is a regular player
@@ -251,25 +253,17 @@ public class GameState{
                 if (gch.player.equals(player)) {
                     gch.sendMessage("/turn\n");
                     msg = gch.getQuery();
-                    while(msg!= null){}
-                    System.out.println("msg from Client is: " + msg);
+                    while(msg== null)
+                    {
+                    }
+                    score=  makeMove(msg,player);
+
                 }
             }
         }
 
 
-        if (msg != null) {
-            score=  makeMove(msg,player);
 
-        }
-        else{
-            System.out.println("Walla msg is NULL!");
-            try {
-                Thread.sleep(1000 * 7);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
         player.sumScore += score;
         return score != 0;
     }
@@ -282,7 +276,6 @@ public class GameState{
         String queryWord = "Q,"+books+args[0];
         boolean validQuery = true;
         Word w = null;
-        p.getPlayerHand().forEach(tile -> System.out.println(tile.getLetter()));
         w = convertStrToWord(msg,p);
         // if tiles are over
         if(p.getHandSize() == 0){
