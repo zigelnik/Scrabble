@@ -30,6 +30,7 @@ public class GamePage extends Application {
     public GridPane playerRack;
     public Label  scoreLabel = new Label("0");
     public Label playerTmpQuery = new Label();
+    public Label boardQuery = new Label();
     private final Object lockObject = new Object();
 
 
@@ -149,7 +150,6 @@ public class GamePage extends Application {
 
             System.out.println("Player Query is: " + playerQuery);
             synchronized (lockObject) {
-                System.out.println("Inside lockObject");
                 playerTmpQuery.setText(playerQuery);
                 Model.getModel().updateQuery(playerQuery);  // updating when something changes
                 lockObject.notify(); // Notifies the waiting thread to resume
@@ -159,10 +159,8 @@ public class GamePage extends Application {
             //if the move is not valid we need to remove the tiles from board and get it back to player hand
             //moveBackPlacedTiles();
 
-
-
-
             //reset the placedTiles list for the next turn
+
             placedTiles.clear();
             map.clear();
         });
@@ -202,6 +200,32 @@ public class GamePage extends Application {
 
         createRack(list);
         primaryStage.show();
+    }
+
+
+    public void placeTileOnBoard(int row, int col, String value) {
+        Label cellLabel = createCellLabel(value, getColorForCell(value));
+        enableDropOnCell(cellLabel);
+        gameBoard.add(cellLabel, col, row);
+    }
+
+    public void updateBoard(String message){
+        System.out.println( "from updateBoard"+message);
+        char[] ch = message.split(",")[0].toCharArray();
+        int row = Integer.parseInt(message.split(",")[1]);
+        int col = Integer.parseInt(message.split(",")[2]);
+        String isVert = message.split(",")[3];
+
+        if(isVert.equals("TRUE")){
+            for(int i = 0; i < ch.length; i++){
+                placeTileOnBoard(row + i,col,Character.toString(ch[i]));
+            }
+        }
+        else{
+            for(int i = 0; i < ch.length; i++){
+                placeTileOnBoard(row,col+i,Character.toString(ch[i]));
+            }
+        }
     }
 
     public String getPlayerQuery(){

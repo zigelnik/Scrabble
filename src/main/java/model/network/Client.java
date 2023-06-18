@@ -72,14 +72,19 @@ public class Client  {
                                 Model.getModel().updatePlayerValues(p.getSumScore(), p.convertTilesToStrings(p.getPlayerHand()),p.getId());
                             });
                             lock.unlock();
+
                     }
                      else if(message.equals("/update")){
                         message = readFromServer.readLine();
                         p.setPlayerHand(p.StringToTiles(message));
                         p.setSumScore(Integer.parseInt(readFromServer.readLine()));
+                        String query = readFromServer.readLine();
+                        System.out.println("query from client!" + query);
                         lock.lock();
                         Platform.runLater(()->{
                             Model.getModel().updatePlayerValues(p.getSumScore(), p.convertTilesToStrings(p.getPlayerHand()),p.getId());
+                            gp.updateBoard(query);
+//                            Model.getModel().updateBoard(query);
                         });
                         lock.unlock();
                     }
@@ -90,10 +95,8 @@ public class Client  {
                         });
                         lock.unlock();
                         synchronized (gp.getLockObject()) {
-                            System.out.println("inside lockObjecy in Client!!");
                             try {
                                 gp.getLockObject().wait(); // Releases the lock and waits until notified
-                                System.out.println("after wait in Client!!");
                                 writeToServer.println( "/turn\n"+ gp.getPlayerQuery());
 
                             } catch (InterruptedException ex) {

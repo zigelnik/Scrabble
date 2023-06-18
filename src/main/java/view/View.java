@@ -16,6 +16,8 @@ public class View implements Observer {
     public void setViewModel() {
         vm.playerQuery.bind(gamePage.playerTmpQuery.textProperty());// Binding the ViewModel to View
         gamePage.scoreLabel.textProperty().bind(vm.score.asString()); // Binding the View to ViewModel
+//        gamePage.updateBoard(vm.boardQuery.toString());
+        gamePage.boardQuery.textProperty().bind(vm.boardQuery);
         //binding for the playerHand
         setPlayerHand();
     }

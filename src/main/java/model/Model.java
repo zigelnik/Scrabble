@@ -11,6 +11,7 @@ public class Model extends Observable implements Facade {
     public Client client;
     private String playerQuery;
     public int playerId;
+    public String boardQuery;
     Map<Integer,List<String>> playersHandMap = Collections.synchronizedMap(new HashMap<>());
     Map<Integer,Integer> playersScoreMap = Collections.synchronizedMap(new HashMap<>());
 
@@ -42,6 +43,12 @@ public class Model extends Observable implements Facade {
         playersHandMap.put(playerId,playerHand);
         playersScoreMap.put(playerId,playerScore);
 
+        setChanged();
+        notifyObservers();
+    }
+
+    public void updateBoard(String boardQuery){
+        this.boardQuery = boardQuery;
         setChanged();
         notifyObservers();
     }

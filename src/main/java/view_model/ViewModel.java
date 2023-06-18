@@ -15,11 +15,13 @@ public class ViewModel extends Observable implements Observer {
     public IntegerProperty score;
     public StringProperty playerQuery;
     public ListProperty<String> playerHand;
+    public StringProperty boardQuery;
 
     public ViewModel() {
         this.score = new SimpleIntegerProperty(0);
         this.playerHand = new SimpleListProperty<>();
         this.playerQuery = new SimpleStringProperty("");
+        this.boardQuery = new SimpleStringProperty("");
     }
 
     public void hostGame(int port, String name) {
@@ -45,6 +47,11 @@ public class ViewModel extends Observable implements Observer {
             // converting the m.getPlayerHand() to observableList (Only way to make apply the set)
             playerQuery.unbind();
             playerQuery.set(m.getPlayerQuery());
+
+            //rendering the board after placing Tiles
+            if(m.boardQuery != null){
+                boardQuery.set(m.boardQuery);
+            }
 
         }
     }

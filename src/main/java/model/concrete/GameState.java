@@ -29,6 +29,7 @@ public class GameState{
     final Object lock = new Object();
     GamePage gp = GamePage.getGP();
     Model model;
+    String msg;
 
 
 
@@ -193,8 +194,14 @@ public class GameState{
                 {
                     player.isTurnOver =  legalMove(player);
                 }
+
+                player.isTurnOver = false; // returning so next round the player can play again his turn.
+                currPlayerInd = ((currPlayerInd+1) % playersList.size());
+
                 if(player.getClass().equals(Host.class)){
                     model.updatePlayerValues(player.getSumScore(), player.convertTilesToStrings(player.playerHand),player.id); // updating PlayerHand and Score
+                    gp.updateBoard(msg);
+//                    model.updateBoard(msg);
                 }
                 else{
                     String result = String.join(",", player.convertTilesToStrings(player.playerHand));
@@ -202,14 +209,10 @@ public class GameState{
                     {
                         if(client.player.equals(player))
                         {
-                            client.sendMessage("/update\n" + result + "\n" + player.sumScore);
+                            client.sendMessage("/update\n" + result + "\n" + player.sumScore + "\n" + msg);
                         }
                     }
                 }
-
-                player.isTurnOver = false; // returning so next round the player can play again his turn.
-                currPlayerInd = ((currPlayerInd+1) % playersList.size());
-
                 // do we need to get the winner as object or change the isWinner to void?
                 Player winner = isWinner();
 
@@ -227,7 +230,7 @@ public class GameState{
 
     public boolean legalMove(Player player)
     {
-        String msg = null;
+
         int score=0;
 
         // if the player is the host
@@ -248,13 +251,17 @@ public class GameState{
                 if (gch.player.equals(player)) {
                     gch.sendMessage("/turn\n");
                     msg = gch.getQuery();
+                    while(msg!= null){}
                     System.out.println("msg from Client is: " + msg);
                 }
             }
         }
 
 
-        if (msg != null) {score=  makeMove(msg,player);}
+        if (msg != null) {
+            score=  makeMove(msg,player);
+
+        }
         else{
             System.out.println("Walla msg is NULL!");
             try {
