@@ -49,3 +49,6 @@ The project is structured using the MVVM architecture and Observer-Observable de
 
 **ViewModel**: Contains the view model classes for the game, which handle the game logic and communication between the model and view. The classes in this package act as intermediaries between the model and view, responding to user input, binding it to model's varbiable and updating the view accordingly.
 
+
+## Video Simulation
+[<img src="https://i.imgur.com/WElRNjE.png" width="50%">](https://www.veed.io/embed/8ea73ff8-0289-4907-8b7d-065d32f0d9bb)
