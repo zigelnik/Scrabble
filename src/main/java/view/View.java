@@ -18,6 +18,9 @@ public class View implements Observer {
         gamePage.scoreLabel.textProperty().bind(vm.score.asString()); // Binding the View to ViewModel
 //        gamePage.updateBoard(vm.boardQuery.toString());
         gamePage.boardQuery.textProperty().bind(vm.boardQuery);
+//        if(!vm.boardQuery.toString().equals("")){
+//            gamePage.updateBoard(gamePage.boardQuery.textProperty().toString());
+//        }
         //binding for the playerHand
         setPlayerHand();
     }

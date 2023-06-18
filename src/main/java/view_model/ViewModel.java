@@ -41,17 +41,17 @@ public class ViewModel extends Observable implements Observer {
         if (o == m) {
             Platform.runLater(() -> {
                 score.set(m.getPlayersScoreMap().get(m.playerId));
+
             });
             playerHand.set(FXCollections.observableList(m.getPlayersHandMap().get(m.playerId)));
             View.getView().setPlayerHand();
             // converting the m.getPlayerHand() to observableList (Only way to make apply the set)
             playerQuery.unbind();
             playerQuery.set(m.getPlayerQuery());
-
+            boardQuery.set(m.boardQuery);
             //rendering the board after placing Tiles
-            if(m.boardQuery != null){
-                boardQuery.set(m.boardQuery);
-            }
+
+
 
         }
     }

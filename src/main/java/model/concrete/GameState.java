@@ -201,7 +201,7 @@ public class GameState{
                 if(player.getClass().equals(Host.class)){
                     model.updatePlayerValues(player.getSumScore(), player.convertTilesToStrings(player.playerHand),player.id); // updating PlayerHand and Score
                     gp.updateBoard(msg);
-//                    model.updateBoard(msg);
+
                 }
                 else{
                     String result = String.join(",", player.convertTilesToStrings(player.playerHand));

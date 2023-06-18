@@ -203,12 +203,6 @@ public class GamePage extends Application {
     }
 
 
-    public void placeTileOnBoard(int row, int col, String value) {
-        Label cellLabel = createCellLabel(value, getColorForCell(value));
-        enableDropOnCell(cellLabel);
-        gameBoard.add(cellLabel, col, row);
-    }
-
     public void updateBoard(String message){
         System.out.println( "from updateBoard"+message);
         char[] ch = message.split(",")[0].toCharArray();
@@ -225,6 +219,22 @@ public class GamePage extends Application {
             for(int i = 0; i < ch.length; i++){
                 placeTileOnBoard(row,col+i,Character.toString(ch[i]));
             }
+        }
+    }
+    public Node getNodeFromGridPane(GridPane gridPane, int col, int row) {
+        for (Node node : gridPane.getChildren()) {
+            if (GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
+                return node;
+            }
+        }
+        return null;
+    }
+
+    public void placeTileOnBoard(int row, int col, String value) {
+        Node existingNode = getNodeFromGridPane(gameBoard, col, row);
+        Label cellLabel = (Label) existingNode;
+        if(cellLabel!=null) {
+            cellLabel.setText(value);
         }
     }
 
