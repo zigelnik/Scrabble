@@ -1,6 +1,5 @@
 package model.concrete;
 
-import javafx.application.Platform;
 import model.Host;
 import model.Model;
 import model.logic.DictionaryManager;
@@ -28,14 +27,16 @@ public class GameState{
     private  static class GameStateHolder{ public static final GameState gm = new GameState();}
     public static GameState getGM() {return GameStateHolder.gm;}
     final Object lock = new Object();
-    Model model = Model.getModel();
     GamePage gp = GamePage.getGP();
+    Model model;
+
 
 
     //CTOR
     public  GameState() {
       board = Board.getBoard();
        bag = Tile.Bag.getBag();
+       model = Model.getModel();
       isGameOver = false;
     }
 
@@ -91,7 +92,7 @@ public class GameState{
             {
                 if(client.player.equals(tmpPlayer))
                 {
-                  client.sendMessage("/query\n"+result);
+                  client.sendMessage("/init\n"+result);
                 }
             }
             //Sending to update the Init pack for each player, using Player method to convert tiles to strings
@@ -180,14 +181,14 @@ public class GameState{
     }
     public void initGame(){
 
-
-
         int currPlayerInd = 1;
 
         while(!getIsGameOver())
         {
             for(Player player : playersList)
             {
+                //Holding all the Threads that not their turn!
+
                 while(!player.isTurnOver)
                 {
                     player.isTurnOver =  legalMove(player);
@@ -212,15 +213,16 @@ public class GameState{
                 // do we need to get the winner as object or change the isWinner to void?
                 Player winner = isWinner();
 
-                GameServer.broadcastToClients(player.acceptedQuery);
-
             }
             //TODO: fix the main bug when using multiple clients!
             //TODO:The break and the stop=true comment is preventing infinty loop when testing one player!
-            break;
+
         }
-        // stop=true;
+//         stop=true;
     }
+
+
+
 
 
     public boolean legalMove(Player player)
@@ -231,33 +233,36 @@ public class GameState{
         // if the player is the host
         if (player.getClass().equals(Host.class)) {
             System.out.println("Host, enter your query and press Submit: ");
-//                        try {
-//                            msg = consoleReader.readLine();
-//                        } catch (IOException e) {
-//                            System.out.println("bad input");
-//                            ;
-//                        }
-        } else { // if the player is a regular player
+            synchronized (gp.getLockObject()) {
+                try {
+                    gp.getLockObject().wait(); // Releases the lock and waits until notified
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
+                msg = model.getPlayerQuery();
+                System.out.println("msg from Host is: " + msg);
+            }
+        }
+        else { // if the player is a regular player
             for (GameClientHandler gch : GameServer.getClients()) {
                 if (gch.player.equals(player)) {
-//                    msg = gch.getMessageQuery();
-                    System.out.println("Enter your query and press Submit: ");
-
+                    gch.sendMessage("/turn\n");
+                    msg = gch.getQuery();
+                    System.out.println("msg from Client is: " + msg);
                 }
             }
         }
-        synchronized (gp.getLockObject()) {
-            try {
-                gp.getLockObject().wait(); // Releases the lock and waits until notified
-            } catch (InterruptedException ex) {
-                throw new RuntimeException(ex);
-            }
-            msg = model.getPlayerQuery();
-            System.out.println("msg from legalMove is: " + msg);
-        }
+
 
         if (msg != null) {score=  makeMove(msg,player);}
-        else{System.out.println("Walla msg is NULL!");}
+        else{
+            System.out.println("Walla msg is NULL!");
+            try {
+                Thread.sleep(1000 * 7);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
         player.sumScore += score;
         return score != 0;
     }

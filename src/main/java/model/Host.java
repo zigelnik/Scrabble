@@ -9,11 +9,13 @@ public class Host extends Player {
 
     public GameServer gameServer;
     public QueryServer queryServer;
-    public GameState gameState = GameState.getGM();
+    public GameState gameState;
 
-    public Host(String name)
+    public Host(String name,int port)
     {
+        this.gameServer = new GameServer(port);
         setName(name);
+        this.gameState =GameState.getGM();
     }
 
 }

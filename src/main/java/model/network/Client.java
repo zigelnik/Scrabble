@@ -50,14 +50,13 @@ public class Client  {
             {
                 while ((message = readFromServer.readLine()) != null)
                 {
-                    if (message.equals("/query"))
+                    if (message.equals("/init"))
                     {
                         message = readFromServer.readLine();
                         p.setPlayerHand(p.StringToTiles(message));
                         lock.lock();
                         Platform.runLater(()->{
                             Model.getModel().updatePlayerValues(p.getSumScore(), p.convertTilesToStrings(p.getPlayerHand()),p.getId());
-
                         });
                         lock.unlock();
 
@@ -83,6 +82,24 @@ public class Client  {
                             Model.getModel().updatePlayerValues(p.getSumScore(), p.convertTilesToStrings(p.getPlayerHand()),p.getId());
                         });
                         lock.unlock();
+                    }
+                    else if(message.equals("/turn")){
+                        lock.lock();
+                        Platform.runLater(()->{
+                            Model.getModel().updatePlayerValues(p.getSumScore(), p.convertTilesToStrings(p.getPlayerHand()),p.getId());
+                        });
+                        lock.unlock();
+                        synchronized (gp.getLockObject()) {
+                            System.out.println("inside lockObjecy in Client!!");
+                            try {
+                                gp.getLockObject().wait(); // Releases the lock and waits until notified
+                                System.out.println("after wait in Client!!");
+                                writeToServer.println( "/turn\n"+ gp.getPlayerQuery());
+
+                            } catch (InterruptedException ex) {
+                                ex.printStackTrace();
+                            }
+                        }
                     }
                 }
             }

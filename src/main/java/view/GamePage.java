@@ -149,6 +149,7 @@ public class GamePage extends Application {
 
             System.out.println("Player Query is: " + playerQuery);
             synchronized (lockObject) {
+                System.out.println("Inside lockObject");
                 playerTmpQuery.setText(playerQuery);
                 Model.getModel().updateQuery(playerQuery);  // updating when something changes
                 lockObject.notify(); // Notifies the waiting thread to resume
@@ -203,6 +204,10 @@ public class GamePage extends Application {
         primaryStage.show();
     }
 
+    public String getPlayerQuery(){
+       return playerTmpQuery.getText();
+    }
+
      public void createRack(List<Label> list){
 
         //Create the player rack tiles
@@ -214,6 +219,8 @@ public class GamePage extends Application {
             i++;
         }
     }
+
+
 
     private Label createCellLabel(String cellValue, Color cellColor) {
         Label cellLabel = new Label(cellValue);

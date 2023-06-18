@@ -6,11 +6,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.Model;
 import model.network.GameServer;
-import view.View;
-
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
+import view.View;;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ViewModel extends Observable implements Observer {
     public Model m = Model.getModel();
@@ -50,7 +48,6 @@ public class ViewModel extends Observable implements Observer {
 
         }
     }
-
 
 
 

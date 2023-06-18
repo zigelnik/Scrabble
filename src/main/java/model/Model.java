@@ -7,7 +7,6 @@ import model.network.GameServer;
 
 
 public class Model extends Observable implements Facade {
-
     public Host host;
     public Client client;
     private String playerQuery;
@@ -15,20 +14,13 @@ public class Model extends Observable implements Facade {
     Map<Integer,List<String>> playersHandMap = Collections.synchronizedMap(new HashMap<>());
     Map<Integer,Integer> playersScoreMap = Collections.synchronizedMap(new HashMap<>());
 
-    public Map<Integer, List<String>> getPlayersHandMap() {
-        return playersHandMap;
-    }
 
-    public Map<Integer, Integer> getPlayersScoreMap() {
-        return playersScoreMap;
-    }
 
     @Override
     public void hostGame(int port, String name)
     {
-        host = new Host(name);
+        host = new Host(name,port);
         host.gameState.addPlayer(host);
-        host.gameServer = new GameServer(port);
         host.gameServer.start();
     }
 
@@ -67,5 +59,11 @@ public class Model extends Observable implements Facade {
 
     private  static class ModelHolder{ public static final Model m = new Model();}
     public static Model getModel() {return ModelHolder.m;}
+    public Map<Integer, List<String>> getPlayersHandMap() {
+        return playersHandMap;
+    }
+    public Map<Integer, Integer> getPlayersScoreMap() {
+        return playersScoreMap;
+    }
 
 }

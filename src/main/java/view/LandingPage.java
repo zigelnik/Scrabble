@@ -10,18 +10,24 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import model.concrete.Tile;
 import view_model.ViewModel;
 
+import java.util.HashMap;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
 
 public class LandingPage extends Application {
 
     private String hostPort;
     private String playerName;
-    ViewModel vm = ViewModel.getViewModel();
+    private View v = View.getView();
     private WaitingPage wp = WaitingPage.getWP();
     private String IP;
+    private final ExecutorService executorService = Executors.newFixedThreadPool(2); // Create a thread pool with 2 threads
+
 
     private static Stage theStage;
     @FXML
@@ -35,6 +41,7 @@ public class LandingPage extends Application {
 
 
     public VBox root;
+
 
 
     @Override
@@ -80,10 +87,13 @@ public class LandingPage extends Application {
                 if(isPortValid(port)){
                     this.hostPort = port;
 
-                    Thread hostThread = new Thread(()-> {
-                        vm.hostGame(Integer.parseInt(hostPort),playerName);
+
+                    Thread hostThread = new Thread(() -> {
+                        // Thread logic goes here
+                        v.vm.hostGame(Integer.parseInt(hostPort), playerName);
                     });
-                    hostThread.start();
+                    executorService.execute(hostThread);
+
 
                     //Displaying the waiting page
                     try {
@@ -145,10 +155,11 @@ public class LandingPage extends Application {
                     System.out.println("Join button clicked." + " Port: " + port +  " IP: " + ip);
                     this.IP = ip;
 
-                    Thread joinThread = new Thread(()-> {
-                        vm.joinGame(IP, Integer.parseInt(port),playerName);
+                    Thread joinThread = new Thread(() -> {
+                        v.vm.joinGame(IP, Integer.parseInt(port),playerName);
                     });
-                    joinThread.start();
+                    executorService.execute(joinThread);
+
 
                     //Displaying the waiting page
                     try {

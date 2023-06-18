@@ -11,18 +11,22 @@ public class GameClientHandler extends Thread {
     static private BufferedReader readFromClient;
     private PrintWriter writeToClient;
     String stringWord;
+    String query;
     public Player player;
+    public Object locker = new Object();
 
     public GameClientHandler(Socket s, Player p) {
         try {
             player =p;
-               socket = s;
+            socket = s;
             readFromClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             writeToClient = new PrintWriter(socket.getOutputStream(), true);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+
 
     public void run() {
         try {
@@ -31,7 +35,10 @@ public class GameClientHandler extends Thread {
 
             String message;
             while ((message = readFromClient.readLine()) != null) {
-                System.out.println(message);
+                if(message.equals("/turn")){
+                    message = readFromClient.readLine();
+                    query = message;
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -65,6 +72,9 @@ public class GameClientHandler extends Thread {
         return stringWord;
     }
 
+    public String getQuery() {
+        return query;
+    }
 
 }
 

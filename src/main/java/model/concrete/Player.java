@@ -16,7 +16,10 @@ public class Player {
     int sumScore;
     boolean isTurnOver;
     String acceptedQuery;
+
     ///////////////////////
+
+
 
 
     public Player(){
@@ -24,6 +27,7 @@ public class Player {
         this.handSize = 7;
         this.sumScore = 0;
         isTurnOver = false;
+
     }
 
 
@@ -69,6 +73,8 @@ public class Player {
         return playerHand.size() == 7;
     }
 
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -102,4 +108,8 @@ public class Player {
         }
         return  tiles;
     }
+
+
+
+
 }
