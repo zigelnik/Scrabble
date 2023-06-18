@@ -204,7 +204,7 @@ public class GamePage extends Application {
 
 
     public void updateBoard(String message){
-        System.out.println( "from updateBoard"+message);
+        System.out.println( "from updateBoard "+message);
         char[] ch = message.split(",")[0].toCharArray();
         int row = Integer.parseInt(message.split(",")[1]);
         int col = Integer.parseInt(message.split(",")[2]);

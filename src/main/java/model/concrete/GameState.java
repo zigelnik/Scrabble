@@ -1,5 +1,6 @@
 package model.concrete;
 
+import javafx.application.Platform;
 import model.Host;
 import model.Model;
 import model.logic.DictionaryManager;
@@ -39,6 +40,7 @@ public class GameState{
        bag = Tile.Bag.getBag();
        model = Model.getModel();
       isGameOver = false;
+      this.msg = null;
     }
 
     //Getters
@@ -200,8 +202,9 @@ public class GameState{
 
                 if(player.getClass().equals(Host.class)){
                     model.updatePlayerValues(player.getSumScore(), player.convertTilesToStrings(player.playerHand),player.id); // updating PlayerHand and Score
-                    gp.updateBoard(msg);
-
+                    Platform.runLater(()->{
+                        gp.updateBoard(msg);
+                    });
                 }
                 else{
                     String result = String.join(",", player.convertTilesToStrings(player.playerHand));
