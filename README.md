@@ -51,4 +51,4 @@ The project is structured using the MVVM architecture and Observer-Observable de
 
 
 ## Demo
-[<img src="https://i.imgur.com/yREfMT3.jpg" width="50%">](https://www.veed.io/embed/ff808dc0-678c-4eec-b493-8de805189fe0)
+[<img src="https://i.imgur.com/yREfMT3.jpg" width="50%">](https://www.veed.io/embed/1c0e96a9-bece-497a-9792-cf6a589743ee)
