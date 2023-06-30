@@ -11,7 +11,12 @@ import java.io.*;
 import java.net.*;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
 
+ The Client class represents a client (player) that connects to a server.
+
+ It handles communication with the server and manages the user interface.
+ */
 // Client class
 public class Client  {
     String ip;
@@ -27,13 +32,23 @@ public class Client  {
     public View v = View.getView();
     public Player p  = new Player();
     ReentrantLock lock = new ReentrantLock();
+    /**
 
+     Constructs a Client object with the specified IP address, port, and name.
+     @param ip The IP address of the server.
+     @param port The port number of the server.
+     @param name The name of the client.
+     */
     public Client(String ip, int port, String name) {
         this.ip = ip;
         this.port = port;
         this.name = name;
     }
 
+    /**
+
+     Starts the client by establishing a connection with the server and initializing communication.
+     */
     public void start() {
         try {
             socket = new Socket(ip, port);

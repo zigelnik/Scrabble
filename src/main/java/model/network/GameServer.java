@@ -9,7 +9,14 @@ import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
+
+
+/**
+
+ The GameServer class represents a server that manages the game and handles communication with clients.
+
+ It listens for incoming client connections and assigns each client to a separate thread for processing.
+ */
 
 // Server class
 public class GameServer {
@@ -19,15 +26,28 @@ public class GameServer {
     public static List<GameClientHandler> clients = Collections.synchronizedList(new ArrayList<>());
     ExecutorService executorService = Executors.newFixedThreadPool(MAX_CLIENTS);
 
+    /**
+
+     Constructs a GameServer object with the specified port.
+     @param port The port number on which the server listens for incoming connections.
+     */
     public GameServer(int port) {
         this.port = port;
 
     }
+    /**
 
+     Returns the list of currently connected clients.
+     @return The list of GameClientHandler objects representing the connected clients.
+     */
     public static List<GameClientHandler> getClients() {
         return clients;
     }
 
+    /**
+
+     Starts the game server and begins accepting incoming connections from clients.
+     */
     public  void start() {
         try {
 
@@ -57,6 +77,11 @@ public class GameServer {
         }
     }
 
+    /**
+
+     Broadcasts a message to all connected clients.
+     @param message The message to be broadcasted.
+     */
     public static void broadcastToClients(String message) {
         synchronized (clients) {
             for (GameClientHandler client : clients) {
@@ -64,15 +89,16 @@ public class GameServer {
             }
         }
     }
+    /**
 
+     Removes a client from the list of connected clients.
+     @param gameClientHandler The GameClientHandler representing the client to be removed.
+     */
     public static void removeClient(GameClientHandler gameClientHandler) {
         synchronized (clients) {
             clients.remove(gameClientHandler);
         }
     }
-
-
-    //GETTERS
 
 }
 

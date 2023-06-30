@@ -6,6 +6,13 @@ import model.concrete.Player;
 import java.io.*;
 import java.net.Socket;
 
+/**
+
+ The GameClientHandler class represents a client handler for the game server.
+
+ It manages the communication with a specific client and handles incoming messages.
+ */
+
 public class GameClientHandler extends Thread {
     public Socket socket;
     static private BufferedReader readFromClient;
@@ -15,6 +22,13 @@ public class GameClientHandler extends Thread {
     public Player player;
     public Object locker = new Object();
 
+
+    /**
+
+     Constructs a GameClientHandler object with the specified socket and player.
+     @param s The socket associated with the client.
+     @param p The Player object representing the client.
+     */
     public GameClientHandler(Socket s, Player p) {
         try {
             player =p;
@@ -26,7 +40,12 @@ public class GameClientHandler extends Thread {
         }
     }
 
+    /**
 
+     Runs the client handler thread.
+
+     It listens for incoming messages from the client and handles them accordingly.
+     */
 
     public void run() {
         try {
@@ -55,11 +74,20 @@ public class GameClientHandler extends Thread {
         }
     }
 
+    /**
 
+     Sends a message to the connected client.
+     @param message The message to be sent.
+     */
     public void sendMessage(String message) {
         writeToClient.println(message);
     }
 
+    /**
+
+     Prompts the client to enter a query and returns the entered query.
+     @return The entered query as a string.
+     */
     public  String getMessageQuery()
     {
         writeToClient.println("Enter you query: ");

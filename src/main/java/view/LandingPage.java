@@ -19,6 +19,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
 
+/**
+ * The main landing page of the Scrabble game application.
+ */
 public class LandingPage extends Application {
 
     private String hostPort;
@@ -43,7 +46,12 @@ public class LandingPage extends Application {
     public VBox root;
 
 
-
+    /**
+     * The main entry point for the application.
+     *
+     * @param primaryStage The primary stage for the application.
+     * @throws Exception if an error occurs during application startup.
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
         try{
@@ -58,12 +66,21 @@ public class LandingPage extends Application {
         }
     }
 
+    /**
+     * Loads the FXML file for the landing page layout.
+     *
+     * @throws Exception if an error occurs while loading the FXML file.
+     */
+
     private void loadFXML() throws Exception {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(LandingPage.class.getResource("/fxmlFiles/landing-page.fxml"));
         root = fxmlLoader.load();
     }
 
+    /**
+     * Event handler for the hostButton.
+     */
     @FXML
     public void hostBtn() {
         String name = nameField.getText();
@@ -125,6 +142,10 @@ public class LandingPage extends Application {
 
     }
 
+
+    /**
+     * Event handler for the joinButton.
+     */
     @FXML
     public void joinBtn() {
         String name = nameField.getText();
@@ -189,6 +210,13 @@ public class LandingPage extends Application {
 
     }
 
+
+    /**
+     * Validates the provided port number.
+     *
+     * @param port The port number to validate.
+     * @return true if the port number is valid, false otherwise.
+     */
     public boolean isPortValid(String port){
         try {
             if (port.isEmpty()) {
@@ -214,6 +242,13 @@ public class LandingPage extends Application {
 
         return true;
     }
+
+    /**
+     * Validates the provided IP address.
+     *
+     * @param ip The IP address to validate.
+     * @return true if the IP address is valid, false otherwise.
+     */
     public boolean isiPValid(String ip) {
         try {
             if (ip.isEmpty()) {
@@ -233,6 +268,14 @@ public class LandingPage extends Application {
         }
         return true;
     }
+
+    /**
+     * Displays an alert dialog with the specified title and content.
+     *
+     * @param title   The title of the alert.
+     * @param content The content of the alert.
+     */
+
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -250,9 +293,28 @@ public class LandingPage extends Application {
 
         alert.showAndWait();
     }
+
+    /**
+     * Retrieves the primary stage of the application.
+     *
+     * @return The primary stage.
+     */
     public static Stage getPrimaryStage() {return theStage;}
+
+    /**
+     * Retrieves the player name entered on the landing page.
+     *
+     * @return The player name.
+     */
     public String getPlayerName() {return playerName;}
+
+    /**
+     * Retrieves the host port entered on the landing page.
+     *
+     * @return The host port.
+     */
     public String getHostPort() {return hostPort;}
+
     public String getIP() {
         return IP;
     }

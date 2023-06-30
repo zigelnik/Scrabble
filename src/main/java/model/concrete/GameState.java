@@ -18,29 +18,86 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static model.network.GameServer.clients;
+/**
+ * The GameState class represents the state of a game session.
+ * It manages the game's state, players, tiles, and board.
+ *
+ * This class follows the singleton pattern to ensure only one instance
+ * of the game state exists throughout the application.
+ */
 
 public class GameState{
-     public Tile.Bag bag;
-    public List<Player> playersList =  Collections.synchronizedList(new ArrayList<>());
-    Map<Integer,List<Tile>> playersHandMap = Collections.synchronizedMap(new HashMap<>());
-     public Board board;
-     private boolean isGameOver;
-    private  static class GameStateHolder{ public static final GameState gm = new GameState();}
-    public static GameState getGM() {return GameStateHolder.gm;}
+    /**
+     * The bag of tiles used in the game.
+     */
+    public Tile.Bag bag;
+
+    /**
+     * The list of players participating in the game.
+     */
+    public List<Player> playersList;
+
+    /**
+     * A mapping of player IDs to their respective tile hands.
+     */
+    Map<Integer, List<Tile>> playersHandMap;
+
+    /**
+     * The game board.
+     */
+    public Board board;
+
+    /**
+     * A flag indicating whether the game is over.
+     */
+    private boolean isGameOver;
+
+    /**
+     * Holder class for implementing the singleton pattern.
+     */
+    private static class GameStateHolder {
+        public static final GameState gm = new GameState();
+    }
+
+    /**
+     * Returns the singleton instance of the GameState.
+     *
+     * @return The singleton instance of the GameState.
+     */
+    public static GameState getGM() {
+        return GameStateHolder.gm;
+    }
+
+    /**
+     * Object used for synchronization purposes.
+     */
     final Object lock = new Object();
+
+    /**
+     * The GamePage associated with the game state.
+     */
     GamePage gp = GamePage.getGP();
+
+    /**
+     * The model associated with the game state.
+     */
     Model model;
+
+    /**
+     * The message associated with the game state.
+     */
     String msg;
 
-
-
-    //CTOR
-    public  GameState() {
-      board = Board.getBoard();
-       bag = Tile.Bag.getBag();
-       model = Model.getModel();
-      isGameOver = false;
-      this.msg = null;
+    /**
+     * Constructs a new instance of the GameState.
+     * Initializes the board, bag, model, and sets isGameOver to false.
+     */
+    public GameState() {
+        board = Board.getBoard();
+        bag = Tile.Bag.getBag();
+        model = Model.getModel();
+        isGameOver = false;
+        this.msg = null;
     }
 
     //Getters
@@ -58,7 +115,12 @@ public class GameState{
 
     public  boolean getIsGameOver(){return isGameOver;}
 
-
+    /**
+     * Sets the turn order for the players in the game.
+     * Randomly assigns an ID to each player based on the tiles drawn from the bag.
+     * Sorts the playersList in descending order based on their IDs.
+     * The first player in the sorted list will play first.
+     */
     // Functions
     public  void setTurns(){
         //extracting randomly tile for each player, setting is id, returning to bag
@@ -80,27 +142,29 @@ public class GameState{
         }
         //first player at list is now playing first randomly
     }
-
+    /**
+     * Initializes the player hands at the start of the game.
+     * Draw tiles from the bag and adds them to each player's hand.
+     * Updates the playersHandMap with the player's ID and their corresponding hand.
+     * Sends the initial hand information to the clients via the GameClientHandler.
+     * Updates the player values, including the hand and ID, for the host player.
+     */
     public void initHands(){
-        for(int i = 0; i < playersList.size(); i++){
-            Player tmpPlayer = playersList.get(i);
-
-            for(int j=0;j<playersList.get(i).handSize;j++) {
+        for (Player tmpPlayer : playersList) {
+            for (int j = 0; j < tmpPlayer.handSize; j++) {
                 tmpPlayer.playerHand.add(bag.getRand());
             }
-            playersHandMap.put(tmpPlayer.getId(),tmpPlayer.playerHand);
+            playersHandMap.put(tmpPlayer.getId(), tmpPlayer.playerHand);
             String result = String.join(",", tmpPlayer.convertTilesToStrings(tmpPlayer.playerHand));
 
-            for(GameClientHandler client: clients)
-            {
-                if(client.player.equals(tmpPlayer))
-                {
-                  client.sendMessage("/init\n"+result);
+            for (GameClientHandler client : clients) {
+                if (client.player.equals(tmpPlayer)) {
+                    client.sendMessage("/init\n" + result);
                 }
             }
             //Sending to update the Init pack for each player, using Player method to convert tiles to strings
-            if(tmpPlayer.getClass().equals(Host.class)){
-                Model.getModel().updatePlayerValues(0,tmpPlayer.convertTilesToStrings(tmpPlayer.playerHand),tmpPlayer.id);
+            if (tmpPlayer.getClass().equals(Host.class)) {
+                Model.getModel().updatePlayerValues(0, tmpPlayer.convertTilesToStrings(tmpPlayer.playerHand), tmpPlayer.id);
             }
         }
     }
@@ -108,6 +172,15 @@ public class GameState{
     {
         playersList.add(player);
     }
+
+    /**
+     * Determines if there is a winner in the game.
+     * A player is considered the winner when the tile bag is empty, and they have finished their pack.
+     * Iterates through the players to find the player with the highest score who has an empty hand.
+     * Sets the isGameOver flag to true if a winner is found.
+     * Returns the player object representing the winner, or null if there is no winner yet.
+     * @return The player object representing the winner, or null if there is no winner yet.
+     */
 
     public  Player isWinner(){
         int max = 0;
@@ -182,6 +255,15 @@ public class GameState{
         setTurns();
         initHands();
     }
+
+
+    /**
+     * Initializes and starts the game.
+     * Starts the game loop until the game is over. Each player takes their turn sequentially.
+     * Within each turn, the player continues playing until their turn is over, determined by the `legalMove` method.
+     * After each player's turn, updates are sent to the clients or the host, including player scores and hand updates.
+     * Checks for a winner using the `isWinner` method.
+     */
     public void initGame(){
 
         int currPlayerInd = 1;
@@ -229,7 +311,20 @@ public class GameState{
 
 
 
-
+    /**
+     * Executes a legal move for the given player.
+     *
+     * If the player is a host, prompts the host to enter a query and waits for submission.
+     * Once the query is received, it is passed to the `makeMove` method to process the move and calculate the score.
+     *
+     * If the player is a regular player, sends a turn message to the corresponding client, and waits for the query response.
+     * Once the query is received, it is passed to the `makeMove` method to process the move and calculate the score.
+     *
+     * After the move is made, updates the player's total score and returns whether the move resulted in a score greater than zero.
+     *
+     * @param player The player making the move.
+     * @return {@code true} if the move resulted in a score greater than zero, {@code false} otherwise.
+     */
 
     public boolean legalMove(Player player)
     {
@@ -270,6 +365,21 @@ public class GameState{
         player.sumScore += score;
         return score != 0;
     }
+
+
+    /**
+     * Makes a move based on the given message and player.
+     *
+     * Parses the message to extract the necessary information for the move, such as the word, row, column, and alignment.
+     * Validates the move based on various conditions, including tile availability and word existence in the dictionary.
+     *
+     * If the move is valid, attempts to place the word on the board and calculates the score.
+     * Updates the player's hand size, total score, and accepted query based on the move result.
+     *
+     * @param msg The message containing the move details.
+     * @param p The player making the move.
+     * @return The score obtained from the move, or 0 if the move is invalid.
+     */
 
     public int makeMove(String msg , Player p)  {
         // if makeMove fails this integer will stay 0.
@@ -313,7 +423,15 @@ public class GameState{
         return tmpMoveScore;
     }
 
-    // there is dictionaryLegal method from patam1 , return always True.
+    /**
+     * Checks if the given word is legal by querying a dictionary server.
+     *
+     * Opens a new thread to communicate with the dictionary server and sends the query to check if the word is legal.
+     * Returns true if the word is valid according to the dictionary, or false otherwise.
+     *
+     * @param query The word to be checked.
+     * @return true if the word is legal, false otherwise.
+     */
     public boolean tmpDictionaryLegal(String query ){
         //TODO: with given word we will open new thread to dictionaryServer
         //TODO: check with dm if the word is legal , return true or false
