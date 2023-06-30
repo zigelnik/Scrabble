@@ -28,14 +28,12 @@ public class Dictionary {
         bf = new BloomFilter(BF_SIZE, HASH_FUNC1, HASH_FUNC2);
 
 
-
         for (String file : files)
             updateWordSet(file);
 
         for (String word : wordsSet)
             bf.add(word);
 
-        System.out.println("set size:"+wordsSet.size());
 
     }
 

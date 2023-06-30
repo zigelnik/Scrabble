@@ -15,22 +15,34 @@ import view_model.ViewModel;
 
 import java.util.Objects;
 
+
+/**
+
+ The WaitingPage class represents the waiting page of the game GUI.
+ It extends the JavaFX Application class and provides methods for setting up and displaying the waiting page.
+ */
 public class WaitingPage extends Application {
 
-   public ViewModel vm = ViewModel.getViewModel();
+    public ViewModel vm = ViewModel.getViewModel();
     public GamePage gp = GamePage.getGP();
+
     public View v = View.getView();
     public static Stage theStage;
     @FXML
     private Label waitingLabel;
-
     @FXML
     private Button startButton;
 
     public VBox root;
-
     private boolean isHost = false;
 
+
+    /**
+     * Starts the waiting page by setting up the stage and initializing the scene.
+     *
+     * @param primaryStage The primary stage of the JavaFX application.
+     * @throws Exception if an error occurs during the initialization of the waiting page.
+     */
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -56,17 +68,20 @@ public class WaitingPage extends Application {
         setWaitingDisplay();
     }
 
+    /**
+     * Sets the waiting display and configures the start button's action event.
+     */
     public void setWaitingDisplay() {
         if(isHost)
         {
             startButton.setOnAction(e -> {
                 //TODO: do NOT change the methods call order!!
                 gp.start(theStage);
-                vm.m.getHostServer().hostPlayer.initPlayersHand();
-                View.getView().setViewModel();
                 vm.initPlayersBoard();
+                View.getView().setViewModel();
+                vm.m.host.gameState.initPlayers();
                 Thread t = new Thread(() -> {
-                    vm.m.getHostServer().hostPlayer.initGame();
+                    vm.m.host.gameState.initGame();
                 });
                 t.start();
             });
@@ -77,15 +92,24 @@ public class WaitingPage extends Application {
 //        }
     }
 
-    public void setClientBoard(){
-
-    }
-
-
+    /**
+     * Sets whether the current instance is the host.
+     *
+     * @param isHost true if the current instance is the host, false otherwise.
+     */
     public void setHost(boolean isHost) {
         this.isHost = isHost;
     }
 
+    /**
+     * Static holder class for the WaitingPage instance.
+     */
     private  static class WPHolder{ public static final WaitingPage wp = new WaitingPage();}
+
+    /**
+     * Retrieves the WaitingPage instance.
+     *
+     * @return The WaitingPage instance.
+     */
     public static WaitingPage getWP() {return WPHolder.wp;}
 }

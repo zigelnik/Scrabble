@@ -18,20 +18,28 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import model.Model;
-import view_model.ViewModel;
+
+
+/**
+ * The GamePage class represents the graphical user interface for the Scrabble game.
+ * It extends the JavaFX Application class and provides methods for initializing and updating
+ * the game board, player rack, and handling user actions.
+ */
 
 import java.util.*;
 
 public class GamePage extends Application {
 
     private static Stage theStage;
-    private GridPane gameBoard;
     public final ObservableList<String> placedTiles = FXCollections.observableArrayList();
-    private static HashMap<String , Point2D> map = new HashMap<>(); //map between letter and coordinate on gameBoard
+    private static Map<String , Point2D> map = Collections.synchronizedMap(new HashMap<>()); //map between letter and coordinate on gameBoard
     public GridPane playerRack;
-    public Label scoreLabel;
+    public Label  scoreLabel = new Label("0");
     public Label playerTmpQuery = new Label();
+    public Label boardQuery = new Label();
     private final Object lockObject = new Object();
+    List<Label> list = Collections.synchronizedList(new ArrayList<>(Collections.nCopies(7, new Label(""))));
+    GridPane gameBoard = new GridPane();
 
 
 
@@ -54,11 +62,18 @@ public class GamePage extends Application {
     };
 
 
-    public static void main(String[] args) {
-        launch(args);
+
+    public static void main(String [] args){
+        launch();
     }
 
 
+    /**
+     * The start method is called when the JavaFX application is launched.
+     * It sets up the game board, player rack, and user interface elements.
+     *
+     * @param primaryStage the primary stage for the JavaFX application
+     */
 
 
     @Override
@@ -67,7 +82,6 @@ public class GamePage extends Application {
         primaryStage.setTitle("Scrabble Game");
 
         // Game board
-        gameBoard = new GridPane();
         gameBoard.setHgap(5);
         gameBoard.setVgap(5);
 
@@ -84,7 +98,7 @@ public class GamePage extends Application {
         }
 
         // Score label
-        scoreLabel = new Label("0");
+
         scoreLabel.setStyle("-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;");
         scoreLabel.setAlignment(Pos.BOTTOM_CENTER);
         Label scoreTitle = new Label("Score: ");
@@ -162,10 +176,8 @@ public class GamePage extends Application {
             //if the move is not valid we need to remove the tiles from board and get it back to player hand
             //moveBackPlacedTiles();
 
-
-
-
             //reset the placedTiles list for the next turn
+
             placedTiles.clear();
             map.clear();
         });
@@ -202,12 +214,101 @@ public class GamePage extends Application {
         playerRack.setAlignment(Pos.BOTTOM_CENTER);
         root.getChildren().add(playerRack);
         // creating initial List that contains only X for playerRack not null, the initPack will override
-        List<Label> list = new ArrayList<>(Collections.nCopies(7, new Label("")));
+
         createRack(list);
         primaryStage.show();
     }
 
-    public void createRack(List<Label> list){
+
+    /**
+     * Updates the game board with the specified message.
+     * The message contains information about the tiles to be placed on the board.
+     * The tiles are added to the board based on the provided row and column coordinates.
+     * The message also specifies whether the tiles should be placed vertically or horizontally.
+     *
+     * @param message the message containing tile information and placement details
+     */
+
+    public void updateBoard(String message){
+        char[] ch = message.split(",")[0].toCharArray();
+        int row = Integer.parseInt(message.split(",")[1]);
+        int col = Integer.parseInt(message.split(",")[2]);
+        String isVert = message.split(",")[3];
+
+        if(isVert.equals("TRUE")){
+            for(int i = 0; i < ch.length; i++){
+                placeTileOnBoard(row + i,col,Character.toString(ch[i]));
+            }
+        }
+        else{
+            for(int i = 0; i < ch.length; i++){
+                placeTileOnBoard(row,col+i,Character.toString(ch[i]));
+            }
+        }
+    }
+
+
+
+    /**
+     * Retrieves the JavaFX node from the specified GridPane at the given column and row coordinates.
+     * It iterates over the child nodes of the GridPane and checks if their column and row indices match
+     * the specified values. If a matching node is found, it is returned; otherwise, null is returned.
+     *
+     * @param gridPane the GridPane from which to retrieve the node
+     * @param col      the column index of the node to retrieve
+     * @param row      the row index of the node to retrieve
+     * @return the JavaFX node at the specified column and row coordinates, or null if not found
+     */
+
+    public Node getNodeFromGridPane(GridPane gridPane, int col, int row) {
+        for (Node node : gridPane.getChildren()) {
+            if (GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
+                return node;
+            }
+        }
+        return null;
+    }
+
+
+    /**
+     * Places a tile with the specified value on the game board at the given row and column coordinates.
+     * It retrieves the JavaFX node from the game board GridPane at the specified coordinates using the
+     * getNodeFromGridPane method. If a matching node is found, it assumes it is a Label and sets its text
+     * to the specified value.
+     *
+     * @param row   the row index of the game board where the tile should be placed
+     * @param col   the column index of the game board where the tile should be placed
+     * @param value the value to be set on the tile
+     */
+
+    public void placeTileOnBoard(int row, int col, String value) {
+        Node existingNode = getNodeFromGridPane(gameBoard, col, row);
+        Label cellLabel = (Label) existingNode;
+        if(cellLabel!=null) {
+            cellLabel.setText(value);
+        }
+    }
+
+    /**
+     * Retrieves the current player's query from the temporary query label.
+     *
+     * @return the player's query as a string
+     */
+
+    public String getPlayerQuery(){
+       return playerTmpQuery.getText();
+    }
+
+
+    /**
+     * Creates the player rack using the specified list of labels.
+     * Each label represents a tile in the player's rack.
+     *
+     * @param list the list of labels representing the player's rack tiles
+     */
+
+     public void createRack(List<Label> list){
+
         //Create the player rack tiles
         int i =0;
         for (Label lb : list) {
@@ -218,6 +319,14 @@ public class GamePage extends Application {
         }
     }
 
+    /**
+     * Creates and configures a Label for a cell in the game board with the specified cell value and color.
+     *
+     * @param cellValue  the value to be displayed on the cell label
+     * @param cellColor  the background color of the cell label
+     * @return the created and configured Label for the cell
+     */
+
     private Label createCellLabel(String cellValue, Color cellColor) {
         Label cellLabel = new Label(cellValue);
         cellLabel.setPrefSize(40, 40);
@@ -225,6 +334,14 @@ public class GamePage extends Application {
         cellLabel.setStyle("-fx-background-color: " + toRGBCode(cellColor) + "; -fx-text-fill: black; -fx-font-weight: bold;");
         return cellLabel;
     }
+
+    /**
+     * Creates a label for a game board cell with the specified text and style class.
+     *
+     * @param tileValue       the text to display in the label
+     * @param tileColor       the color class to apply to the label
+     * @return the created label
+     */
 
     private Label createTileLabel(String tileValue, Color tileColor) {
         Label tileLabel = new Label(tileValue);
@@ -234,6 +351,13 @@ public class GamePage extends Application {
         return tileLabel;
     }
 
+    /**
+     * This method is responsible for handling the drag and drop functionality
+     * on the game board cells. It enables dropping tiles on the cells and updates
+     * the cell's appearance based on the drag and drop events.
+     *
+     * @param cellLabel the label representing the game board cell
+     */
 
     private void enableDropOnCell(Label cellLabel) {
         String originalCellValue = cellLabel.getText();
@@ -297,6 +421,13 @@ public class GamePage extends Application {
         });
     }
 
+    /**
+     * This method is responsible for handling the drag functionality
+     * on the player rack tiles. It enables dragging tiles from the rack
+     * and updates the rack and board cells based on the drag events.
+     *
+     * @param tileLabel the label representing the player rack tile
+     */
 
     private void enableDrag(Label tileLabel) {
         tileLabel.setOnDragDetected(event -> {
@@ -316,6 +447,12 @@ public class GamePage extends Application {
             event.consume();
         });
     }
+
+    /**
+     * Updates the player rack by placing the specified tile in an empty slot.
+     *
+     * @param tile the tile to be placed in the player rack
+     */
     private void updatePlayerRack(String tile) {
         // Find the tile label in the player rack
         for (Node node : playerRack.getChildren()) {
@@ -330,6 +467,13 @@ public class GamePage extends Application {
         }
     }
 
+    /**
+     * Initializes the player's rack with the specified list of tiles.
+     * The tiles are added to the rack starting from the leftmost slot.
+     *
+     * @param rack the list of tiles to initialize the player's rack
+     */
+
     public void initPlayerRack(String rack){
         String [] arr = rack.split(",");
         for(int i = 0; i < 7; i++){
@@ -337,10 +481,25 @@ public class GamePage extends Application {
         }
     }
 
+
+    /**
+     * Checks if the given cell label represents a special cell on the game board.
+     *
+     * @param cellLabel the label representing a cell on the game board
+     * @return true if the cell is a special cell, false otherwise
+     */
     private boolean isSpecialCell(Label cellLabel) {
         String cellValue = cellLabel.getText();
         return cellValue.equals("2W") || cellValue.equals("3W") || cellValue.equals("2L") || cellValue.equals("3L") || cellValue.equals("*");
     }
+
+
+    /**
+     * Retrieves the color associated with the given cell value.
+     *
+     * @param cellValue the value of the cell
+     * @return the color associated with the cell value
+     */
     private Color getColorForCell(String cellValue) {
         return switch (cellValue) {
             case "2W" -> Color.LIGHTBLUE;
@@ -352,6 +511,13 @@ public class GamePage extends Application {
         };
     }
 
+
+    /**
+     * Converts a JavaFX Color object to its corresponding RGB code representation.
+     *
+     * @param color the Color object to convert
+     * @return the RGB code representation of the Color object
+     */
     private String toRGBCode(Color color) {
         return String.format("#%02X%02X%02X",
                 (int) (color.getRed() * 255),
@@ -359,15 +525,27 @@ public class GamePage extends Application {
                 (int) (color.getBlue() * 255));
     }
 
+
+    /**
+     * Changes the value of a cell at the specified row and column coordinates on the game board.
+     * The cell value is updated with the given value, and the corresponding cell label is created and added to the game board.
+     *
+     * @param cellValue the new value to set for the cell
+     * @param row       the row coordinate of the cell
+     * @param col       the column coordinate of the cell
+     */
     public void changeCell(String cellValue, int row, int col) {
         Label cellLabel = createCellLabel(cellValue, getColorForCell(cellValue));
         enableDropOnCell(cellLabel);
         gameBoard.add(cellLabel, col, row);
     }
 
-    public static Stage getTheStage() {
-        return theStage;
-    }
+    /**
+     * Moves back the previously placed tiles on the game board.
+     * Iterates over the list of placed tiles, retrieves their original coordinates,
+     * and clears the corresponding cell label on the game board.
+     * The tiles are moved back by setting the text of the cell label to an empty string.
+     */
     public void moveBackPlacedTiles() {
         for (String tile : placedTiles) {
             Point2D coordinates = map.get(tile);
@@ -382,6 +560,24 @@ public class GamePage extends Application {
         }
     }
 
+    /**
+     * Retrieves the JavaFX node from the specified grid pane at the given column and row.
+     *
+     * @param gridPane the grid pane to search for the node
+     * @param column      the column index of the node
+     * @param row      the row index of the node
+     * @return the JavaFX node at the specified column and row, or null if not found
+     */
+
+
+    /**
+     * Retrieves the node (cell) at the specified row and column coordinates in the given GridPane.
+     *
+     * @param row       The row index of the desired node.
+     * @param column    The column index of the desired node.
+     * @param gridPane  The GridPane containing the nodes.
+     * @return The node at the specified row and column coordinates, or null if not found.
+     */
     public Node getNodeByRowColumnIndex(final int row, final int column, GridPane gridPane) {
         Node result = null;
         ObservableList<Node> children = gridPane.getChildren();
@@ -396,8 +592,24 @@ public class GamePage extends Application {
         return result;
     }
 
+
+    /**
+     * A holder class for the GamePage instance.
+     */
     private  static class GPHolder{ public static final GamePage gp = new GamePage();}
+
+    /**
+     * Retrieves the GamePage instance.
+     *
+     * @return The GamePage instance.
+     */
     public static GamePage getGP() {return GPHolder.gp;}
+
+    /**
+     * Retrieves the lock object.
+     *
+     * @return The lock object.
+     */
     public Object getLockObject() {
         return lockObject;
     }
